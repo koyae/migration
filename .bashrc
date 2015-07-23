@@ -10,6 +10,8 @@ alias ls='ls --color'
 alias du='du -h'
 alias df='df -h'
 shopt -s extglob # enable shell-extensions
+git config --global push.default upstream
+git config --global color.ui auto # some systems oddly disable this
 
 # weird stuff:
 alias up='cd ..'
