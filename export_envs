@@ -1,0 +1,13 @@
+#!/bin/bash
+# ~/export_envs
+
+#
+# Export cross-system and local machine settings
+#
+
+export HISTIGNORE="ls*" # don't store ls-commands in bash history
+export HISTFILESIZE=100000
+. export_local 
+# ^ settings for local machine which may not work
+# ^.. on other machines such as configs for uncommon programs
+# ^.. or aliases which depend on local file-structure
