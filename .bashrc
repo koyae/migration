@@ -3,15 +3,19 @@
 
 #### Aliases and shell-tweaks: ####
 
+# Global definitions:
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
 # Shell tweaks: 
 alias mv='mv -i'
 alias cp='cp -i'
+unalias ls
 alias ls='ls --color'
 alias du='du -h'
 alias df='df -h'
 shopt -s extglob # enable shell-extensions
-git config --global push.default upstream
-git config --global color.ui auto # some systems oddly disable this
 
 # weird stuff:
 alias up='cd ..'
@@ -24,11 +28,6 @@ alias untar='tar zxvf'
 
 # Local aliases, and general and machine-specific envs:
 . ~/export_envs
-
-# Global definitions:
-if [ -f /etc/bashrc ]; then
-	. /etc/bashrc
-fi
 
 # Function-definitions:
 
