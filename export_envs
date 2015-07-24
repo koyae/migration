@@ -7,7 +7,7 @@
 
 export HISTIGNORE="ls" # don't store plain ls-commands in bash history
 export HISTFILESIZE=100000
-. export_local 
+if [[ -f ~/export_local ]]; then . ~/export_local ; fi
 # ^ settings for local machine which may not work
 # ^.. on other machines such as configs for uncommon programs
 # ^.. or aliases which depend on local file-structure
