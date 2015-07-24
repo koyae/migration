@@ -11,7 +11,6 @@ fi
 # Shell tweaks: 
 alias mv='mv -i'
 alias cp='cp -i'
-unalias ls
 alias ls='ls --color'
 alias du='du -h'
 alias df='df -h'
