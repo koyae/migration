@@ -5,7 +5,7 @@
 # Export cross-system and local machine settings
 #
 
-export HISTIGNORE="ls*" # don't store ls-commands in bash history
+export HISTIGNORE="ls" # don't store plain ls-commands in bash history
 export HISTFILESIZE=100000
 . export_local 
 # ^ settings for local machine which may not work
