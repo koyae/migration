@@ -19,7 +19,7 @@ git config --global push.default upstream
 git config --global color.ui auto # some systems oddly disable this
 
 # weird stuff:
-alias up='cd ..'
+alias up='cd `pwd -P`/..' #resolve symlinks and go up. 'cd -' is for going "back"
 alias down='cd'
 alias lastat='cd $(cat ~/lastat)'
 alias lastam='pwd > ~/lastat'
