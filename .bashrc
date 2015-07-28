@@ -21,7 +21,7 @@ alias cp='cp -i'
 alias ls='ls --color'
 alias du='du -h'
 alias df='df -h'
-alias reup='. ~/.bashrc'
+alias reup='echo Reloading .bashrc && . ~/.bashrc'
 shopt -s extglob # enable shell-extensions
 git config --global push.default upstream
 git config --global color.ui auto # some systems oddly disable this
