@@ -1,6 +1,13 @@
 #!/bin/bash
 # .bashrc
 
+#### Function-definitions: ####
+
+. ~/define_funcs
+
+####: Function-definitions ####
+
+
 #### Aliases and shell-tweaks: ####
 
 # Global definitions:
@@ -14,6 +21,7 @@ alias cp='cp -i'
 alias ls='ls --color'
 alias du='du -h'
 alias df='df -h'
+alias reup='. ~/.bashrc'
 shopt -s extglob # enable shell-extensions
 git config --global push.default upstream
 git config --global color.ui auto # some systems oddly disable this
@@ -25,28 +33,19 @@ alias lastat='cd $(cat ~/lastat)'
 alias lastam='pwd > ~/lastat'
 alias untar='tar zxvf'
 
-####: Aliases ####
+# General envs:
+if [[ -f ~/export_envs ]]; then . ~/export_envs ; fi
+# ^ exports functions which should always be exported
 
-# Local aliases, and general and machine-specific envs:
-. ~/export_envs
+# Machine-specific aliases and envs:
+if [[ -f ~/export_local ]]; then . ~/export_local ; fi
+# ^ settings for local machine which may not work on other machines
+# ^.. such as configs for uncommon programs or aliases which depend on
+# ^.. or describe local file-structure
+# ^ May export additional functions.
 
-# Function-definitions:
+####: Aliases and shell-tweaks ####
 
-function cdl {
-    cd "$(dirname "$(readlink "$1")")"
-}
-
-function lcd {
-	cdl "$@"
-}
-
-function sis {
-    cd ../$1
-}
-
-export -f sis
-export -f cdl
-export -f lcd
 
 # If not running interactively, don't do anything
 [[ "$-" != *i* ]] && return

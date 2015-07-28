@@ -1,0 +1,26 @@
+#!/bin/bash
+# define_funcs
+
+# remember to source this BEFORE you try to export the stuff
+
+function cdl {
+    cd "$(dirname "$(readlink "$1")")"
+}
+
+function lcd {
+	cdl "$@"
+}
+
+function sis {
+    cd ../$1
+}
+
+function tarup {
+	if (( $# > 1 )); then
+		tar cvzf $*
+	else
+		tar cvzf "$1".tar "$1"
+		# ^ this prevents that obnoxious and confounding
+		# ^.. "cowardly refusing to create an empty archive" message
+	fi
+}
