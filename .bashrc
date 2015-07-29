@@ -19,6 +19,7 @@ fi
 alias mv='mv -i'
 alias cp='cp -i'
 alias ls='ls --color'
+alias ll='ls -l'
 alias du='du -h'
 alias df='df -h'
 alias reup='echo Reloading .bashrc && . ~/.bashrc'
