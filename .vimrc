@@ -19,7 +19,7 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 	:set mouse=n
 	:set gdefault " find-and-replace defaults to global rather than just current line
 	:set autoindent " keep the current indentation on new <CR>. Negate with :setlocal noautoindent
-	:set shiftright " make :vs open on right instead of bumping current pane over
+	:set splitright " make :vs open on right instead of bumping current pane over
 	:set tabstop=4 " make tab-characters display as 4 spaces instead of default 8 
 	:set shiftwidth=4 " make '>' (angle bracket) behave itself
 	:set ignorecase smartcase "searching is non-case-sensitive unless there's a cap
