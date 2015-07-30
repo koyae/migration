@@ -1,0 +1,29 @@
+#!/bin/bash
+## tarall
+
+## tarall [-f]
+## tar up all the folders which are top-level in the current directory, then remove them 
+   
+getconfirm=1
+while getopts ":f" opt; do
+	if [[ "$opt" = "f"  ]]; then
+		getconfirm=0
+		break
+	else
+		echo $OPTARG is not a valid argument.
+	fi
+done
+if (( getconfirm )); then
+	echo -e You are about to convert all of the directories in the current folder to .tar-files, and remove the originals. Proceed?
+	read
+	shopt -s nocasematch
+	if [[ "$REPLY" = "y" ]] || [[ "$REPLY" = "yes" ]]; then
+		echo You got it.
+	else
+		echo Cancelled.
+		exit 1 # jump out because user cancelled
+	fi
+	shopt -u nocasematch
+fi
+find . -maxdepth 1 -mindepth 1 -type d -exec tar cvzf "{}.tar" "{}" \; -exec rm -r -f "{}" \;
+exit 0
