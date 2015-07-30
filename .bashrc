@@ -19,7 +19,6 @@ fi
 alias mv='mv -i'
 alias cp='cp -i'
 alias ls='ls --color'
-alias ll='ls -l'
 alias du='du -h'
 alias df='df -h'
 alias reup='echo Reloading .bashrc && . ~/.bashrc'
@@ -29,11 +28,13 @@ git config --global color.ui auto # some systems oddly disable this
 
 # weird stuff:
 alias up='cd `pwd -P`/..' #resolve symlinks and go up. 'cd -' is for going "back"
+alias l='ls'
+alias ll='ls -l'
 alias down='cd'
 alias lastat='cd $(cat ~/lastat)'
 alias lastam='pwd > ~/lastat'
 alias untar='tar zxvf'
-
+ 
 # General envs:
 if [[ -f ~/export_envs ]]; then . ~/export_envs ; fi
 # ^ exports functions which should always be exported
