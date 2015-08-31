@@ -7,6 +7,7 @@
 export HISTIGNORE="ls" # don't store plain ls-commands in bash history
 export HISTFILESIZE=100000
 
+export -f up
 export -f sis
 export -f cdl
 export -f lcd
