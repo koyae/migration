@@ -20,7 +20,10 @@ function unlock {
 	if (( $# < 1 )); then
 		echo 'No arguments received. Usage: unlock <file>'
 	else
-		rm ."$1".swp
+		for arg in "$@"; do
+		# ^ loop through arguments as needed
+			rm "."$arg".swp"
+		done
 	fi
 }
 
