@@ -16,6 +16,14 @@ function up {
 	cd "`pwd -P`/$gohere"
 }
 
+function unlock {
+	if (( $# < 1 )); then
+		echo 'No arguments received. Usage: unlock <file>'
+	else
+		rm ."$1".swp
+	fi
+}
+
 function cdl {
     cd "$(dirname "$(readlink "$1")")"
 }

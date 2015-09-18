@@ -11,3 +11,4 @@ export -f up
 export -f sis
 export -f cdl
 export -f lcd
+export -f unlock
