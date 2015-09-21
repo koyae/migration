@@ -16,6 +16,29 @@ function up {
 	cd "`pwd -P`/$gohere"
 }
 
+function grepr {
+	location='.'
+	regex=""
+	findargs=""
+	if (( $# < 1 )); then
+		echo 'Recursive grep usage: grepr [<location>] <regex> [<extra args for find>]]'
+		exit 1
+	elif [[ $# -eq 1 ]]; then
+		regex="$1"
+	else # (( $# > 1 )); then
+		location="$1"
+		regex="$2"
+		shift 2
+		while [[ $# -gt 0 ]]; do
+			findargs="$findargs $1"
+			shift
+		done
+	fi
+	shift $shiftamount # perform shift so $@ works next
+	echo find "$location" -type f $findargs -exec grep -H "$regex" {} \; 
+	find "$location" -type f $findargs -exec grep -H "$regex" {} \; 
+}
+
 function unlock {
 	if (( $# < 1 )); then
 		echo 'No arguments received. Usage: unlock <file>'
