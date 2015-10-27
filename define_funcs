@@ -72,3 +72,11 @@ function tarup {
 	fi
 }
 
+function xviml {
+# view the contents of an xml-file after formatting has been applied
+	if (( $# < 1 )); then
+		echo 'Format XML and open in vim. Saving afterwards optional. Usage: xviml <file>'
+		exit 1
+	fi
+	xmllint "$1" --format | vim -
+}
