@@ -17,3 +17,4 @@ export -f cdl
 export -f lcd
 export -f unlock
 export -f grepr
+export -f xviml
