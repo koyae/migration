@@ -28,6 +28,7 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 "-- cmdalias.vim aliases
 	:Alias Wq wq
 	:Alias qw wq
+	:Alias Q q
 
 	" override setting with \c or \C anywhere in search query
  
