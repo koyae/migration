@@ -11,16 +11,19 @@ hi Cursor     guifg=bg     guibg=fg
 hi lCursor    guifg=NONE   guibg=Cyan
 
 " Note: we never set 'term' because the defaults for B&W terminals are OK
-hi DiffAdd    ctermbg=LightBlue    guibg=LightBlue
-hi DiffChange ctermbg=LightMagenta guibg=LightMagenta
-hi DiffDelete ctermfg=Blue	   ctermbg=LightCyan gui=bold guifg=Blue guibg=LightCyan
-hi DiffText   ctermbg=Red	   cterm=bold gui=bold guibg=Red
+" Also keep in mind that a typical PuTTY window only reads ctermbg and ctermfg
+" Differentiable NR-8 xterm colors are: Black Blue Green Cyan
+" Red Magenta Brown/Yellow White/Grey 
+hi DiffAdd    ctermbg=Green    guibg=Brown ctermfg=White cterm=bold
+hi DiffChange ctermbg=Grey cterm=bold 
+hi DiffDelete ctermfg=Blue	   ctermbg=LightRed 
+hi DiffText   cterm=bold gui=bold ctermbg=Brown 
 hi Directory  ctermfg=DarkBlue	   guifg=Blue
 hi ErrorMsg   ctermfg=White	   ctermbg=DarkRed  guibg=Red	    guifg=White
 hi FoldColumn ctermfg=DarkBlue	   ctermbg=Grey     guibg=Grey	    guifg=DarkBlue
 hi Folded     ctermbg=Grey	   ctermfg=DarkBlue guibg=LightGrey guifg=DarkBlue
 hi IncSearch  cterm=reverse	   gui=reverse
-hi LineNr     ctermfg=Brown	   guifg=Brown
+hi LineNr     ctermfg=Brown	   guifg=Brown cterm=bold
 hi ModeMsg    cterm=bold	   gui=bold
 hi MoreMsg    ctermfg=DarkGreen    gui=bold guifg=SeaGreen
 hi NonText    ctermfg=Blue	   gui=bold guifg=gray guibg=white
@@ -29,8 +32,8 @@ hi PmenuSel   ctermfg=White	   ctermbg=DarkBlue  guifg=White  guibg=DarkBlue
 hi Question   ctermfg=DarkGreen    gui=bold guifg=SeaGreen
 hi Search     ctermfg=NONE	   ctermbg=Yellow guibg=Yellow guifg=NONE
 hi SpecialKey ctermfg=DarkBlue	   guifg=Blue
-hi StatusLine cterm=bold	   ctermbg=blue ctermfg=yellow guibg=gold guifg=blue
-hi StatusLineNC	cterm=bold	   ctermbg=blue ctermfg=black  guibg=gold guifg=blue
+hi StatusLine cterm=bold	   ctermbg=blue ctermfg=white guibg=gold guifg=blue
+hi StatusLineNC	cterm=bold	   ctermbg=blue ctermfg=yellow guibg=gold guifg=blue
 hi Title      ctermfg=DarkMagenta  gui=bold guifg=Magenta
 hi VertSplit  cterm=reverse	   gui=reverse
 hi Visual     ctermbg=NONE	   cterm=reverse gui=reverse guifg=Grey guibg=fg
