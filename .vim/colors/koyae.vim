@@ -23,7 +23,7 @@ hi ErrorMsg   ctermfg=White	   ctermbg=DarkRed  guibg=Red	    guifg=White
 hi FoldColumn ctermfg=DarkBlue	   ctermbg=Grey     guibg=Grey	    guifg=DarkBlue
 hi Folded     ctermbg=Grey	   ctermfg=DarkBlue guibg=LightGrey guifg=DarkBlue
 hi IncSearch  cterm=reverse	   gui=reverse
-hi LineNr     ctermfg=Brown	   guifg=Brown cterm=bold
+hi LineNr     ctermfg=LightMagenta  guifg=Brown cterm=bold gui=underline  
 hi ModeMsg    cterm=bold	   gui=bold
 hi MoreMsg    ctermfg=DarkGreen    gui=bold guifg=SeaGreen
 hi NonText    ctermfg=Blue	   gui=bold guifg=gray guibg=white
@@ -33,7 +33,7 @@ hi Question   ctermfg=DarkGreen    gui=bold guifg=SeaGreen
 hi Search     ctermfg=NONE	   ctermbg=Yellow guibg=Yellow guifg=NONE
 hi SpecialKey ctermfg=DarkBlue	   guifg=Blue
 hi StatusLine cterm=bold	   ctermbg=blue ctermfg=white guibg=gold guifg=blue
-hi StatusLineNC	cterm=bold	   ctermbg=blue ctermfg=yellow guibg=gold guifg=blue
+hi StatusLineNC	ctermbg=blue ctermfg=yellow guibg=gold guifg=blue
 hi Title      ctermfg=DarkMagenta  gui=bold guifg=Magenta
 hi VertSplit  cterm=reverse	   gui=reverse
 hi Visual     ctermbg=NONE	   cterm=reverse gui=reverse guifg=Grey guibg=fg
