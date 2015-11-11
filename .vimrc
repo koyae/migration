@@ -30,6 +30,10 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 	:Alias qw wq
 	:Alias Q q
 
+"-- changesqlcase.vim aliases
+	vnoremap <silent> U :call ChangeSqlCase()<Return>
+	"<cr>
+
 	" override setting with \c or \C anywhere in search query
  
 "-------------------Functions------------------------------:
@@ -142,7 +146,7 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 "---------------------Novel keybindings--------------------: 
 	" ctrlPageUp goes to next tab:
 	noremap <silent> <C-PgUp> gT
-	" ctrlPageDown goes to previou tab:
+	" ctrlPageDown goes to previous tab:
 	noremap <silent> <C-PgDown> gt
 	" ctrlUp swaps current line with above
 	nnoremap <C-Up> dd<Up><S-p>
