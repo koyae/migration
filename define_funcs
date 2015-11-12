@@ -80,3 +80,17 @@ function xviml {
 	fi
 	xmllint "$1" --format | vim -
 }
+
+function sviml {
+# view the contents of an SQL-file after keywords have all been capped
+	if ( $# < 1 ); then
+		echo 'Format PostgreSQL and open in vim. Saving afterwards optional. Usage: sviml <file>'
+		exit 1
+	fi
+	vim "$1" -c 'normal ggVGU'
+	# ^ gg goes to top
+	# ^.. V starts selecting by line
+	# ^.. G goes to bottom
+	# ^.. U is a custom mapping to do the SQL-capitalizing magic
+}
+
