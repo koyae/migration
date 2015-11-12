@@ -24,15 +24,18 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 	:set shiftwidth=4 " make '>' (angle bracket) behave itself
 	:set ignorecase smartcase "searching is non-case-sensitive unless there's a cap
 	:set shellcmdflag=-ic
+"- compatability 
+	:set nocompatible
+	:set <S-Left>=[D
+	:set <S-Right>=[C
+	:set <C-Left>=OD
+	:set <C-Right>=OC
 
 "-- cmdalias.vim aliases
 	:Alias Wq wq
 	:Alias qw wq
 	:Alias Q q
-
-"-- changesqlcase.vim aliases
-	vnoremap <silent> U :call ChangeSqlCase() <Return>
-
+	
  
 "-------------------Functions------------------------------:
 
@@ -42,6 +45,16 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 " and in turn "below" means the opposite.
 
 " Note that function! forces overwrite if necessary on creation of a funciton	
+
+	" Selects entire document then performs series of keystrokes in normal mode
+	function! SelectAllThenDo(keystrokeString)
+		normal ggVG
+		exec a:keystrokeString
+	endfunction
+
+	function! GoopyMalchik()
+		call SelectAllThenDo(':call ChangeSqlCase()')
+	endfunction
 
 	function! InsertCharAfterCurrentChar(char)
 		silent! exec "normal a" . a:char
@@ -155,7 +168,7 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 	noremap <C-9> %
 	" ctrl0 jumps to matching parenthesis when one is selected, just like % does
 	noremap <C-0> %
-
+	
 "-- Find and replace stuff
 
 	" ctrlF opens search mode
@@ -199,7 +212,29 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 	" insert-key enters replace-mode
 	nnoremap <Insert> i<Insert>
 
+	" shiftU capitalizes SQL keywords: 
+	vnoremap <silent> U :call ChangeSqlCase() <Return><Return>
+ 	" ctrlU capitalizes any alphas in selection:
+	vnoremap <silent> <C-u> U
+	" ctrlShiftU lowercases any alphas in selection:
+	vnoremap <silent> <C-U> u 
 
+"-- Selection stuff
+
+	" shiftRight starts visual selection to the right
+ 	nmap <S-Right> v<Right>
+	" shiftLeft starts visual selection to the left
+	nmap <S-Left> v<Left>
+	" allow shiftLeft to stay held while selecting without jumping by word
+	vmap <S-Left> <Left>
+	" allow shiftRight to stay held while selecting without jumping by word
+	vmap <S-Right> <Right>
+	" ctrlRight jumps by word like in most text editors:
+	vnoremap <C-Right> <S-Right>
+	" ctrlLeft jumps by word like in most text editors:
+	vnoremap <C-Left> <S-Left>
+	":4 sadly the previous two aliases do not quite work in PuTTY 
+  
 "-- Normal-mode passthroughs for 
 
 	" backslash-key, forwardslash-key, double-quote-key

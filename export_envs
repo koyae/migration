@@ -18,3 +18,4 @@ export -f lcd
 export -f unlock
 export -f grepr
 export -f xviml
+export -f sviml
