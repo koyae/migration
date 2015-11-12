@@ -31,10 +31,8 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 	:Alias Q q
 
 "-- changesqlcase.vim aliases
-	vnoremap <silent> U :call ChangeSqlCase()<Return>
-	"<cr>
+	vnoremap <silent> U :call ChangeSqlCase() <Return>
 
-	" override setting with \c or \C anywhere in search query
  
 "-------------------Functions------------------------------:
 
