@@ -60,15 +60,16 @@
 " vim@culley.fastmail.fm
 " 
 
+" Must be called via CALL because function works on highlighted region
 function! ChangeSqlCase()
-
+call SettingGuardSave('gdefault')
+set nogdefault
 " three atoms on the search:
 "
 " 1. \(\_^\|\W\)\@<= --------- non word character or begin of line \@<= is
 " required to match to words next to each other (make the space non-inclusive)
 " 2. long list of words separated by \|
-" 3. \(\W\|\_$\)\@= ---------- just like item one for the other side of the
-" match
+" 3. \(\W\|\_$\)\@= ---------- just like item one for the other side of the match
 "
 " The substitution:
 "
@@ -816,7 +817,9 @@ function! ChangeSqlCase()
 	\year\|
 	\yes\|
 	\zone
-    \\)\(\W\|\_$\)\@=/\U\2\E/ie
+    \\)\(\W\|\_$\)\@=/\U\2\E/gie
+
+call SettingGuardRestore()
 
 " Removed:
 "    \sql\| ===== this was changing the case of my variable name...
