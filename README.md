@@ -8,7 +8,7 @@ Git does not allow cloning directly into non-empty folders, so making files acce
 
 1. Navigate to the home directory ('~').
 2. **git init** to start a new repo.
-3. **git remote add origin https://github\.com/koyae/migration** to define a remote source repo. 
+3. **git remote add origin https&#58;//github.com/koyae/migration** to define a remote source repo. 
 4. **git pull origin master** to pull from the master branch of that source.
 5. **git --set-upstream-to origin master** to allow **git push** to target `origin master` by default.
 
@@ -24,7 +24,7 @@ Git does not allow cloning directly into non-empty folders, so making files acce
  
 ### Clone the repo into a new directory and then link files to ~
 
-1. **git clone https://github\.com/koyae/migration [dirname]** to clone the repo to a directory (this can be within ~ or elsewhere)
+1. **git clone https&#58;//github.com/koyae/migration [dirname]** to clone the repo to a directory (this can be within ~ or elsewhere)
 2. For each of the files you would like to use, do:
   * **ln -s "\`pwd -P\`"/<file> \`realpath ~`** to add a symbolic link, making the file transparently accessible to ~
 
