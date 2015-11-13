@@ -26,7 +26,7 @@ Git does not allow cloning directly into non-empty folders, so making files acce
 
 1. **git clone `https://github.com/koyae/migration`** [*`dirname`*] to clone the repo to a directory (this can be within ~ or elsewhere)
 2. For each of the files you would like to use, do:
-  * **`ln -s "\`pwd -P\`"/`*`file`* `\`realpath ~\``** to add a symbolic link, making the file transparently accessible to ~
+  * **`ln -s "\`pwd -P\`"/``*`file`* `\`realpath ~\``** to add a symbolic link, making the file transparently accessible to ~
 
 #### Advantages
 
