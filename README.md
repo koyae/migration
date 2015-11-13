@@ -8,9 +8,9 @@ Git does not allow cloning directly into non-empty folders, so making files acce
 
 1. Navigate to the home directory ('~').
 2. **git init** to start a new repo.
-3. **git remote add origin `https://github.com/koyae/migration`** to define a remote source repo. 
-4. **git pull origin master** to pull from the master branch of that source.
-5. **git --set-upstream-to origin master** to allow **git push** to target `origin master` by default.
+3. **`git remote add origin https://github.com/koyae/migration`** to define a remote source repo. 
+4. **`git pull origin master`** to pull from the master branch of that source.
+5. **`git --set-upstream-to origin master`** to allow **`git push`** to target `origin master` by default.
 
 #### Advantages
 
@@ -24,15 +24,15 @@ Git does not allow cloning directly into non-empty folders, so making files acce
  
 ### Clone the repo into a new directory and then link files to ~
 
-1. **git clone `https://github.com/koyae/migration`** [*dirname*] to clone the repo to a directory (this can be within ~ or elsewhere)
+1. **git clone `https://github.com/koyae/migration`** [*`dirname`*] to clone the repo to a directory (this can be within ~ or elsewhere)
 2. For each of the files you would like to use, do:
-  * **ln -s "\`pwd -P\`"/<file> \`realpath ~`** to add a symbolic link, making the file transparently accessible to ~
+  * **`ln -s "\`pwd -P\`"/`*`file`* `\`realpath ~\``** to add a symbolic link, making the file transparently accessible to ~
 
 #### Advantages
 
 * This approach allows you to selectively link files to ~ in the case you don't want all of them. 
 * Reduces the amount of clutter you might get from files like `README.md` or `export_local__remove_my_tail` without creating the risk of committing removed files accidentally (as git can still find them)
-* Allows **git add .** to be used from the subdirectory without extra files (such as .ssh or such) being added unintentionally.
+* Allows **`git add .`** to be used from the subdirectory without extra files (such as .ssh or such) being added unintentionally.
 
 #### Disadvantages
 
