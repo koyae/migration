@@ -20,13 +20,13 @@ Git does not allow cloning directly into non-empty folders, so making files acce
 #### Disadvantages
 
 * Creating the repo in ~ will make the directory slightly more cluttered due to extra files such as this README. Though extra files *can* be simply be deleted, this creates some risk of committing the removal accidentally.
-* **git add .** is generally not an option for adding a number of new files due to other things which will likely be present in ~/
+* **`git add .`** is generally not an option for adding a number of new files due to other things which will likely be present in ~/
  
 ### Clone the repo into a new directory and then link files to ~
 
 1. **`git clone https://github.com/koyae/migration`** [*`dirname`*] to clone the repo to a directory (this can be within ~ or elsewhere)
 2. For each of the files you would like to use, do:
-  * **`ln -s "\`pwd -P\`"`*`file`* `\`realpath ~\``** to add a symbolic link, making the file transparently accessible to ~
+  * **`ln -s "\`pwd -P\`"/`*`file`* `\`realpath ~\``** to add a symbolic link, making the file transparently accessible to ~
 
 #### Advantages
 
