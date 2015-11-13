@@ -9,7 +9,8 @@ Git does not allow cloning directly into non-empty folders, so making files acce
 1. Navigate to the home directory ('~').
 2. **git init** to start a new repo.
 3. **git remote add origin https://github.com/koyae/migration** to define a remote source repo. 
-4. **git pull origin master** to pull pull from the master branch of that source.
+4. **git pull origin master** to pull from the master branch of that source.
+5. **git --set-upstream-to origin master** to allow **git push** to target `origin master` by default.
 
 #### Advantages
 
