@@ -26,13 +26,13 @@ Git does not allow cloning directly into non-empty folders, so making files acce
 
 1. **`git clone https://github.com/koyae/migration`** [*`dirname`*] to clone the repo to a directory (this can be within ~ or elsewhere)
 2. For each of the files you would like to use, do:
-  * **`ln -s "\`pwd -P\`"/`*`file`* `\`realpath ~\``** to add a symbolic link, making the file transparently accessible to ~
+  * **``ln -s " `pwd -P`\``*`file`*`"` `realpath ~`** to add a symbolic link, making the file transparently accessible to ~
 
 #### Advantages
 
 * This approach allows you to selectively link files to ~ in the case you don't want all of them. 
 * Reduces the amount of clutter you might get from files like `README.md` or `export_local__remove_my_tail` without creating the risk of committing removed files accidentally (as git can still find them)
-* Allows **`git add .`** to be used from the subdirectory without extra files (such as .ssh or such) being added unintentionally.
+* Allows **`git add .`** to be used from the subdirectory without extra files (such as `.ssh` or such) being added unintentionally.
 
 #### Disadvantages
 
