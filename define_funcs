@@ -19,18 +19,25 @@ function up {
 function grepr {
 	location='.' #"`pwd -P`"
 	regex=""
-	findargs=""
+	findargs="-type f"
 	if (( $# < 1 )); then
-		echo 'Recursive grep usage: grepr <regex> or grepr <location> <regex> [<extra args for find>]]'
+		echo 'Recursive grep usage: grepr <regex> or grepr <location> <regex> [<args for find>]'
+		echo 'With the simple invocation, find will receive -type f. With the full invocation, this must be specified if desired.'
 		kill -INT $$
 	elif [[ $# -eq 1 ]]; then
-		regex="$1"
+		regex="'"$1"'"
 	else # (( $# > 1 )); then
 		location="$1"
-		regex="$2"
+		regex="'"$2"'"
+		findargs="" 
 		shift 2
 		while [[ $# -gt 0 ]]; do
-			if [[ $1 == -* || $1 == \! ]]; then
+			if [[ $1 == -type ]]; then
+			# if we're dealing with the -type flag, assume it's followed by a letter:
+				findargs="$findargs $1"
+				shift
+				findargs="$findargs $1" # find will choke if passed e.g. -type 'f'
+			elif [[ $1 == -* || $1 == \! ]]; then
 			# if component begins with '-' or is negator '!'
 			# don't quote so it actually reads as a flag:
 				findargs="$findargs $1"
@@ -42,8 +49,8 @@ function grepr {
 		done
 	fi
 	#shift $shiftamount # perform shift so $@ works next
-	echo find "$location" $findargs -type f -exec grep -H "$regex" {} --color=always \; 
-	find "$location" $findargs -type f -exec grep -H "$regex" {} --color=always \;
+	echo find "$location" $findargs -exec grep -H "$regex" {} --color=always \\\;
+	find "$location" $findargs -exec grep -H "$regex" {} --color=always \;
 }
 
 function unlock {
