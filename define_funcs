@@ -17,7 +17,7 @@ function up {
 }
 
 function grepr {
-	location='.' #"`pwd -P`"
+	location=. #"`pwd -P`"
 	regex=""
 	findargs="-type f"
 	if (( $# < 1 )); then
@@ -25,10 +25,10 @@ function grepr {
 		echo 'With the simple invocation, find will receive -type f. With the full invocation, this must be specified if desired.'
 		kill -INT $$
 	elif [[ $# -eq 1 ]]; then
-		regex="'"$1"'"
+		regex=$1
 	else # (( $# > 1 )); then
 		location="$1"
-		regex="'"$2"'"
+		regex="$2"
 		findargs="" 
 		shift 2
 		while [[ $# -gt 0 ]]; do
@@ -49,7 +49,7 @@ function grepr {
 		done
 	fi
 	#shift $shiftamount # perform shift so $@ works next
-	echo find "$location" $findargs -exec grep -H "$regex" {} --color=always \\\;
+	echo find "$location" $findargs -exec grep -H "'$regex'" {} --color=always \\\;
 	find "$location" $findargs -exec grep -H "$regex" {} --color=always \;
 }
 
