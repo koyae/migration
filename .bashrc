@@ -31,7 +31,7 @@ git config --global color.ui auto # some systems oddly disable this
 alias l='ls'
 alias ll='ls -l'
 alias down='cd'
-alias lastat='cd $(cat ~/lastat)'
+alias lastat='cd "$(cat ~/lastat)"'
 alias lastam='pwd > ~/lastat'
 alias untar='tar zxvf'
  
