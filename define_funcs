@@ -79,7 +79,7 @@ function lcd {
 }
 
 function sis {
-    cd ../$1
+    cd ../"$1"
 }
 
 function tarup {
