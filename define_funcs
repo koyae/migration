@@ -17,6 +17,15 @@ function up {
 }
 
 function grepr {
+# NOTE: to allow this function to work in readonly directories, 
+# ..... the "~" ($HOME) directory is used to write a temporary file.
+# ..... On Windows systems, the default $HOME path is generally not set
+# ..... correctly, resulting in errors when `grepr` is called. 
+# ..... This can be resolved either by using CMD's mklink
+# ..... to create a symbolic link in [cygwinDirectory]/home to the proper place
+# ..... (on Windows 7 and up), or you can directly set $HOME in /etc/bashrc,
+# ..... ~/export_local, or elsewhere that individual ".bashrc"s are likely to
+# ..... source.
 	location=$"." #"`pwd -P`"
 	regex=$""
 	findargs="-type f"
@@ -52,11 +61,11 @@ function grepr {
 	fi
 	dostring=$"find $location $findargs -exec grep -H '$regex' {} --color=always \\;"
 	# find $location $findargs -exec grep -H '$regex' {} --color=always \\\;
-	fn="~/grepr_`date +%s`.tmp"
-	echo $dostring > $fn 
-	chmod u+x ~/fine
-	. ~/fine
-	# rm ~/fine
+	fn=$"grepr_`date +%s`.tmp"
+	echo "$dostring" > "$fn"
+	chmod u+x "$fn" # enable execution for current user
+	. "$fn" # execute file in current shell
+	rm "$fn"
 }
 
 function unlock {
