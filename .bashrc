@@ -1,6 +1,10 @@
 #!/bin/bash
-# .bashrc
-
+#!/bin/bash
+#calledvia=$_ # must be first line to work
+#if [[ $calledvia != $0 ]]
+# if .bashrc is being sourced from elsewhere
+#fi
+ 
 #### Function-definitions: ####
 
 . ~/define_funcs
@@ -26,6 +30,7 @@ alias pwd='pwd -P'
 shopt -s extglob # enable shell-extensions
 git config --global push.default upstream
 git config --global color.ui auto # some systems oddly disable this
+PATH="~/bin2:$PATH"
 
 # weird stuff:
 alias l='ls'

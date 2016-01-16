@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# find xext:
+xextpath=$""
+foundit=0
+for xextpath in "/binbin/xext" "$HOME/bin2bin/xext"; do
+	if [ -f "$xextpath" ]; then
+		foundit=1
+		break
+	fi
+done
+# :find xext
+if (( $foundit == 0  )); then
+		echo -n tarup could not find xext. exiting.
+		kill -INT $$
+fi
+
+if (( $# > 1 )); then
+	tar -cvzf $*
+else
+	extension=$".`$xextpath $1`"
+	outputname=$"$(basename "$1" "$extension").tar"
+	if [ -d "$1" ]; then
+	# if directory was given
+		tar -cvzf "$1".tar "$1"
+		# ^ this prevents that obnoxious and confounding
+		# ^.. "cowardly refusing to create an empty archive" message
+	elif [ -f "$1" ]; then
+	# if regular file was given
+		tar -cvzf "$outputname" --add-file="$1"
+	fi
+fi
