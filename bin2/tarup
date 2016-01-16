@@ -3,7 +3,7 @@
 # find xext:
 xextpath=$""
 foundit=0
-for xextpath in "/binbin/xext" "$HOME/bin2bin/xext"; do
+for xextpath in "/bin/xext" "$HOME/bin/xext"; do
 	if [ -f "$xextpath" ]; then
 		foundit=1
 		break
