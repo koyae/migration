@@ -1,0 +1,20 @@
+#!/bin/bash
+# xext - extract extension
+if [[ $# < 1 || "$1" == "-h" || "$1" == "--help" || "$1" == "-?" ]]; then
+	echo
+	echo xext - extract extension
+	echo
+	echo '	Usage: xext <string>'
+	echo '	Output: file'\''s extension (if any) WITHOUT the leading dot'
+	kill -INT $$
+fi
+entire=$"$*"
+filename=$(basename "$entire") 
+#echo \($filename\)
+if [[ $filename =~ \. ]]; then
+	echo "${filename##*.}"
+else
+	echo
+fi
+
+# original code courtesy http://stackoverflow.com/questions/965053/
