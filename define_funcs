@@ -68,6 +68,20 @@ function grepr {
 	rm "$fn"
 }
 
+function prepend {
+	if (( $# < 2 )); then
+		echo Two or more arguments required. Usage: prepend <prefix> file1[ file2...]
+	else
+		prefix=$1
+		shift # move past the prefix so all remaining params are files
+		while (( $# > 0 )); do
+			sed -i "1i $prefix" $1
+			shift
+		done
+	fi
+}
+ 
+
 function unlock {
 	if (( $# < 1 )); then
 		echo 'No arguments received. Usage: unlock <file>'
