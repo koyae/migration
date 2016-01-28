@@ -1,14 +1,22 @@
 #!/bin/bash
 ## tarall
 
-## tarall [-f]
+## tarall [-f] [-p]
 ## tar up all the folders which are top-level in the current directory, then remove them 
-   
+
+function tar_then_del {
+	tar -czvf "$1".tar "$1" && rm -r -f "$1"
+	# Above, the && means only do the file-removal if `tar` succeeds
+}
+export -f tar_then_del
+
 getconfirm=1
-while getopts ":f" opt; do
+changepermissions=0
+while getopts ":fp" opt; do
 	if [[ "$opt" = "f"  ]]; then
 		getconfirm=0
-		break
+	elif [[ $opt = "p" ]]; then
+		changepermissions=1
 	else
 		echo $OPTARG is not a valid argument.
 	fi
@@ -25,5 +33,14 @@ if (( getconfirm )); then
 	fi
 	shopt -u nocasematch
 fi
-find . -maxdepth 1 -mindepth 1 -type d -exec tar cvzf "{}.tar" "{}" \; -exec rm -r -f "{}" \;
+find . -maxdepth 1 -mindepth 1 -type d -exec bash -c 'tar_then_del "$0"' {} \;
+# ^ bash -c '<command> "$0"' {} will pass in the matching location/file in
+# ^.. and special characters will be handled for all cases this way. Other ways
+# ^.. cause problems under certain circumstances e.g. quotes in filenames, etc.
+# ^ We have to launch a shell because only the shell can execute functions
+# ^.. as opposed to scripts saved as files.
+if (( $changepermissions == 1 )); then 
+	chmod g+swr ./* --silent
+	chmod o-wrx ./* --silent
+fi
 exit 0
