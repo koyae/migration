@@ -180,7 +180,7 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 	" visual ctrlH starts replacement within selection
 	vnoremap <C-h>  :s/
 	" ctrlR replaces the selected text:
-	vnoremap <C-r> "hy:%s/<C-r>h//<left><left>
+	vnoremap <C-r> "hy:%s/<C-r>h//<left>
 	" credit: http://stackoverflow.com/questions/676600/
 
 "-------------------Keybinding overrides-------------------:
