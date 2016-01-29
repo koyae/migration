@@ -20,6 +20,7 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 	:set gdefault " find-and-replace defaults to global rather than just current line
 	:set autoindent " keep the current indentation on new <CR>. Negate with :setlocal noautoindent
 	:set splitright " make :vs open on right instead of bumping current pane over
+	:set splitbelow " make :split open files on the bottom instead of bumping current pane down
 	:set tabstop=4 " make tab-characters display as 4 spaces instead of default 8 
 	:set shiftwidth=4 " make '>' (angle bracket) behave itself
 	:set ignorecase smartcase "searching is non-case-sensitive unless there's a cap
@@ -179,7 +180,7 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 	" visual ctrlH starts replacement within selection
 	vnoremap <C-h>  :s/
 	" ctrlR replaces the selected text:
-	vnoremap <C-r> "hy:%s/<C-r>h//g<left><left>
+	vnoremap <C-r> "hy:%s/<C-r>h//<left><left>
 	" credit: http://stackoverflow.com/questions/676600/
 
 "-------------------Keybinding overrides-------------------:
