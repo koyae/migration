@@ -23,7 +23,7 @@ fi
 alias mv='mv -i'
 alias cp='cp -i'
 alias ls='ls --color'
-alias du='du -h'
+alias du='duc'
 alias df='df -h'
 alias reup='echo Reloading .bashrc && . ~/.bashrc'
 alias pwd='pwd -P'

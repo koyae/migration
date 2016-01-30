@@ -105,6 +105,15 @@ function sis {
     cd ../"$1"
 }
 
+function duc {
+	# below, we ignore aliases on `du` with `command`
+	if (( $# < 1 )); then
+		command du -h -s *
+	else
+		command du -h "$@"
+	fi
+}
+
 function xviml {
 # view the contents of an xml-file after formatting has been applied
 	if (( $# < 1 )); then
