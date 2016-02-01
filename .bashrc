@@ -38,7 +38,6 @@ alias ll='ls -l'
 alias down='cd'
 alias lastat='cd "$(cat ~/lastat)"'
 alias lastam='pwd > ~/lastat'
-alias untar='tar zxvf'
  
 # General envs:
 if [[ -f ~/export_envs ]]; then . ~/export_envs ; fi
