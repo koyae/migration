@@ -68,6 +68,14 @@ function grepr {
 	rm "$fn"
 }
 
+function ps {
+	if (( $# == 2 )) && [[ "$1" == "aux" ]]; then
+		command ps aux | grep "$2"
+	else
+		command ps "$@"
+	fi
+}
+
 function prepend {
 	if (( $# < 2 )); then
 		echo Two or more arguments required. Usage: prepend <prefix> file1[ file2...]
