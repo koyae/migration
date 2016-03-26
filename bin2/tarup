@@ -10,7 +10,7 @@ for xextpath in "/bin/xext" "$HOME/bin/xext"; do
 	fi
 done
 # :find xext
-if (( $foundit == 0  )); then
+if (( $foundit == 0 )); then
 		echo -n tarup could not find xext. exiting.
 		kill -INT $$
 fi
