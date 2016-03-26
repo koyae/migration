@@ -4,6 +4,7 @@
 #
 # Export cross-system and local machine settings
 #
+export EDITOR="vim"
 export HISTIGNORE="ls" # don't store plain ls-commands in bash history
 export HISTFILESIZE=100000
 export LS_COLORS=$LS_COLORS:'di=0;34:ln=0;36:ex=0;32:' 
