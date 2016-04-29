@@ -16,17 +16,26 @@ if (( $foundit == 0 )); then
 fi
 
 if (( $# > 1 )); then
+# if a bunch of arguments were given, we just pass them along to tar
+# with the flags we know are desigred, like we would with a plain alias
 	tar -cvzf $*
 else
 	extension=$".`$xextpath $1`"
-	outputname=$"$(basename "$1" "$extension").tar"
+	echo extension: $extension
+	outputname=$"$(basename "$1" "$extension")"
+	outputname=$"$(echo $outputname | sed 's/\/$//g').tar"
+	# ^ remove trailing slashes so sytem does not try to create passedInFolder/.tar
+	# as the .tar will get picked up as well, causing the command to fail with
+	# tar: <filename>: file changed as we read it
 	if [ -d "$1" ]; then
-	# if directory was given
-		tar -cvzf "$1".tar "$1"
-		# ^ this prevents that obnoxious and confounding
-		# ^.. "cowardly refusing to create an empty archive" message
+	# if directory was given:
+		tar -cvzf "$outputname" "$1"
 	elif [ -f "$1" ]; then
-	# if regular file was given
+	# if regular file was given:
 		tar -cvzf "$outputname" --add-file="$1"
+	else
+		echo 'tarup: error: received non-regular, non-directory file as target.'
+		exit 1
 	fi
+	exit 0
 fi

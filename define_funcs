@@ -81,7 +81,9 @@ function grepr {
 
 function ps {
 	if (( $# == 2 )) && [[ "$1" == "aux" ]]; then
-		command ps aux | grep "$2"
+		psResults=$"`command ps aux`"
+		echo "$psResults" | awk 'NR==1'
+		echo "$psResults" | grep "$2"
 	else
 		command ps "$@"
 	fi
