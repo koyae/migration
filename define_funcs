@@ -101,7 +101,19 @@ function prepend {
 		done
 	fi
 }
- 
+
+function nuke {
+	if (( $# < 1 )); then
+		echo 'One or more arguments required. Useage: nuke file1[ file2...]'
+		echo 'Overwrites file(s) with an empty regular file.'
+		kill -INT $$		
+	fi
+	for a in "$@"; do
+		rm "$a"
+		touch "$a"
+	done
+}
+
 function untar {
 	if (( $# < 1 )); then
 		echo 'No arguments received. Usage: untar <archiveFile>'
