@@ -1,0 +1,84 @@
+#!/bin/bash
+
+function isregular(){
+	if ! [ -f "$1" ]; then
+		echo
+		echo "$1 is not a regular file or does not exist."
+		exit 1
+	fi
+}
+
+# ---- Easy outs:
+
+if (( $# < 1 || $# > 2 )); then
+	echo
+	echo debom - tool for removing UTF-8 BOM-tables from text or SQL-files
+	echo Accepts 1 or 2 arguments - no more, no fewer.
+	echo 'Usage: debom <utf8_file_with_bom> [<outputname>]'
+	exit 126	
+fi
+
+isregular "$1"
+if (( $# == 2 )); then
+	isregular "$2"
+fi
+
+# 9: Extract first few bits from file to ensure BOM-table exists
+# and then check them against the known BOM-table bits (assigned
+# to a variable above):
+ 
+bombits="0000000 bbef 5cbf" # seeing these leading bits means BOM is present
+headbits=$(hexdump "$1" | head -n 1 | cut -d ' ' -f 1-3 -)
+
+if [[ "$headbits" != "$bombits"  ]]; then
+	echo
+	echo "debom: Input file does not appear to have a BOM-table. Exiting."
+	kill -INT $$
+fi # :9
+
+# ---- :Easy outs
+
+outname='' # var which will store name of output file
+overwrite=0
+
+outname="$1".bomless
+if (( $# == 1 )); then
+	echo
+	echo "debom can create $outname or overwrite the current file."
+	echo -n "Overwrite $1? (y/n)"
+	read
+	if [[ $REPLY == y* ]] || [[ $REPLY == Y* ]]; then
+		overwrite=1
+	fi
+elif [[ "$1" == "$2" ]]; then
+	overwrite=1
+fi
+
+
+
+# If we made it past the above check, actually do the removal here:
+tail -c +4 "$1" > "$outname" 
+
+ 
+# If it appears the removal did not succeed, declare it and exit:
+if (( $? != 0 )); then
+	echo
+	echo "Something went wrong."
+	echo "You may not have permission to write to $outname or read from $1"
+	kill -INT $$ 
+fi
+
+# If we stripped the table successfully, tell the user the good news:
+echo
+if (( $? == 0 && $overwrite == 1 )); then
+	mv -f "$outname" "$1"
+	echo "File written to $1"
+	echo
+else
+	echo "File written to $outname"
+	echo
+fi
+
+# NOTE: could also use `isutf8` from moreutils package for extra safety
+# but it's probably fine for now.
+
