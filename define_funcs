@@ -192,10 +192,11 @@ function sviml {
 		echo 'Format PostgreSQL and open in vim. Saving afterwards optional. Usage: sviml <file>'
 		kill -INT $$
 	fi
-	vim "$1" -c 'normal ggVGU'
+	# vim "$1" -c 'call ChangeSqlCase()'
+	vim "$1" -c 'normal ggVG:call ChangeSqlCase()'
 	# ^ gg goes to top
 	# ^.. V starts selecting by line
 	# ^.. G goes to bottom
-	# ^.. U is a custom mapping to do the SQL-capitalizing magic
+	# ^.. Then we call a custom function to fix the case and hit enter
 }
 
