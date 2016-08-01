@@ -201,8 +201,6 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 	nmap <silent> <expr> o InsertLineBelow() . "\<Esc>"
 	nmap <silent> <expr> O InsertLineAbove() . "\<Esc><C-Del>"
 
-	vnoremap s _x 
-  
 	nmap <Up> gk
 	nmap <Down> gj
 	vmap <Up> gk
@@ -210,7 +208,9 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 	" 2^ wrap according to what's shown on screen versus using \n 
 
 	" s-key does not yank, just deletes:
-	vnoremap s "_xi
+	vnoremap s "_x
+	" x-key does not yank, just deletes:
+	vnoremap x "_x
 
 	" z-key undo:
 	nmap z u
