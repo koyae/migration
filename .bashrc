@@ -27,6 +27,7 @@ alias du='duc'
 alias df='df -h'
 alias reup='echo Reloading .bashrc && . ~/.bashrc'
 alias pwd='pwd -P'
+alias ssh='ssh -a' # disable agent-forwarding
 shopt -s extglob # enable shell-extensions
 git config --global push.default upstream
 git config --global color.ui auto # some systems oddly disable this

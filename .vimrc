@@ -109,6 +109,8 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 		if col('.') == first_nonblank
 			return '0'  " if at first nonblank, go to start line
 		endif
+
+
 		return &wrap && wincol() > 1 ? 'g^' : '^'
 	endfunction
 
@@ -199,11 +201,16 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 	nmap <silent> <expr> o InsertLineBelow() . "\<Esc>"
 	nmap <silent> <expr> O InsertLineAbove() . "\<Esc><C-Del>"
 
+	vnoremap s _x 
+  
 	nmap <Up> gk
 	nmap <Down> gj
 	vmap <Up> gk
 	vmap <Down> gj
 	" 2^ wrap according to what's shown on screen versus using \n 
+
+	" s-key does not yank, just deletes:
+	vnoremap s "_xi
 
 	" z-key undo:
 	nmap z u
@@ -215,11 +222,11 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 	nnoremap <Insert> i<Insert>
 
 	" shiftU capitalizes SQL keywords: 
-	vnoremap <silent> U :call ChangeSqlCase() <Return><Return>
+	vnoremap <silent> <C-u> :call ChangeSqlCase() <Return><Return>
  	" ctrlU capitalizes any alphas in selection:
-	vnoremap <silent> <C-u> U
+	vnoremap <silent> U gU
 	" ctrlShiftU lowercases any alphas in selection:
-	vnoremap <silent> <C-U> u 
+	vnoremap <silent> u gu 
 
 "-- Selection stuff
 
@@ -236,7 +243,10 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 	" ctrlLeft jumps by word like in most text editors:
 	vnoremap <C-Left> <S-Left>
 	":4 sadly the previous two aliases do not quite work in PuTTY 
-  
+	
+	" ctrlA does select all:
+	nnoremap <C-a> gg<S-v>G
+
 "-- Normal-mode passthroughs for 
 
 	" backslash-key, forwardslash-key, double-quote-key
