@@ -200,3 +200,15 @@ function sviml {
 	# ^.. Then we call a custom function to fix the case and hit enter
 }
 
+function shortfind {
+# If given a single search-term, do a sliding search in the current directory 
+# otherwise works like standard find
+	if (( $# == 0 )); then
+		kill -INT $$
+	elif (( $# != 1 )); then
+		command find $@
+	else
+		term='*'"$1"'*'
+		command find . -iname "$term"
+	fi
+}
