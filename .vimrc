@@ -36,10 +36,7 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 	:Alias Wq wq
 	:Alias qw wq
 	:Alias Q q
-	:Alias Q! q!
 	:Alias W w
-	:Alias W! w!
-	
  
 "-------------------Functions------------------------------:
 
