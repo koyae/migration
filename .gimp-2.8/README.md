@@ -49,8 +49,8 @@ If you hop machines all the time and do not want to point GIMP to an additional 
 
 On Windows, the something like the above line can be added to either of two files:
 
-* "_cywinDirectory_\\home\\_userName_\\.gimp-_version_/gimprc" 
-* or "_gimpInstallDir_/etc/gimp/_majorVersion_/gimprc". 
+* "_cywinDirectory_\\home\\_userName_\\.gimp-_version_\\gimprc" 
+* or "_gimpInstallDir_\\etc\\gimp\\_majorVersion_\\gimprc". 
 
 Keep in mind that since the list is colon-separated, it may be necessary to escape volume-prefixes like 'C:' as 'C\\:'.
 
