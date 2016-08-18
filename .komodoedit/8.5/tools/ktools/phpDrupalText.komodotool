@@ -1,0 +1,18 @@
+{
+  "keyboard_shortcut": "Ctrl+T", 
+  "name": "phpDrupalText", 
+  "language": "JavaScript", 
+  "trigger": "trigger_postopen", 
+  "value": [
+    "// Macro recorded on: Mon Apr 18 2016 14:52:16 GMT-0600 (Mountain Standard Time)", 
+    "komodo.assertMacroVersion(3);", 
+    "if (komodo.view) { komodo.view.setFocus(); }", 
+    "komodo.view.selection = 't()';", 
+    "ko.commands.doCommand('cmd_left')"
+  ], 
+  "version": "1.0.12", 
+  "rank": 100, 
+  "trigger_enabled": false, 
+  "async": false, 
+  "type": "macro"
+}
