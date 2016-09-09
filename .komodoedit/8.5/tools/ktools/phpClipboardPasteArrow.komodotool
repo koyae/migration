@@ -1,0 +1,18 @@
+{
+  "keyboard_shortcut": "", 
+  "name": "phpClipboardPasteArrow", 
+  "language": "JavaScript", 
+  "trigger": "trigger_postopen", 
+  "value": [
+    "// Macro recorded on: Thu Oct 29 2015 15:59:02 GMT-0600 (Mountain Standard Time)", 
+    "komodo.assertMacroVersion(3);", 
+    "if (komodo.view) { komodo.view.setFocus(); }", 
+    "ko.commands.doCommand('cmd_paste')", 
+    "komodo.view.selection = '->';"
+  ], 
+  "version": "1.0.12", 
+  "rank": 100, 
+  "trigger_enabled": false, 
+  "async": false, 
+  "type": "macro"
+}

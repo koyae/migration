@@ -1,0 +1,14 @@
+{
+  "keyboard_shortcut": "Alt+A", 
+  "name": "phpArray", 
+  "value": [
+    "array([[%tabstop]])[[%tabstop:;]][[%tabstop:]]!@#_currentPos!@#_anchor"
+  ], 
+  "set_selection": "false", 
+  "version": "1.0.12", 
+  "indent_relative": "false", 
+  "icon": "chrome://komodo/skin/images/snippet.png", 
+  "type": "snippet", 
+  "treat_as_ejs": "false", 
+  "auto_abbreviation": "false"
+}

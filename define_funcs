@@ -24,9 +24,9 @@ function s3cmd {
 
 function up {
 	rungnum=1 # how many ladder-rungs to climb, default just 1 level if no args
-	absprefix=$"`pwd`" # the actual prefix to give to `cd`. Opts may modify.
+	absprefix=$"." # the actual prefix to give to `cd`. Opts may modify.
 	while getopts ":S" opt; do
-		if [[ "$opt" == 'S' ]]; then
+		if [[ "$opt" == "S" ]]; then
 			absprefix="`pwd -P`"
 			shift # allow rungnum to be picked up as $1 below
 		elif [[ "$opt" == '?' ]]; then
@@ -200,3 +200,15 @@ function sviml {
 	# ^.. Then we call a custom function to fix the case and hit enter
 }
 
+function shortfind {
+# If given a single search-term, do a sliding search in the current directory 
+# otherwise works like standard find
+	if (( $# == 0 )); then
+		kill -INT $$
+	elif (( $# != 1 )); then
+		command find $@
+	else
+		term='*'"$1"'*'
+		command find . -iname "$term"
+	fi
+}

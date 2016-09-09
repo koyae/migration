@@ -1,0 +1,17 @@
+{
+  "keyboard_shortcut": "F7", 
+  "name": "phpStatic", 
+  "language": "JavaScript", 
+  "trigger": "trigger_postopen", 
+  "value": [
+    "// Macro recorded on: Mon Nov 02 2015 17:33:23 GMT-0700 (Mountain Standard Time)", 
+    "komodo.assertMacroVersion(3);", 
+    "if (komodo.view) { komodo.view.setFocus(); }", 
+    "komodo.view.selection = 'static::';"
+  ], 
+  "version": "1.0.12", 
+  "rank": 100, 
+  "trigger_enabled": false, 
+  "async": false, 
+  "type": "macro"
+}

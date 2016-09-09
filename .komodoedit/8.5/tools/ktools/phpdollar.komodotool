@@ -1,0 +1,17 @@
+{
+  "keyboard_shortcut": "Shift+F4###F4", 
+  "name": "phpdollar", 
+  "language": "JavaScript", 
+  "trigger": "trigger_postopen", 
+  "value": [
+    "// Macro recorded on: Mon Mar 16 2015 16:47:38 GMT-0600 (Mountain Standard Time)", 
+    "komodo.assertMacroVersion(3);", 
+    "if (komodo.view) { komodo.view.setFocus(); }", 
+    "komodo.view.selection = '$';"
+  ], 
+  "version": "1.0.12", 
+  "rank": 100, 
+  "trigger_enabled": false, 
+  "async": false, 
+  "type": "macro"
+}
