@@ -48,7 +48,7 @@ hi Identifier cterm=NONE ctermfg=DarkCyan    gui=NONE guifg=cyan4
 hi PreProc    cterm=NONE ctermfg=DarkMagenta gui=NONE guifg=magenta3
 hi Special    cterm=NONE ctermfg=LightRed    gui=NONE guifg=deeppink
 hi Statement  cterm=bold ctermfg=Blue	     gui=bold guifg=blue
-hi String     cterm=NONE ctermfg=Yellow    gui=NONE guifg=SkyBlue 
+hi String     cterm=NONE ctermfg=DarkYellow   gui=NONE guifg=SkyBlue 
 hi Type	      cterm=NONE ctermfg=Blue	     gui=bold guifg=blue
 
 " vim: sw=2
