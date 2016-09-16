@@ -3,7 +3,7 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 
 "--------------------Plugin Imports------------------------:
 	:source ~/.vim/plugin/cmdalias.vim
-
+	execute pathogen#infect()
 "---------------------User settings------------------------:
 
 "-- Display

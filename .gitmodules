@@ -1,0 +1,6 @@
+[submodule ".vim/plugin/vim-pathogen"]
+	path = .vim/plugin/vim-pathogen
+	url = https://github.com/tpope/vim-pathogen
+[submodule ".vim/bundle/emmet-vim"]
+	path = .vim/bundle/emmet-vim
+	url = https://github.com/mattn/emmet-vim
