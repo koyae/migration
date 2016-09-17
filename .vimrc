@@ -1,5 +1,6 @@
 " Custom Filetypes:
 autocmd BufNewFile,BufRead, *.postgre setf pgsql
+autocmd BufNewFile,BufRead, pom.xml set tabstop=2 expandtab shiftwidth=2
 
 "--------------------Plugin Imports------------------------:
 	:source ~/.vim/plugin/cmdalias.vim
@@ -17,6 +18,7 @@ autocmd BufNewFile,BufRead, *.postgre setf pgsql
 "-- I/O
 	:set bs=2
 	:set mouse=n
+	:set ttymouse=sgr
 	:set gdefault " find-and-replace defaults to global rather than just current line
 	:set autoindent " keep the current indentation on new <CR>. Negate with :setlocal noautoindent
 	:set splitright " make :vs open on right instead of bumping current pane over
