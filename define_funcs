@@ -3,6 +3,7 @@
 
 # remember to source this BEFORE you try to export the stuff
 
+# Complex `s3cmd` wrapper:
 function s3cmd {
 	# define keys if needed:
 	if [ -z "$AWS_SECRET_KEY" ]; then
@@ -22,6 +23,7 @@ function s3cmd {
 	fi
 }
 
+# Move current working directory up one or more levels:
 function up {
 	rungnum=1 # how many ladder-rungs to climb, default just 1 level if no args
 	absprefix=$"." # the actual prefix to give to `cd`. Opts may modify.
@@ -46,6 +48,7 @@ function up {
 	cd "$absprefix/$gohere"
 }
 
+# recursive grep / grep recursive
 function grepr {
 # NOTE: to allow this function to work in readonly directories, 
 # ..... the "~" ($HOME) directory is used to write a temporary file.
@@ -98,6 +101,7 @@ function grepr {
 	rm "$fn"
 }
 
+# [ Complex alias for builtin `ps` command ]
 function ps {
 	if (( $# == 2 )) && [[ "$1" == "aux" ]]; then
 		psResults=$"`command ps aux`"
@@ -108,6 +112,7 @@ function ps {
 	fi
 }
 
+# Write to the beginning of a file
 function prepend {
 	if (( $# < 2 )); then
 		echo Two or more arguments required. Usage: prepend <prefix> file1[ file2...]
@@ -121,6 +126,7 @@ function prepend {
 	fi
 }
 
+# Delete the contents of a file
 function nuke {
 	if (( $# < 1 )); then
 		echo 'One or more arguments required. Useage: nuke file1[ file2...]'
@@ -133,6 +139,7 @@ function nuke {
 	done
 }
 
+# Uncompress tar'd files:
 function untar {
 	if (( $# < 1 )); then
 		echo 'No arguments received. Usage: untar <archiveFile>'
@@ -145,6 +152,7 @@ function untar {
 	fi
 }
   
+# Remove vim lockfiles
 function unlock {
 	if (( $# < 1 )); then
 		echo 'No arguments received. Usage: unlock <file>'
@@ -156,22 +164,27 @@ function unlock {
 	fi
 }
 
+# Change current working directory to the absolute directory of a symlink
 function cdl {
     cd "$(dirname "$(readlink "$1")")"
 }
 
+# Alias for cdl function (defined above)
 function lcd {
 	cdl "$@"
 }
 
+# Convert a Windows-style file-path to a linux-style one
 function wcd {
 	cd $(echo "$1" | sed 's/\\\\/\//g')
 }
 
+# Change current working directory to a parallel directory
 function sis {
     cd ../"$1"
 }
 
+# [ Complex alias for builtin `du` command ]
 function duc {
 	# below, we ignore aliases on `du` with `command`
 	if (( $# < 1 )); then
@@ -179,6 +192,16 @@ function duc {
 	else
 		command du -h "$@"
 	fi
+}
+
+# Output a table of contents for a zip-file:
+function toc {
+	if (( $# < 1 )); then
+		echo 'toc function - exports a table of contents for a zip-file'
+		echo "\tUsage: toc <file>.zip"
+	fi
+	vim -c "w $1.toc" -c "q" "$1"
+	echo "Saved toc to $1.toc"
 }
 
 function xviml {
