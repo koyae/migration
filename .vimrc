@@ -1,10 +1,20 @@
 " Custom Filetypes:
 autocmd BufNewFile,BufRead, *.postgre setf pgsql
-autocmd BufNewFile,BufRead, pom.xml set tabstop=2 expandtab shiftwidth=2
+autocmd BufNewFile,BufRead, pom.xml,web.xml set tabstop=2 expandtab shiftwidth=2
+
+
+"--------------------Compatibility settings----------------:
+	:set nocompatible
+	:set <S-Left>=[D
+	:set <S-Right>=[C
+	:set <C-Left>=OD
+	:set <C-Right>=OC
+	:set <A-z>=z
 
 "--------------------Plugin Imports------------------------:
 	:source ~/.vim/plugin/cmdalias.vim
 	execute pathogen#infect()
+
 "---------------------User settings------------------------:
 
 "-- Display
@@ -27,12 +37,6 @@ autocmd BufNewFile,BufRead, pom.xml set tabstop=2 expandtab shiftwidth=2
 	:set shiftwidth=4 " make '>' (angle bracket) behave itself
 	:set ignorecase smartcase "searching is non-case-sensitive unless there's a cap
 	:set shellcmdflag=-ic
-"- compatability 
-	:set nocompatible
-	:set <S-Left>=[D
-	:set <S-Right>=[C
-	:set <C-Left>=OD
-	:set <C-Right>=OC
 
 "-- cmdalias.vim aliases
 	:Alias Wq wq
@@ -188,6 +192,10 @@ autocmd BufNewFile,BufRead, pom.xml set tabstop=2 expandtab shiftwidth=2
 
 "-------------------Keybinding overrides-------------------:
 
+"-- Emmet bindings:
+	" altZ expands tags instead of Emmet's default two-step shortcut ctrlY-then-,
+	imap <A-z> <C-Y>,
+
 "-- Smarthome bindings:
 	noremap <expr> <silent> <Home> SmartHome()
 	imap <silent> <Home> <C-O><Home>
@@ -275,5 +283,3 @@ autocmd BufNewFile,BufRead, pom.xml set tabstop=2 expandtab shiftwidth=2
 	nnoremap <silent> <expr> x SmartX()
 	" ctrlDelete deletes rest of line
 	nmap <C-kDel> v<S-$><Left>x 
-
-
