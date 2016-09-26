@@ -22,11 +22,11 @@ fi
 # Shell tweaks: 
 alias mv='mv -i'
 alias cp='cp -i'
+alias cd='c_d'
 alias ls='ls --color'
 alias du='duc'
 alias df='df -h'
 alias reup='echo Reloading .bashrc && . ~/.bashrc'
-alias pwd='pwd -P'
 alias ssh='ssh -a' # disable agent-forwarding
 alias find='shortfind'
 shopt -s extglob # enable shell-extensions
