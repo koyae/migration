@@ -27,6 +27,7 @@ alias ls='ls --color'
 alias du='duc'
 alias df='df -h'
 alias reup='echo Reloading .bashrc && . ~/.bashrc'
+alias pwdp='pwd -P'
 alias ssh='ssh -a' # disable agent-forwarding
 alias find='shortfind'
 shopt -s extglob # enable shell-extensions

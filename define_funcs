@@ -246,7 +246,7 @@ function shortfind {
 function c_d {
 	if ! [ -d "$1" ]; then
 		echo "$1 is not a directory. Changing to parent dir instead."
-		command cd "$(dirname "$1"`)"
+		command cd "$(dirname "$1")"
 		[ $PS1 ] && return 1 || exit 1;
 	else
 		command cd "$1"
