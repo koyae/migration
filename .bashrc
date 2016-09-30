@@ -40,6 +40,7 @@ alias l='ls'
 alias ll='ls -l'
 alias down='cd'
 alias cdP='cd "`pwd -P`"'
+alias cdgr='cd "`git rev-parse --show-toplevel`"'
 alias lastat='cd "$(cat ~/lastat)"'
 alias lastam='pwd > ~/lastat'
  
