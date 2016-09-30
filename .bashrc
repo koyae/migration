@@ -54,8 +54,14 @@ if [[ -f ~/export_local ]]; then . ~/export_local ; fi
 # ^.. or describe local file-structure
 # ^ May export additional functions.
 
-####: Aliases and shell-tweaks ####
+APPDATA="/cygdrive/c/Users/`whoami`/AppData/Roaming"
+if ! [[ -d "$APPDATA" ]]; then
+	unset APPDATA
+else
+	USERPROFILE="/cygdrive/c/Users/`whoami`"
+fi
 
+####: Aliases and shell-tweaks ####
 
 # If not running interactively, don't do anything
 [[ "$-" != *i* ]] && return

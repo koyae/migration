@@ -250,6 +250,8 @@ function c_d {
 		return 1;
 	else
 		command cd $@
-		return 0;
+		return $?;
+		# ^ `command` is transparent to operations encountering errors, so we
+		# just go by what it tells us
 	fi
 }
