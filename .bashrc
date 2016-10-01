@@ -39,6 +39,7 @@ PATH="~/bin2:$PATH"
 alias l='ls'
 alias ll='ls -l'
 alias down='cd'
+alias cdP='cd "`pwd -P`"'
 alias lastat='cd "$(cat ~/lastat)"'
 alias lastam='pwd > ~/lastat'
  
