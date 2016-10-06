@@ -245,8 +245,16 @@ function shortfind {
 
 function c_d {
 	if (( $# > 0 )) && [ "$1" != "-" ] && ! [ -d "$1" ]; then
-		echo "$1 is not a directory. Changing to parent dir instead."
-		command cd "$(dirname "$1")"
+		local parentDir=$(dirname "$1")
+		echo "$1 is not a directory." 1>&2
+		if [[ -d "$parentDir" ]] && [[ "$parentDir" != "." ]]; then
+		# ^ dirname yields "." if passed the empty string. Since "." should
+		# pretty invariably test as a valid directory, we check for this
+		# separately. We can encounter this if the caller does a relative `cd`
+		# like `cd 0` in a directory where there is no subdir called '0'
+			echo  "Changing to parent dir instead." 1>&2
+			command cd "$parentDir"
+		fi
 		return 1;
 	else
 		command cd $@
