@@ -63,6 +63,7 @@ function grepr {
 	location=$"." #"`pwd -P`"
 	regex=$""
 	findargs="-type f"
+	dostring=""
 	if (( $# < 1 )); then
 		echo 'Recursive grep usage: grepr <regex> or grepr <location> <regex> [<args for find>]'
 		echo 'With the simple invocation, find will receive -type f. With the full invocation, this must be specified if desired.'
@@ -70,6 +71,7 @@ function grepr {
 	elif [[ $# -eq 1 ]]; then
 	# if we just got the one argument
 		regex="$1"
+		dostring="grep -R -H '$regex' . --color=always"
 	else # (( $# > 1 )); then
 	# if we got more than one argument
 		location=$"$1"
@@ -92,10 +94,10 @@ function grepr {
 			fi
 			shift
 		done
+		dostring=$"find $location $findargs -exec grep -H '$regex' {} --color=always \\;"
 	fi
-	dostring=$"find $location $findargs -exec grep -H '$regex' {} --color=always \\;"
 	# find $location $findargs -exec grep -H '$regex' {} --color=always \\\;
-	fn=$"grepr_`date +%s`.tmp"
+	fn=$"/tmp/`whoami`_grepr_`date +%s`.tmp"
 	echo "$dostring" > "$fn"
 	chmod u+x "$fn" # enable execution for current user
 	. "$fn" # execute file in current shell
