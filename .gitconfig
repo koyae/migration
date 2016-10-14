@@ -1,0 +1,31 @@
+[include]
+	path = .gitconfig2
+[color]
+	ui = auto
+	diff = auto
+	status = true
+	interactive = true
+	pager = true
+[push]
+	default = simple
+#	recursesubmodules = check
+[diff]
+	submodule = log
+[alias]
+	clone = clone --recursive
+[status]
+	submodulessummary = 1
+[alias "submodule"]
+	# if a submodule gets added in the current git directory, make sure
+	# that a recursive check is done on push/pull so that bad things
+	# don't happen
+	add = "\
+		!function f(){ \
+			if [[$(git config push.recursesubmodules) == '']]; then \
+				git config push.recursesubmodules check; \
+			fi \
+			git submodule add $@ \
+		} \
+		f \
+		echo push.recursesubmodules set to 'check' \
+		unset -f f"
