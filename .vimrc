@@ -20,6 +20,7 @@ autocmd BufNewFile,BufRead, pom.xml,web.xml set tabstop=2 expandtab shiftwidth=2
 "-- Display
 	colorscheme koyae
 	syntax on
+	let g:is_posix=1 " this will be right on 99% of systems
 	if exists('+breakindent')
 		:set breakindent " paragraphs moved all the way over if there's an indent in front (long line soft wrap)
 	endif
