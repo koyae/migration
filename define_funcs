@@ -259,7 +259,7 @@ function c_d {
 		fi
 		return 1;
 	else
-		command cd $@
+		command cd "$@"
 		return $?;
 		# ^ `command` is transparent to operations encountering errors, so we
 		# just go by what it tells us
