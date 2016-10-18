@@ -7,7 +7,7 @@
 	interactive = true
 	pager = true
 [push]
-	default = simple
+	default = upstream
 #	recursesubmodules = check
 [diff]
 	submodule = log

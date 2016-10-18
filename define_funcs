@@ -232,16 +232,24 @@ function sviml {
 
 function shortfind {
 # If given a single search-term, do a sliding search in the current directory 
-# otherwise works like standard find
-	if (( $# == 0 )); then
-		echo 'shortfind usage: shortfind <term>'
+	# assume contains-search first:
+	term='*'"$1"'*' # potentially nonfinal
+	if (( $# == 0 )) || (( $# > 2 )); then
+		echo 'shortfind usage: shortfind [-e] <term>'
+		echo '-e -- exact match'
 		kill -INT $$
-	elif (( $# != 1 )); then
-		command find $@
-	else
-		term='*'"$1"'*'
-		command find . -iname "$term"
+	elif (( $# == 2 )); then
+		if ! [[ "$@" = *-e* ]]; then
+			echo -e "\nTo use two arguments with shortfind, one must be -e"
+			echo 'For more information just use shortfind by itself to show help'
+			kill -INT $$
+		elif [[ "-e" = $1 ]]; then
+			term="$2"
+		elif [[ "-e" = $2 ]]; then
+			term="$1"
+		fi
 	fi
+	command find . -iname "$term"
 }
 
 
