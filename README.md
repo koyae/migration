@@ -41,7 +41,13 @@ Git does not allow cloning directly into non-empty folders, so making files acce
 ### Initialize submodules
 
 This repo includes vim-plugins which are managed as git submodules. To initialize them, run: **`git submodule update --init --recursive`** 
- 
+
+### Modify `.gitconfig`
+
+This repo uses `.gitconfig1` to avoid conflicts with `.gitconfig` since it may be written to often which causes conflicts when committing or synching with the repo.
+
+Run **`bin2/setup.sh`** to add the import lines to `.gitconfig` and then type `:q`, `<enter>` to exit vim or just do **`git config --global --add include.path <path to .gitconfig1>`** 
+
 ### Modify `/etc/bashrc` or `export_local__remove_my_tail`
 
 On Windows systems, the $HOME directory is not always set reliably, which can result in some VERY confusing behavior with regard to what `~` actually represents the shell versus saved scripts. (In the worst case, it can point to two different places, making its meaning ambiguous in certain cases.) 
