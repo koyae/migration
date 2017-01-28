@@ -1,4 +1,4 @@
-" Custom Filetypes:
+" Custom handling by filetype:
 autocmd BufNewFile,BufRead, *.postgre setf pgsql
 autocmd BufNewFile,BufRead, pom.xml,web.xml set tabstop=2 expandtab shiftwidth=2
 autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
@@ -10,7 +10,8 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	:set <C-Left>=OD
 	:set <C-Right>=OC
 	:set <A-z>=z
-
+	:set <C-A-x>=
+ 
 "--------------------Plugin Imports------------------------:
 	:source ~/.vim/plugin/cmdalias.vim
 	execute pathogen#infect()
@@ -55,9 +56,9 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 " Note that function! forces overwrite if necessary on creation of a funciton	
 
 	" Selects entire document then performs series of keystrokes in normal mode
-	function! SelectAllThenDo(keystrokeString)
+	function! SelectAllThenDo(commandString)
 		normal ggVG
-		exec a:keystrokeString
+		exec a:commandString
 	endfunction
 
 	function! GoopyMalchik()
@@ -178,6 +179,10 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	noremap <C-9> %
 	" ctrl0 jumps to matching parenthesis when one is selected, just like % does
 	noremap <C-0> %
+	" ctrlAltX deletes all lines
+	noremap <silent> <C-A-x> :call SelectAllThenDo("normal x") <Return>
+	" ctrlS saves current file.
+	nnoremap <C-s> :w <Return>
 	
 "-- Find and replace stuff
 
@@ -260,10 +265,14 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 "-- Normal-mode passthroughs for 
 
 	" backslash-key, forwardslash-key, double-quote-key
-	nmap <silent> <expr> / ToInsertBeforeCurrentChar('/')
+	for v in ["javascript","php","java","c","cpp","cs"]
+		let cmdstr = "autocmd Syntax, " . v . " nmap <silent> <expr> "
+		let cmdstr = cmdstr . "/ ToInsertBeforeCurrentChar('/')"
+		execute cmdstr 
+	endfor
 	nmap <silent> <expr> \ ToInsertBeforeCurrentChar('\')
-	nmap <expr> <silent> " ToInsertBeforeCurrentChar('"') 
-	" space makes a space before current character:
+	autocmd Syntax, vim nmap <expr> <silent> " ToInsertBeforeCurrentChar('"') 
+	" space inserts a space in front of current character:
 	noremap <silent> <expr> <Space> ToInsertBeforeCurrentChar(" ")
 	" enter-key acts like enter:
 	nmap <silent> <expr> <Return> ToInsertCr()
