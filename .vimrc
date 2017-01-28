@@ -183,6 +183,9 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	noremap <silent> <C-A-x> :call SelectAllThenDo("normal x") <Return>
 	" ctrlS saves current file.
 	nnoremap <C-s> :w <Return>
+	" ^ Note that many shell-clients bind ctrlS to send the freeze-output 
+	" signal (XOFF). This command won't work if that's not done. In most cases
+	" it can be disabled from .bashrc
 	
 "-- Find and replace stuff
 
