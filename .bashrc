@@ -33,6 +33,11 @@ shopt -s extglob # enable shell-extensions
 git config --global push.default upstream
 git config --global color.ui auto # some systems oddly disable this
 PATH="~/bin2:$PATH"
+stty stop ''
+stty start ''
+stty -ixon
+stty -ixoff
+# ^ 4: disable freeze and unfreeze commands to free ctrlS and ctrlQ
 
 # weird stuff:
 alias l='ls'
