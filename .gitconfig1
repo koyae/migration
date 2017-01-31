@@ -9,6 +9,18 @@
 [push]
 	default = upstream
 #	recursesubmodules = check
+[log]
+	# show short commit-hashes under `git log`:
+	abbrevCommit = true
+	# ^ This option was added in version 1.7.6.
+	# For previous versions this gives similar results:
+	# git config --global format.pretty "format:%C(yellow)%h%Creset
+	# Author %an: <%ce>
+	# Date:  %cd
+	#
+	#    %s
+	# 
+	# "
 [diff]
 	submodule = log
 [alias]
