@@ -7,7 +7,14 @@
 export EDITOR="vim"
 export HISTIGNORE="ls" # don't store plain ls-commands in bash history
 export HISTFILESIZE=100000
-export LS_COLORS=$LS_COLORS:'di=0;34:ln=0;36:ex=0;32:' 
-#^ blue directories, cyan symlinks, green executables 
+#^ store up to the last 100,000 commands, truncating away the oldest ones on
+# both login and logout
+export HISTSIZE=10000
+#^ store up to 10,000 commands for the current session, saving the most-recent
+# ones **from the current session** up to that number on logout. Also, load this
+# same number of past commands from the history-file on login for reuse in new
+# sessions (but don't store the old ones on logout.)
+export LS_COLORS=$LS_COLORS:'di=0;34:ln=0;36:ex=0;32:'
+#^ blue directories, cyan symlinks, green executables
 # http://linux-sxs.org/housekeeping/lscolors.html
-# http://askubuntu.com/a/466203/432173 
+# http://askubuntu.com/a/466203/432173
