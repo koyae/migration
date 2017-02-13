@@ -11,7 +11,6 @@ binding cmd_selectCharNext Shift+Right
 binding cmd_historyForward Alt+Right
 binding cmd_wordRight Ctrl+Right
 binding cmd_selectWordRight Ctrl+Shift+Right
-binding cmd_beginningOfWordExtend Ctrl+Shift+W
 binding cmd_endOfWord Ctrl+E
 binding cmd_newlineExtra Shift+Return
 binding cmd_newline Return
@@ -109,6 +108,7 @@ binding cmd_bookmarkToggle Ctrl+Shift+B
 binding cmd_bookmarkRemoveAll Ctrl+Shift+F2
 binding cmd_bookmarkGotoNext F1
 binding cmd_bookmarkGotoNext F2
+binding cmd_bookmarkGotoNext F2
 binding cmd_bookmarkGotoPrevious Shift+F1
 binding cmd_completeWord Ctrl+Space
 binding cmd_triggerPrecedingCompletion Ctrl+Shift+Space
@@ -166,3 +166,4 @@ binding cmd_editPrefsCurrent Shift+F3
 binding cmd_transientMarkPop Ctrl+Alt+Shift+M
 binding cmd_transientMarkSet Ctrl+M
 binding cmd_transientMarkMoveBack Alt+M
+binding cmd_closeAll Ctrl+Shift+W

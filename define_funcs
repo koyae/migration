@@ -71,7 +71,7 @@ function grepr {
 	elif [[ $# -eq 1 ]]; then
 	# if we just got the one argument
 		regex="$1"
-		dostring="grep -R -H '$regex' . --color=always"
+		dostring="grep -R -n -H '$regex' . --color=always "
 	else # (( $# > 1 )); then
 	# if we got more than one argument
 		location=$"$1"
@@ -94,7 +94,7 @@ function grepr {
 			fi
 			shift
 		done
-		dostring=$"find $location $findargs -exec grep -H '$regex' {} --color=always \\;"
+		dostring=$"find $location $findargs -exec grep -n -H '$regex' {} --color=always \\;"
 	fi
 	# find $location $findargs -exec grep -H '$regex' {} --color=always \\\;
 	fn=$"/tmp/`whoami`_grepr_`date +%s`.tmp"
