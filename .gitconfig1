@@ -21,6 +21,9 @@
 	#    %s
 	# 
 	# "
+	# Thanks to answers:
+	# 	stackoverflow.com/a/11884798/3159183
+	# 	stackoverflow.com/a/4820071/3159183
 [diff]
 	submodule = log
 [alias]
