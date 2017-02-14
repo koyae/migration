@@ -28,6 +28,14 @@
 	submodule = log
 [alias]
 	clone = clone --recursive
+	commit = "\
+		!function f(){ \
+			git commit \"$@\"\
+			git show | awk 'NR==2'\
+			# ^ always show author\
+		} \
+		f \
+		unset -f f"
 [status]
 	submodulessummary = 1
 [alias "submodule"]
@@ -36,10 +44,10 @@
 	# don't happen
 	add = "\
 		!function f(){ \
-			if [[$(git config push.recursesubmodules) == '']]; then \
+			if [[ $(git config push.recursesubmodules) == '' ]]; then \
 				git config push.recursesubmodules check; \
 			fi \
-			git submodule add $@ \
+			git submodule add \"$@\" \
 		} \
 		f \
 		echo push.recursesubmodules set to 'check' \
