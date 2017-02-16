@@ -10,6 +10,7 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	:set <C-Left>=OD
 	:set <C-Right>=OC
 	:set <A-z>=z
+	:set <A-s>=s
 	:set <C-A-x>=
  
 "--------------------Plugin Imports------------------------:
@@ -117,7 +118,6 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 			return '0'  " if at first nonblank, go to start line
 		endif
 
-
 		return &wrap && wincol() > 1 ? 'g^' : '^'
 	endfunction
 
@@ -160,9 +160,28 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
     function! SmartDelete()
         return AtEndOfLine()? "a\<Del>\<Esc>" : "x"
     endfunction
-
+	
 	function! SmartX()
-		return OnlyWhitespaceOnLine()? SmartDelete() : "x"
+		" Delete the whole line if we have only whitespace:
+		return OnlyWhitespaceOnLine()? 'V"_x' : '"_x'
+	endfunction
+	
+	function! SmartS()
+		let keySequence = '"_xi'
+		" If replacing (characters up to) the last character, make sure to
+		" insert starting from the first column that was replaced, rather than
+		" sometimes one back from that:
+		return AtEndOfLine()? keySequence . "\<Right>" : keySequence
+	endfunction
+
+	function! SaveSetting(settingName)
+		let estring = "let t:" . a:settingName . " = &" . a:settingName
+		exec estring
+	endfunction
+
+	function! RestoreSetting(settingName)
+		let estring = "let &" . a:settingName . " = t:" . a:settingName
+		exec estring
 	endfunction
 
 "---------------------Novel keybindings--------------------: 
@@ -170,34 +189,47 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	noremap <silent> <C-PgUp> gT
 	" ctrlPageDown goes to previous tab:
 	noremap <silent> <C-PgDown> gt
-	" ctrlUp swaps current line with above
+	" ctrlUp swaps current line with above:
 	nnoremap <C-Up> dd<Up><S-p>
-	" ctrlDown swaps current line with below
+	" ctrlDown swaps current line with below:
 	nnoremap <C-Down> ddp
-	noremap <C-q> :q
-	" ctrl9 jumps to matching parenthesis when one is selected, just like % does
+	" ctrlQ attempts to quit vim:
+	noremap <C-q> :qa<Return>
+	" ctrl9 jumps to matching parenthesis when one is selected, just like % does:
 	noremap <C-9> %
-	" ctrl0 jumps to matching parenthesis when one is selected, just like % does
+	" ctrl0 jumps to matching parenthesis when one is selected, just like % does:
 	noremap <C-0> %
-	" ctrlAltX deletes all lines
+	" ctrlAltX deletes all lines:
 	noremap <silent> <C-A-x> :call SelectAllThenDo("normal x") <Return>
-	" ctrlS saves current file.
+	" ctrlS saves current file:
 	nnoremap <C-s> :w <Return>
 	" ^ Note that many shell-clients bind ctrlS to send the freeze-output 
 	" signal (XOFF). This command won't work if that's not done. In most cases
 	" it can be disabled from .bashrc
 	
+	" altS clears trailing whitespace if present then places a semicolon at EOL:
+	nnoremap <silent> <A-s> :call SaveSetting('hlsearch')<Return>
+		\:set nohlsearch<Return>
+		\:s/\s\+$//e<Return>
+		\i<End>;<Esc>
+		\:noh<Return>
+		\:call RestoreSetting('hlsearch')<Return>
+	" ^ This currently clears the selection we had previously. The workaround
+	" for avoiding that would be to just use a function to remove the
+	" undesirable characters without using the standard search/replace-commands.
+
 "-- Find and replace stuff
 
-	" ctrlF opens search mode
+	" ctrlF opens search mode:
 	nnoremap <C-f> /
-	" normal ctrlH starts a document-wide replace
+	" normal ctrlH starts a document-wide replace:
 	nnoremap <C-h> :%s/
-	" visual ctrlH starts replacement within selection
+	" visual ctrlH starts replacement within selection:
 	vnoremap <C-h>  :s/
 	" ctrlR replaces the selected text:
 	vnoremap <C-r> "hy:%s/<C-r>h//<left>
 	" credit: http://stackoverflow.com/questions/676600/
+	vmap <Return> <Del>
 
 "-------------------Keybinding overrides-------------------:
 
@@ -209,10 +241,11 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	noremap <expr> <silent> <Home> SmartHome()
 	imap <silent> <Home> <C-O><Home>
 	noremap <expr> <Home> (col('.') == matchend(getline('.'), '^\s*')+1 ? '0' : '^')
-	noremap <expr> <End> (col('.') == match(getline('.'), '\s*$') ? '$' : 'g_')
-	vnoremap <expr> <End> (col('.') == match(getline('.'), '\s*$') ? '$h' : 'g_')
+	noremap <expr> <End> match( getline('.'), '\s\+$' ) != -1 ? 'g_<Right>' : 'g_'
+	vnoremap <expr> <End> (col('.') == match(getline('.'), '\s\+$') ? '$h' : 'g_')
 	imap <Home> <C-o><Home>
-	imap <End> <C-o><End>
+	" Always place the cursor 1 column right of the last non-whitespace: 
+	imap <End> <C-o>g_<Right>
 	 
 	"2: o-key and shiftO insert a line below or above the current one (without staying in insert mode)
 	" the x below deletes the autoindent whitespace 2:
@@ -226,9 +259,9 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	" 2^ wrap according to what's shown on screen versus using \n 
 
 	" s-key does not yank, just deletes then enters insert-mode:
-	vnoremap s "_xi
+	vnoremap <expr> s SmartS()
 	" x-key does not yank, just deletes:
-	vnoremap x "_x
+	vnoremap <expr> x SmartX()
 
 	" z-key undo:
 	nmap z u
@@ -248,10 +281,14 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 
 "-- Selection stuff
 
-	" shiftRight starts visual selection to the right
+	" shiftRight starts visual selection to the right:
  	nmap <S-Right> v<Right>
-	" shiftLeft starts visual selection to the left
+	" shiftLeft starts visual selection to the left:
 	nmap <S-Left> v<Left>
+	" ctrlShiftRight starts visual selection by word to the left:
+	nmap <C-S-Right> v<C-Right>
+	" ctrlShiftLeft starts visual selection by word to the left:
+	nmap <C-S-Left> v<C-Left>
 	" allow shiftLeft to stay held while selecting without jumping by word
 	vmap <S-Left> <Left>
 	" allow shiftRight to stay held while selecting without jumping by word
@@ -260,7 +297,10 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	vnoremap <C-Right> <S-Right>
 	" ctrlLeft jumps by word like in most text editors:
 	vnoremap <C-Left> <S-Left>
-	":4 sadly the previous two aliases do not quite work in PuTTY 
+	":4 sadly the previous two aliases do not quite work in PuTTY
+	"
+	" ctrlBackspace deletes previous word:
+	nmap  i<C-w><Esc>x 
 	
 	" ctrlA does select all:
 	nnoremap <C-a> gg<S-v>G

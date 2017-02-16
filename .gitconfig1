@@ -27,6 +27,7 @@
 [diff]
 	submodule = log
 [alias]
+	dif = diff --cached
 	clone = clone --recursive
 	commit = "\
 		!function f(){ \

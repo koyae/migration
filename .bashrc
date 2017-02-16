@@ -29,15 +29,17 @@ alias df='df -h'
 alias reup='echo Reloading .bashrc && . ~/.bashrc'
 alias pwdp='pwd -P'
 alias ssh='ssh -a' # disable agent-forwarding
+alias zip='zip -r' # zip recursively by default
 shopt -s extglob # enable shell-extensions
 git config --global push.default upstream
 git config --global color.ui auto # some systems oddly disable this
 PATH="~/bin2:$PATH"
-stty stop ''
-stty start ''
-stty -ixon
-stty -ixoff
-# ^ 4: disable freeze and unfreeze commands to free ctrlS and ctrlQ
+
+# keybinding stuff:
+stty stop ''; stty start ''; stty -ixon; stty -ixoff
+# ^ disable freeze and unfreeze commands to free ctrlS and ctrlQ
+bind '"":""'
+# ^ set ctrlBackspace to mimic ctrlW (delete previous word) in terminal
 
 # weird stuff:
 alias l='ls'

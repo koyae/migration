@@ -13,7 +13,7 @@ hi lCursor    guifg=NONE   guibg=Cyan
 " Note: we never set 'term' because the defaults for B&W terminals are OK
 " Also keep in mind that a typical PuTTY window only reads ctermbg and ctermfg
 " Differentiable NR-8 xterm colors are: Black Blue Green Cyan
-" Red Magenta Brown/Yellow White/Grey 
+" Red Magenta Brown Yellow White Grey
 hi DiffAdd    ctermbg=Green    guibg=Brown ctermfg=White cterm=bold
 hi DiffChange ctermbg=Grey cterm=bold 
 hi DiffDelete ctermfg=Blue	   ctermbg=LightRed 
@@ -32,8 +32,8 @@ hi PmenuSel   ctermfg=White	   ctermbg=DarkBlue  guifg=White  guibg=DarkBlue
 hi Question   ctermfg=DarkGreen    gui=bold guifg=SeaGreen
 hi Search     ctermfg=NONE	   ctermbg=Yellow guibg=Yellow guifg=NONE
 hi SpecialKey ctermfg=DarkBlue	   guifg=Blue
-hi StatusLine cterm=bold	   ctermbg=blue ctermfg=white guibg=gold guifg=blue
-hi StatusLineNC	ctermbg=blue ctermfg=yellow guibg=gold guifg=blue
+hi StatusLine cterm=bold	   ctermbg=Black ctermfg=white guibg=gold guifg=blue
+hi StatusLineNC	ctermbg=Black ctermfg=Grey guibg=blue guifg=black
 hi Title      ctermfg=DarkMagenta  gui=bold guifg=Magenta
 hi VertSplit  cterm=reverse	   gui=reverse
 hi Visual     ctermbg=NONE	   cterm=reverse gui=reverse guifg=Grey guibg=fg
