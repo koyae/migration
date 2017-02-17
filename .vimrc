@@ -147,6 +147,14 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 		endif
 	endfunction
 
+ 
+" helper-function: return booleanishly to indicate whether there are multiple
+" lines selected:
+	function! MultipleLinesSelected()
+		return line("'<") != line("'>")
+	endfunction
+
+ 
 " nnoremapped to <Return>
     function! ToInsertCr()
         "let indentLevel = GetCurrentIndentLevel()
@@ -162,8 +170,13 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
     endfunction
 	
 	function! SmartX()
-		" Delete the whole line if we have only whitespace:
-		return OnlyWhitespaceOnLine()? 'V"_x' : '"_x'
+		" Delete the whole line if we have only whitespace and it is the only
+		" line in question. Otherwise, delete everything in the selection:
+		if MultipleLinesSelected()
+			return '"_x'
+		else
+			return OnlyWhitespaceOnLine()? 'V"_x' : '"_x'
+		endif
 	endfunction
 	
 	function! SmartS()
@@ -200,7 +213,7 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	" ctrl0 jumps to matching parenthesis when one is selected, just like % does:
 	noremap <C-0> %
 	" ctrlAltX deletes all lines:
-	noremap <silent> <C-A-x> :call SelectAllThenDo("normal x") <Return>
+	noremap <silent> <C-A-x> :call SelectAllThenDo("normal x")<Return>
 	" ctrlS saves current file:
 	nnoremap <C-s> :w <Return>
 	" ^ Note that many shell-clients bind ctrlS to send the freeze-output 
