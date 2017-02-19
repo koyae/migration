@@ -151,10 +151,11 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 " helper-function: return booleanishly to indicate whether there are multiple
 " lines selected:
 	function! MultipleLinesSelected()
-		return line("'<") != line("'>")
+		" if the start of the active selection is on a different line than the
+		" end of it:
+		return line("v") != line(".")
 	endfunction
 
- 
 " nnoremapped to <Return>
     function! ToInsertCr()
         "let indentLevel = GetCurrentIndentLevel()
@@ -168,13 +169,15 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
     function! SmartDelete()
         return AtEndOfLine()? "a\<Del>\<Esc>" : "x"
     endfunction
-	
+
 	function! SmartX()
 		" Delete the whole line if we have only whitespace and it is the only
 		" line in question. Otherwise, delete everything in the selection:
-		if MultipleLinesSelected()
+		if MultipleLinesSelected()==1
+			echom "Multiple lines selected."
 			return '"_x'
 		else
+			echom "Multiple lines not selected."
 			return OnlyWhitespaceOnLine()? 'V"_x' : '"_x'
 		endif
 	endfunction
