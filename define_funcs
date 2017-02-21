@@ -115,6 +115,24 @@ function ps {
 	fi
 }
 
+# [ Complex alias for git to add options depending on the specifc subcommand ]
+function git {
+	if (( $# > 0 )); then
+		if [[ "$1" == "commit" ]]; then
+		# if a commit was just made, show the author-information afterwards so
+		# that misattributed commits can be caught before being pushed to repo:
+			command git "$@"
+			command git show | awk 'NR==2'
+		elif [[ "$1" == "clone" ]]; then
+			command git "$@" --recursive
+		else
+			command git "$@"
+		fi
+	else
+		command git
+	fi
+}
+
 # Write to the beginning of a file
 function prepend {
 	if (( $# < 2 )); then

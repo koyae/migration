@@ -27,16 +27,11 @@
 [diff]
 	submodule = log
 [alias]
+# NOTE: In addition to the below aliases, a number of tweaks from define_funcs
+# are made to git-commands by shadowing them using a function. (git does not
+# allow overriding of builtin commands natively, even if it's just to add
+# common flags.)
 	dif = diff --cached
-	clone = clone --recursive
-	commit = "\
-		!function f(){ \
-			git commit \"$@\"\
-			git show | awk 'NR==2'\
-			# ^ always show author\
-		} \
-		f \
-		unset -f f"
 [status]
 	submodulessummary = 1
 [alias "submodule"]
@@ -53,3 +48,4 @@
 		f \
 		echo push.recursesubmodules set to 'check' \
 		unset -f f"
+	# ^ TODO: move to define_funcs, since this code is not actually valid here.
