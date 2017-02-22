@@ -52,7 +52,7 @@ Run **`bin2/setup.sh`** to add the import lines to `.gitconfig` and then type `:
 
 ### Modify `/etc/bashrc` or `export_local__remove_my_tail`
 
-On Windows systems, the $HOME directory is not always set reliably, which can result in some VERY confusing behavior with regard to what `~` actually represents the shell versus saved scripts. (In the worst case, it can point to two different places, making its meaning ambiguous in certain cases.) 
+On Windows systems, the $HOME directory is not always set reliably, which can result in some VERY confusing behavior with regard to what `~` actually represents in the shell versus saved scripts. (In the worst case, it can point to two different places, making its meaning ambiguous in certain cases.) 
 
 To correct this for ALL Cygwin users on the system, add the below line to `/etc/bashrc`. To correct this only for yourself, add the same line instead to `export_local__remove_my_tail` (best if other Cygwin users on your system do not keep their `~` directories in the same spot as yours).
 
