@@ -1,5 +1,10 @@
 #!/bin/sh
 
+oldcwd=`command pwd`
+cd ~
+git config user.email "koyae@users.noreply.github.com"
+cd "$oldcwd"
+
 if [[ -f ~/.gitconfig1 ]]; then
 	read -r -d '' def <<-'EOF'
 		:function! Verytemporary()

@@ -174,10 +174,8 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 		" Delete the whole line if we have only whitespace and it is the only
 		" line in question. Otherwise, delete everything in the selection:
 		if MultipleLinesSelected()==1
-			echom "Multiple lines selected."
 			return '"_x'
 		else
-			echom "Multiple lines not selected."
 			return OnlyWhitespaceOnLine()? 'V"_x' : '"_x'
 		endif
 	endfunction

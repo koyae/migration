@@ -32,6 +32,7 @@
 # allow overriding of builtin commands natively, even if it's just to add
 # common flags.)
 	dif = diff --cached
+	kommit = commit --author='patrickegon@outlook.com'
 [status]
 	submodulessummary = 1
 [alias "submodule"]
