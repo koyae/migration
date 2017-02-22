@@ -11,6 +11,7 @@ Git does not allow cloning directly into non-empty folders, so making files acce
 3. **`git remote add origin https://github.com/koyae/migration`** to define a remote source repo. 
 4. **`git pull origin master`** to pull from the master branch of that source.
 5. **`git branch --set-upstream-to="origin/master"`** to allow **`git push`** to target `origin master` by default.
+6. Perform the step listed in the **"Initialize submodules"** section.
 
 #### Advantages
 
@@ -27,6 +28,7 @@ Git does not allow cloning directly into non-empty folders, so making files acce
 1. **`git clone https://github.com/koyae/migration`** [*`dirname`*] to clone the repo to a directory (this can be within `~` or elsewhere)
 2. For each of the files you would like to use, do:
   * **``ln -s " `pwd -P`\``*`file`*`"` `realpath ~`** to add a symbolic link, making the file transparently accessible to `~`
+3. Perform the step listed in the **"Initialize submodules"** section.
 
 #### Advantages
 
