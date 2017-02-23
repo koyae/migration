@@ -46,7 +46,7 @@ function up {
 		ladder+=($path)
 		path=`dirname "$path"`
 	done
-	cd ${ladder[$rungnum]}
+	cd "${ladder[$rungnum]}"
 }
 
 # recursive grep / grep recursive
