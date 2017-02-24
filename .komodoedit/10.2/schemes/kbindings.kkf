@@ -1,4 +1,4 @@
-version 39
+version 51
 binding cmd_left Left
 binding cmd_selectCharPrevious Shift+Left
 binding cmd_historyBack Alt+Left
@@ -54,7 +54,6 @@ binding cmd_undo Alt+Backspace
 binding cmd_cancel Escape
 binding cmd_editReflow Alt+Q
 binding cmd_editReflow Ctrl+Q
-binding cmd_expandAbbrev Ctrl+T
 binding cmd_toggleOvertype Insert
 binding cmd_convertUpperCase Ctrl+U
 binding cmd_convertLowerCase Ctrl+Shift+U
@@ -66,12 +65,11 @@ binding cmd_toolsRunCommand Ctrl+R
 binding cmd_uncomment Alt+Shift+#
 binding cmd_uncomment Alt+2
 binding cmd_uncomment Alt+4
+binding cmd_uncomment Ctrl+Shift+?
 binding cmd_comment Alt+3
 binding cmd_comment Ctrl+Alt+C
+binding cmd_comment Ctrl+/
 binding cmd_viewIndentationGuides Ctrl+Shift+5
-binding cmd_viewLineNumbers Ctrl+Shift+4
-binding cmd_viewEOL Ctrl+Shift+7
-binding cmd_viewWhitespace Ctrl+Shift+8
 binding cmd_wordWrap Ctrl+Shift+9
 binding cmd_selectToMatchingBrace Ctrl+Shift+(
 binding cmd_gotoLine Alt+G
@@ -145,10 +143,7 @@ binding cmd_selectRectHome Alt+Shift+Home
 binding cmd_selectRectEnd Alt+Shift+End
 binding cmd_selectRectPageUp Alt+Shift+Page_Up
 binding cmd_selectRectPageDown Alt+Shift+Page_Down
-binding cmd_goToFile Ctrl+Shift+O
 binding cmd_invokeHyperlink Ctrl+Alt+G
-binding cmd_invokeTool Ctrl+Shift+K
-binding cmd_addAdditionalCaret Ctrl+K Ctrl+Y
 binding cmd_addNextWordToCaretSet Ctrl+D
 binding cmd_open_remote Ctrl+Alt+O
 binding cmd_editPrefs Alt+F3
@@ -167,3 +162,24 @@ binding cmd_transientMarkPop Ctrl+Alt+Shift+M
 binding cmd_transientMarkSet Ctrl+M
 binding cmd_transientMarkMoveBack Alt+M
 binding cmd_closeAll Ctrl+Shift+W
+binding cmd_scope-combined-toolscmds Ctrl+Shift+K
+binding cmd_scope-files Ctrl+Shift+O
+binding cmd_scope-openfiles Ctrl+<
+binding cmd_goToQuickBookmark_1 Ctrl+1
+binding cmd_goToQuickBookmark_2 Ctrl+2
+binding cmd_goToQuickBookmark_3 Ctrl+3
+binding cmd_goToQuickBookmark_4 Ctrl+4
+binding cmd_goToQuickBookmark_5 Ctrl+5
+binding cmd_goToQuickBookmark_6 Ctrl+6
+binding cmd_goToQuickBookmark_7 Ctrl+7
+binding cmd_goToQuickBookmark_8 Ctrl+8
+binding cmd_toggleQuickBookmark_0 Ctrl+Shift+0
+binding cmd_toggleQuickBookmark_1 Ctrl+Shift+1
+binding cmd_toggleQuickBookmark_2 Ctrl+Shift+2
+binding cmd_toggleQuickBookmark_3 Ctrl+Shift+3
+binding cmd_toggleQuickBookmark_4 Ctrl+Shift+4
+binding cmd_toggleQuickBookmark_6 Ctrl+Shift+6
+binding cmd_toggleQuickBookmark_7 Ctrl+Shift+7
+binding cmd_toggleQuickBookmark_8 Ctrl+Shift+8
+binding cmd_newTab Ctrl+T
+binding cmd_removePrevWordInCaretSet Ctrl+Shift+D

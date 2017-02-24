@@ -7,7 +7,7 @@ setlocal enabledelayedexpansion
 set scriptdir=%~dp0
 
 call :makelinks "%scriptdir%tools\ktools" "tools\ktools" 1 
-for /F "delims=" %%m in ('dir /B "%scriptdir%\schemes"\*.kkf') do (
+for /F "delims=" %%m in ('dir /B "%scriptdir%\schemes"\*.kkf "%scriptdir%"\schemes\*.ksf') do (
 	echo makelinks %scriptdir%schemes\%%~nxm "schemes" 0
 	call :makelinks "%scriptdir%schemes\%%~nxm" "schemes" 0
 )
