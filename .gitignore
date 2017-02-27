@@ -1,3 +1,6 @@
 *.swp
 export_local
 .gitconfig2
+lastat
+.bash_history
+.viminfo

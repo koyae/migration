@@ -40,6 +40,8 @@ stty stop ''; stty start ''; stty -ixon; stty -ixoff
 # ^ disable freeze and unfreeze commands to free ctrlS and ctrlQ
 bind '"":""'
 # ^ set ctrlBackspace to mimic ctrlW (delete previous word) in terminal
+bind '"[1;5D":"b"' # ctrlLeft moves cursor one word back
+bind '"[1;5C":"f"' # ctrlRight moves cursor one word forward
 
 # weird stuff:
 alias l='ls'
