@@ -1,0 +1,11 @@
+BoldAsFont=no
+FontHeight=10
+Green=0,128,0
+Blue=127,127,255
+ScrollMod=off
+CursorType=block
+Columns=101
+Rows=78
+BackgroundColour=255,255,255
+ForegroundColour=46,46,46
+ClicksPlaceCursor=yes
