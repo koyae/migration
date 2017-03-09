@@ -213,6 +213,9 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	noremap <C-9> %
 	" ctrl0 jumps to matching parenthesis when one is selected, just like % does:
 	noremap <C-0> %
+	" ctrlX deletes current line:
+	nnoremap <C-x> Vx
+	inoremap <C-x> <C-o>Vx
 	" ctrlAltX deletes all lines:
 	noremap <silent> <C-A-x> :call SelectAllThenDo("normal x")<Return>
 	" ctrlS saves current file:
