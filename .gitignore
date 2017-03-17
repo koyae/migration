@@ -4,3 +4,4 @@ export_local
 lastat
 .bash_history
 .viminfo
+.ssh

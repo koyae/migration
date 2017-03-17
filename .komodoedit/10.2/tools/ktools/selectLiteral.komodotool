@@ -87,7 +87,7 @@
     "\treturn positionInfo.match(/Ln: (\\d+)/)[1];", 
     "} // getCurrentLineNumber()"
   ], 
-  "version": "1.0.12", 
+  "version": "1.1.5", 
   "rank": 100, 
   "trigger_enabled": false, 
   "async": false, 

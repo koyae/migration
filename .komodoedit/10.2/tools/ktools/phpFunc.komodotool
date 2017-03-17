@@ -1,6 +1,7 @@
 {
   "keyboard_shortcut": "", 
   "name": "phpFunc", 
+  "language": "", 
   "value": [
     "/*", 
     " * function [[%tabstop1:name]]", 
@@ -12,9 +13,9 @@
     "}!@#_currentPos!@#_anchor"
   ], 
   "set_selection": "false", 
-  "version": "1.0.12", 
-  "indent_relative": "true", 
-  "type": "snippet", 
+  "version": "1.1.5", 
   "treat_as_ejs": "false", 
+  "type": "snippet", 
+  "indent_relative": "true", 
   "auto_abbreviation": "false"
 }
