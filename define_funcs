@@ -248,6 +248,15 @@ function sviml {
 	# ^.. Then we call a custom function to fix the case and hit enter
 }
 
+function jvimn {
+# view the contents of a JSON-file after formatting has been applied
+	if (( $# < 1 )); then
+		echo 'Format JSON and open in vim. Saving afterwards optional. Useage: jvimn <file>'
+		kill -INT $$
+	fi
+	python -m json.tool "$1" | vim -
+}
+
 function shortfind {
 # If given a single search-term, do a sliding search in the current directory 
 	# assume contains-search first:
