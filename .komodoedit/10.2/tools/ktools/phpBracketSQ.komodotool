@@ -1,14 +1,15 @@
 {
   "keyboard_shortcut": "Alt+[", 
   "name": "phpBracketSQ", 
+  "language": "", 
   "value": [
     "['[[%tabstop:key]]'][[%tabstop]]!@#_currentPos!@#_anchor"
   ], 
   "set_selection": "false", 
-  "version": "1.0.12", 
-  "auto_abbreviation": "false", 
-  "treat_as_ejs": "false", 
-  "type": "snippet", 
+  "version": "1.1.5", 
   "indent_relative": "false", 
-  "icon": "chrome://komodo/skin/images/snippet.png"
+  "icon": "chrome://komodo/skin/images/snippet.png", 
+  "type": "snippet", 
+  "treat_as_ejs": "false", 
+  "auto_abbreviation": "false"
 }

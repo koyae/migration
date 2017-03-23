@@ -9,7 +9,7 @@
     "if (komodo.view) { komodo.view.setFocus(); }", 
     "komodo.view.selection = '->';"
   ], 
-  "version": "1.0.12", 
+  "version": "1.1.5", 
   "rank": 100, 
   "trigger_enabled": false, 
   "async": false, 

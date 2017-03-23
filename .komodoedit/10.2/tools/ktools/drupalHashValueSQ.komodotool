@@ -1,14 +1,15 @@
 {
   "keyboard_shortcut": "Ctrl+3", 
   "name": "drupalHashValueSQ", 
+  "language": "", 
   "value": [
     "'#[[%tabstop:attributeName]]' => '[[%tabstop:attributeValue]]',[[%tabstop:]]!@#_currentPos!@#_anchor"
   ], 
   "set_selection": "false", 
-  "version": "1.0.12", 
-  "indent_relative": "false", 
-  "icon": "chrome://komodo/skin/images/snippet.png", 
-  "type": "snippet", 
+  "version": "1.1.5", 
+  "auto_abbreviation": "false", 
   "treat_as_ejs": "false", 
-  "auto_abbreviation": "false"
+  "type": "snippet", 
+  "indent_relative": "false", 
+  "icon": "chrome://komodo/skin/images/snippet.png"
 }
