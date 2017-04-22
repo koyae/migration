@@ -12,7 +12,14 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	:set <A-z>=z
 	:set <A-s>=s
 	:set <C-A-x>=
- 
+	:set <A-d>=d
+
+	let term=$TERM
+	if term == 'screen'
+	" if running from `screen`, assume xterm-signals:
+		:set term=xterm
+	endif
+
 "--------------------Plugin Imports------------------------:
 	:source ~/.vim/plugin/cmdalias.vim
 	execute pathogen#infect()
@@ -51,10 +58,17 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 
 " I use the convention "before" in function names to connote one character before
 " In turn "after" means the opposite.
-" To connote the LINE before the cursor's current position, I use "above"
-" and in turn "below" means the opposite.
+" To connote the LINE before the cursor's current position, I use "above".
+" In turn "below" means the opposite.
 
-" Note that function! forces overwrite if necessary on creation of a funciton	
+" Note `function!` forces overwrite if necessary on creation of a funciton	
+
+	function! EatNextWord()
+		normal! m'v
+		call search('\s*[_a-zA-Z]\+\s*', 'ce', getline('.'))
+		normal! "_x
+		normal! `'
+	endfunction
 
 	" Selects entire document then performs series of keystrokes in normal mode
 	function! SelectAllThenDo(commandString)
@@ -318,7 +332,9 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	"
 	" ctrlBackspace deletes previous word:
 	nmap  i<C-w><Esc>x 
-	
+	" altD eats next word / deletes next word:
+	noremap <silent> <A-d> :call EatNextWord() <Return>
+
 	" ctrlA does select all:
 	nnoremap <C-a> gg<S-v>G
 
