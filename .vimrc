@@ -44,7 +44,7 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	:set splitright " make :vs open on right instead of bumping current pane over
 	:set splitbelow " make :split open files on the bottom instead of bumping current pane down
 	:set tabstop=4 " make tab-characters display as 4 spaces instead of default 8 
-	:set shiftwidth=4 " make '>' (angle bracket) behave itself
+	:set shiftwidth=0 " make '>' (angle bracket) always just match `tabstop`
 	:set ignorecase smartcase "searching is non-case-sensitive unless there's a cap
 	:set shellcmdflag=-ic
 
