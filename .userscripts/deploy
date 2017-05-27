@@ -1,0 +1,1 @@
+Placeholder for an actual deploy-script. Basically you just need to link any directories contained in here to the appropriate Firefox profile, so the path will be something like %APPDATA%\Mozilla\Firefox\Profiles\k5or9jn3.Nondeafult\gm_scripts\<dirFromHereName>.

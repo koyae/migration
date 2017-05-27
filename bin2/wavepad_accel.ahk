@@ -103,6 +103,15 @@ paste_file(fn) {
 	paste_file("3.txt")
 	return
 
+!8:: ; alt8
+	MouseClick, right
+	Sleep, 200
+	Send a ; copy link locAtion
+	Sleep, 200
+	file := FileOpen("clipstack.txt","a")
+	WriteMe := Clipboard
+	file.WriteLine(WriteMe)
+	file.Close()
 
 #IfWinActive WavePad
 
