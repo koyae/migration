@@ -329,11 +329,13 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	" ctrlLeft jumps by word like in most text editors:
 	vnoremap <C-Left> <S-Left>
 	":4 sadly the previous two aliases do not quite work in PuTTY
-	"
+	
 	" ctrlBackspace deletes previous word:
 	nmap  i<C-w><Esc>x 
+
 	" altD eats next word / deletes next word:
-	noremap <silent> <A-d> :call EatNextWord() <Return>
+	nnoremap <silent> <A-d> :call EatNextWord() <Return>
+	inoremap <silent> <A-d> <Right><Esc>:call EatNextWord() <Return>i
 
 	" ctrlA does select all:
 	nnoremap <C-a> gg<S-v>G
