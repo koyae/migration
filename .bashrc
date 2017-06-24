@@ -30,6 +30,7 @@ alias reup='echo Reloading .bashrc && . ~/.bashrc'
 alias pwdp='pwd -P'
 alias ssh='ssh -a' # disable agent-forwarding
 alias zip='zip -r' # zip recursively by default
+alias grepc='grep --color=always'
 shopt -s extglob # enable shell-extensions
 git config --global push.default upstream
 git config --global color.ui auto # some systems oddly disable this

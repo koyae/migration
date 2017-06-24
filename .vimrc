@@ -294,12 +294,8 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	" x-key does not yank, just deletes:
 	vnoremap <expr> x SmartX()
 
-	" z-key undo:
-	nmap z u
 	" shiftU redoes:
 	nmap U <C-r>
-	" shiftZ redoes:
-	nmap Z <C-r>
 	" insert-key enters replace-mode
 	nnoremap <Insert> i<Insert>
 
