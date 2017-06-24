@@ -4,6 +4,7 @@
 #
 # Export cross-system and local machine settings
 #
+export TERM=xterm
 export EDITOR="vim"
 export HISTIGNORE="ls" # don't store plain ls-commands in bash history
 export HISTFILESIZE=100000
