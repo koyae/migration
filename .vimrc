@@ -50,9 +50,12 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 
 "-- cmdalias.vim aliases
 	:Alias Wq wq
+	:Alias WQ wq
 	:Alias qw wq
 	:Alias Q q
 	:Alias W w
+	:command! Reup source ~/.vimrc
+	:Alias reup Reup
  
 "-------------------Functions------------------------------:
 
@@ -212,6 +215,16 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 		exec estring
 	endfunction
 
+	function! JumpToNextMatchingChar(flags)
+		let char = matchstr(getline('.'), '\%' . col('.') . 'c.')
+		let caseopt = &ignorecase
+		let smartopt = &smartcase
+		let &ignorecase = 0
+		let &smartcase = 0
+		call search(escape(char,'.|\\*[]~'),'w'.a:flags)
+		let &ignorecase = caseopt
+		let &smartcase = smartopt
+	endfunction
 "---------------------Novel keybindings--------------------: 
 	" ctrlPageUp goes to next tab:
 	noremap <silent> <C-PgUp> gT
@@ -287,7 +300,9 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	nmap <Down> gj
 	vmap <Up> gk
 	vmap <Down> gj
-	" 2^ wrap according to what's shown on screen versus using \n 
+	imap <Up> <C-o>gk
+	imap <Down> <C-o>gj
+	" 6^ wrap according to what's shown on screen versus using" 2^ wrap according to what's shown on screen versus using \n 
 
 	" s-key does not yank, just deletes then enters insert-mode:
 	vnoremap <expr> s SmartS()
@@ -325,7 +340,11 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	" ctrlLeft jumps by word like in most text editors:
 	vnoremap <C-Left> <S-Left>
 	":4 sadly the previous two aliases do not quite work in PuTTY
-	
+
+	" j-key jumps to the next character which matches the one under the
+	" cursor:
+	nnoremap <silent> j :call JumpToNextMatchingChar('')<Return>
+
 	" ctrlBackspace deletes previous word:
 	nmap  i<C-w><Esc>x 
 
