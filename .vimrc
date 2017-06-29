@@ -9,6 +9,7 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	:set <S-Right>=[C
 	:set <C-Left>=OD
 	:set <C-Right>=OC
+	:set <A-=>==
 	:set <A-z>=z
 	:set <A-s>=s
 	:set <C-A-x>=
@@ -263,9 +264,12 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	" for avoiding that would be to just use a function to remove the
 	" undesirable characters without using the standard search/replace-commands.
 
-	" altI adds '>' to the beginning of lines
-	vnoremap <A-i> :s/^/>/<Return>:noh<Return>
-	nnoremap <A-i> :%s/^/>/<Return>:noh<Return>
+	" altI adds '>' to the beginning of lines:
+	vmap <A-i> :s/^./>\0/<Return>:noh <Return>
+	nmap <A-i> :%s/^./>\0/<Return>:noh <Return>
+	" altEquals adds a space after (sequences of) '>' which begin a line:
+	vmap <A-=> :s/\m^\(>\+\)\([^ >]\)/\1 \2/ <Return>:noh <Return>
+	nmap <A-=> :%s/\m^\(>\+\)\([^ >]\)/\1 \2/ <Return>:noh <Return>
 
 "-- Find and replace stuff
 
