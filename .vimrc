@@ -13,6 +13,7 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	:set <A-s>=s
 	:set <C-A-x>=
 	:set <A-d>=d
+	:set <A-i>=i
 
 	let term=$TERM
 	if term == 'screen'
@@ -261,6 +262,10 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	" ^ This currently clears the selection we had previously. The workaround
 	" for avoiding that would be to just use a function to remove the
 	" undesirable characters without using the standard search/replace-commands.
+
+	" altI adds '>' to the beginning of lines
+	vnoremap <A-i> :s/^/>/<Return>:noh<Return>
+	nnoremap <A-i> :%s/^/>/<Return>:noh<Return>
 
 "-- Find and replace stuff
 
