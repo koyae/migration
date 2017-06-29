@@ -300,3 +300,12 @@ function c_d {
 		# just go by what it tells us
 	fi
 }
+
+
+function ll {
+	if (( $# < 1 )); then
+		command ls -l --color=auto
+	else
+		command ls -ld --color=auto $@
+	fi
+}

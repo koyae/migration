@@ -46,7 +46,6 @@ bind '"[1;5C":"f"' # ctrlRight moves cursor one word forward
 
 # weird stuff:
 alias l='ls'
-alias ll='ls -l'
 alias down='cd'
 alias cdP='cd "`pwd -P`"'
 alias cdgr='cd "`git rev-parse --show-toplevel`"'
