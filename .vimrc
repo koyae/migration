@@ -371,6 +371,8 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	vmap <S-Left> <Left>
 	" allow shiftRight to stay held while selecting without jumping by word
 	vmap <S-Right> <Right>
+	" ctrlRight keeps the cursor on the right side of words when jumping:
+	nnoremap <C-Right> <C-Right>he
 	" ctrlRight jumps by word like in most text editors:
 	vnoremap <C-Right> <S-Right>
 	" ctrlLeft jumps by word like in most text editors:
