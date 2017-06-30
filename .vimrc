@@ -217,16 +217,33 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 		exec estring
 	endfunction
 
-	function! JumpToNextMatchingChar(flags)
-		let char = matchstr(getline('.'), '\%' . col('.') . 'c.')
-		let caseopt = &ignorecase
-		let smartopt = &smartcase
+	function! JumpToChar(character,flags)
+		let char=a:character
+		if char == ''
+			let char = g:foundLast		
+		else
+			let g:foundLast = a:character
+		endif
+		call SaveSetting('ignorecase')
+		call SaveSetting('smartcase')
 		let &ignorecase = 0
 		let &smartcase = 0
-		call search(escape(char,'.|\\*[]~'),'w'.a:flags)
-		let &ignorecase = caseopt
-		let &smartcase = smartopt
+		call search('\V' . char, 'w'. a:flags)
+		call RestoreSetting('ignorecase')
+		call RestoreSetting('smartcase')
 	endfunction
+
+	function! JumpToNextMatchingChar(flags)
+		let char = matchstr(getline('.'), '\%' . col('.') . 'c.')
+		call JumpToChar(char,a:flags)
+	endfunction
+
+	" Interactive character-jump function
+	function! FindChar(flags)
+		let char = nr2char( getchar() )
+		call JumpToChar(char,a:flags)
+	endfunction
+	 
 "---------------------Novel keybindings--------------------: 
 	" ctrlPageUp goes to next tab:
 	noremap <silent> <C-PgUp> gT
@@ -283,6 +300,15 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	vnoremap <C-r> "hy:%s/<C-r>h//<left>
 	" credit: http://stackoverflow.com/questions/676600/
 	vmap <Return> <Del>
+	
+	" f-key finds the next single character (accepted afterwards
+	" interactively) on multiple lines, rather than just the current one:
+	nnoremap <silent> f :call FindChar('')<Return>
+	" shiftF finds previous single character (accepted afterwards
+	" interactively)
+	nnoremap <silent> F :call FindChar('b')<Return>
+	nnoremap <silent> ; :call JumpToChar('','')<Return>
+	nnoremap <silent> , :call JumpToChar('','b')<Return>
 
 "-------------------Keybinding overrides-------------------:
 
@@ -325,10 +351,11 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 
 	" shiftU capitalizes SQL keywords: 
 	vnoremap <silent> <C-u> :call ChangeSqlCase() <Return><Return>
- 	" ctrlU capitalizes any alphas in selection:
+ 	" U-key capitalizes any alphas in selection:
 	vnoremap <silent> U gU
-	" ctrlShiftU lowercases any alphas in selection:
+	" u-key lowercases any alphas in selection:
 	vnoremap <silent> u gu 
+
 
 "-- Selection stuff
 
