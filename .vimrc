@@ -285,8 +285,8 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	vmap <A-i> :s/^./>\0/<Return>:noh <Return>
 	nmap <A-i> :%s/^./>\0/<Return>:noh <Return>
 	" altEquals adds a space after (sequences of) '>' which begin a line:
-	vmap <A-=> :s/\m^\(>\+\)\([^ >]\)/\1 \2/ <Return>:noh <Return>
-	nmap <A-=> :%s/\m^\(>\+\)\([^ >]\)/\1 \2/ <Return>:noh <Return>
+	vmap <A-=> :sm/^\(>\+\)\([^ >]\)/\1 \2/ <Return>:noh <Return>
+	nmap <A-=> :%sm/^\(>\+\)\([^ >]\)/\1 \2/ <Return>:noh <Return>
 
 "-- Find and replace stuff
 
