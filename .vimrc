@@ -12,6 +12,8 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	:set <A-=>==
 	:set <A-z>=z
 	:set <A-s>=s
+	:set <A-(>=9
+	:set <A-)>=0
 	:set <C-A-x>=
 	:set <A-d>=d
 	:set <A-i>=i
@@ -92,6 +94,13 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	function! ToInsertBeforeCurrentChar(char)
 		silent! exec "normal a" . "\<Left>". a:char 
 		return "i" . a:char . "\<Esc>"
+	endfunction
+
+	function! InsertAtEOL(str,cleanEnd)
+		if a:cleanEnd
+			execute "normal! :s/\\s\\+$//e\<Return>"
+		endif
+		execute "normal! i\<End>" . a:str . "\<Esc>"
 	endfunction
 
 	" Returns a string to insert a new line relative to the current line
@@ -271,16 +280,14 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	" it can be disabled from .bashrc
 	
 	" altS clears trailing whitespace if present then places a semicolon at EOL:
-	nnoremap <silent> <A-s> :call SaveSetting('hlsearch')<Return>
-		\:set nohlsearch<Return>
-		\:s/\s\+$//e<Return>
-		\i<End>;<Esc>
-		\:noh<Return>
-		\:call RestoreSetting('hlsearch')<Return>
-	" ^ This currently clears the selection we had previously. The workaround
-	" for avoiding that would be to just use a function to remove the
-	" undesirable characters without using the standard search/replace-commands.
-
+	nnoremap <silent> <A-s> :call InsertAtEOL(';',1)<Return> 
+	" alt-0 clears trailing whitespace if present then places ')' at EOL:
+	nnoremap <silent> <A-)> :call InsertAtEOL(')',1)<Return>
+	" openParen surrounds current selection in parentheses from visual mode:
+	vnoremap <silent> ( <Esc>`<i(<Esc>`><Right>a)<Esc>
+	" closeParen does the same as above:
+	vnoremap <silent> ) <Esc>`<i(<Esc>`><Right>a)<Esc>
+	
 	" altI adds '>' to the beginning of lines:
 	vmap <A-i> :s/^./>\0/<Return>:noh <Return>
 	nmap <A-i> :%s/^./>\0/<Return>:noh <Return>
