@@ -15,6 +15,7 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	:set <A-(>=9
 	:set <A-)>=0
 	:set <C-A-x>=
+	:set <C-A-t>=
 	:set <A-d>=d
 	:set <A-i>=i
 
@@ -69,6 +70,13 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 " In turn "below" means the opposite.
 
 " Note `function!` forces overwrite if necessary on creation of a funciton	
+
+	function! PaneToTab()
+		let buffer_number = bufnr('%')
+		close
+		tabedit
+		execute "buffer " . buffer_number
+	endfunction
 
 	function! EatNextWord()
 		normal! m'v
@@ -252,8 +260,12 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 		let char = nr2char( getchar() )
 		call JumpToChar(char,a:flags)
 	endfunction
-	 
-"---------------------Novel keybindings--------------------: 
+
+"---------------------Novel keybindings--------------------:
+
+" ctrlAltT tears out current pane and sends to a new tab:
+	nnoremap <C-A-t> :call PaneToTab()<Return>
+
 	" ctrlPageUp goes to next tab:
 	noremap <silent> <C-PgUp> gT
 	" ctrlPageDown goes to previous tab:
