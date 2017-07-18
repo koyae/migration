@@ -2,6 +2,8 @@
 autocmd BufNewFile,BufRead, *.postgre setf pgsql
 autocmd BufNewFile,BufRead, pom.xml,web.xml set tabstop=2 expandtab shiftwidth=2
 autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
+" allow PHP comments to rewrap correctly:
+autocmd Syntax, php set comments+=://
 
 "--------------------Compatibility settings----------------:
 	:set nocompatible
@@ -52,6 +54,10 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	:set shiftwidth=0 " make '>' (angle bracket) always just match `tabstop`
 	:set ignorecase smartcase "searching is non-case-sensitive unless there's a cap
 	:set shellcmdflag=-ic
+
+"-- Formatting behavior:
+	:set formatoptions+=j " allow vim's re-wrapping functionality to join as well as split
+	:set formatoptions-=r " don't repeat the single-line comment symbol when pressing enter
 
 "-- cmdalias.vim aliases
 	:Alias Wq wq
