@@ -270,16 +270,18 @@ autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	noremap <silent> <C-PgUp> gT
 	" ctrlPageDown goes to previous tab:
 	noremap <silent> <C-PgDown> gt
-	" ctrlUp swaps current line with above:
-	nnoremap <C-Up> dd<Up><S-p>
-	" ctrlDown swaps current line with below:
-	nnoremap <C-Down> ddp
+	" altDown swaps current line(s) with below, keeping selection if needed:
+	nnoremap <A-Up> dd<Up><S-p>
+	vnoremap <A-Up> d<Up><S-p>`[V`]
+	" altUp swaps current line(s) with above, keeping selection if needed:
+	nnoremap <A-Down> ddp
+	vnoremap <A-Down> d<Down><End>p`[V`]
+	" ctrlUp scrolls screen up one line without moving cursor:
+	noremap <C-Up> <C-y>
+	" ctrlDown scrolls screen down one line without moving cursor:
+	noremap <C-Down> <C-e>
 	" ctrlQ attempts to quit vim:
 	noremap <C-q> :qa<Return>
-	" ctrl9 jumps to matching parenthesis when one is selected, just like % does:
-	noremap <C-9> %
-	" ctrl0 jumps to matching parenthesis when one is selected, just like % does:
-	noremap <C-0> %
 	" ctrlX deletes current line:
 	nnoremap <C-x> Vx
 	inoremap <C-x> <C-o>Vx
