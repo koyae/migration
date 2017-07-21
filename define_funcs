@@ -313,3 +313,5 @@ function ll {
 		ls -ld "$@"
 	fi
 }
+
+unalias ll 2>/dev/null

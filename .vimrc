@@ -141,7 +141,7 @@ autocmd Syntax, php set comments+=://
 	"endfunction
 
 	function! InsertLineBelow()
-		return "i\<End>\<End>\<CR>" 
+		return "i\<C-o>$\<CR>"
 	endfunction
 
 	function! InsertLineAbove()
@@ -150,17 +150,52 @@ autocmd Syntax, php set comments+=://
 		return "i\<End>\<Home>\<CR>\<Up>"
 	endfunction
 
-	" Smarthome function courtesy http://vim.wikia.com/wiki/Smart_home#More_features
-	function! SmartHome()
-		let first_nonblank = match(getline('.'), '\S') + 1
-		if first_nonblank == 0
-			return col('.') + 1 >= col('$') ? '0' : '^'
-		endif
-		if col('.') == first_nonblank
-			return '0'  " if at first nonblank, go to start line
-		endif
 
-		return &wrap && wincol() > 1 ? 'g^' : '^'
+	" Function adapted from http://vim.wikia.com/wiki/Smart_home#More_features
+	function! SmartHome(mode)
+		" if the cursor is not at the virtual home, hard home, or soft home,
+		" send it to the virtual home
+		"
+		" if the cursor is at the virutal home but is not at the line's soft
+		" home, send it there.
+		"
+		" if the cursor is at the line's hard home, send it to the line's soft
+		" home.
+		let orig_pos = virtcol('.')
+		let virtual_home = 1 + orig_pos - orig_pos%winwidth('%') 
+		let soft_home = match(getline('.'), '\S') + 1
+		let hard_home = 1
+		" echom "orig: " . orig_pos . " virt: " . virtual_home . " soft: " . soft_home
+		if orig_pos != virtual_home && orig_pos != hard_home && orig_pos != soft_home
+			return 'g^'
+		elseif orig_pos == virtual_home && orig_pos != soft_home
+			return '^'
+		elseif orig_pos == soft_home 
+			return '0'
+		elseif orig_pos == hard_home
+			return '^'
+		endif
+	endfunction
+
+ 
+	function! SmartEnd(mode)
+		call SaveSetting('belloff')	
+		set belloff=all
+		let orig_pos = virtcol('.')
+		let virtual_end = 0
+		if orig_pos < winwidth('%') 
+			let virtual_end = col('$')
+		else
+			let virtual_end = orig_pos + winwidth('%') - 1
+			let virtual_end = virtual_end - virtual_end%winwidth('%') 
+		endif
+		echom "orig: " . orig_pos . " virutal_end: " virtual_end
+		if orig_pos == virtual_end
+			return '$'
+		else
+			return 'g$'
+		endif
+		call RestoreSetting('belloff')
 	endfunction
 
 	"function! ToReplaceWithinSelection()
@@ -343,28 +378,34 @@ autocmd Syntax, php set comments+=://
 	" altZ expands tags instead of Emmet's default two-step shortcut ctrlY-then-,
 	imap <A-z> <C-Y>,
 
-"-- Smarthome bindings:
-	noremap <expr> <silent> <Home> SmartHome()
-	imap <silent> <Home> <C-O><Home>
-	noremap <expr> <Home> (col('.') == matchend(getline('.'), '^\s*')+1 ? '0' : '^')
-	noremap <expr> <End> match( getline('.'), '\s\+$' ) != -1 ? 'g_<Right>' : 'g_'
-	vnoremap <expr> <End> (col('.') == match(getline('.'), '\s\+$') ? '$h' : 'g_')
-	imap <Home> <C-o><Home>
-	" Always place the cursor 1 column right of the last non-whitespace: 
-	imap <End> <C-o>g_<Right>
+"-- Navigation bindings:
+
+	" 3: home-key goes to the beginning of the virtual line, and toggles
+	" between soft home and hard home after tha :
+	nnoremap <expr> <Home> SmartHome('n')
+	imap <expr> <Home> "\<C-o>" . SmartHome('i')
+	vnoremap <expr> <Home> SmartHome(visualmode())
+	
+	" 3: end-key goes to the end of the virtual line or the actual end if
+	" already there:
+	nnoremap <silent> <expr> <End> SmartEnd('n')
+	inoremap <silent> <expr> <End> "\<C-o>" . SmartEnd('i')
+	vnoremap <silent> <expr> <End> SmartEnd(visualmode())
 	 
 	"2: o-key and shiftO insert a line below or above the current one (without staying in insert mode)
 	" the x below deletes the autoindent whitespace 2:
 	nmap <silent> <expr> o InsertLineBelow() . "\<Esc>"
 	nmap <silent> <expr> O InsertLineAbove() . "\<Esc><C-Del>"
 
-	nmap <Up> gk
-	nmap <Down> gj
-	vmap <Up> gk
-	vmap <Down> gj
-	imap <Up> <C-o>gk
-	imap <Down> <C-o>gj
-	" 6^ wrap according to what's shown on screen versus using" 2^ wrap according to what's shown on screen versus using \n 
+	" 6: up-key goes up by virutal line
+	" down-key goes down by virutal line
+	nnoremap <Up> gk
+	nnoremap <Down> gj
+	vnoremap <Up> gk
+	vnoremap <Down> gj
+	inoremap <Up> <C-o>gk
+	inoremap <Down> <C-o>gj
+
 
 	" s-key does not yank, just deletes then enters insert-mode:
 	vnoremap <expr> s SmartS()
@@ -376,7 +417,7 @@ autocmd Syntax, php set comments+=://
 	" insert-key enters replace-mode
 	nnoremap <Insert> i<Insert>
 
-	" shiftU capitalizes SQL keywords: 
+	" shiftU capitalizes SQL keywords:
 	vnoremap <silent> <C-u> :call ChangeSqlCase() <Return><Return>
  	" U-key capitalizes any alphas in selection:
 	vnoremap <silent> U gU
