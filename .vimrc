@@ -18,6 +18,7 @@ autocmd Syntax, php set comments+=://
 	:set <A-)>=0
 	:set <C-A-x>=
 	:set <C-A-t>=
+	:set <C-A-q>=
 	:set <A-d>=d
 	:set <A-i>=i
 
@@ -189,7 +190,6 @@ autocmd Syntax, php set comments+=://
 			let virtual_end = orig_pos + winwidth('%') - 1
 			let virtual_end = virtual_end - virtual_end%winwidth('%') 
 		endif
-		echom "orig: " . orig_pos . " virutal_end: " virtual_end
 		if orig_pos == virtual_end
 			return '$'
 		else
@@ -302,6 +302,24 @@ autocmd Syntax, php set comments+=://
 		call JumpToChar(char,a:flags)
 	endfunction
 
+	function! CloseTab()
+		if &filetype == 'help'
+			quit
+			return
+		endif
+		" since tabdo screws up the current tab-index, we grab it first so we
+		" can close the appropriate tab:
+		let currentTab = tabpagenr()
+		let g:tabCount=0
+		tabdo let g:tabCount+=1
+		if g:tabCount > 1
+			exec currentTab . "tabclose"
+		else
+			qall
+		endif
+	endfunction
+	 
+
 "---------------------Novel keybindings--------------------:
 
 " ctrlAltT tears out current pane and sends to a new tab:
@@ -321,8 +339,10 @@ autocmd Syntax, php set comments+=://
 	noremap <C-Up> <C-y>
 	" ctrlDown scrolls screen down one line without moving cursor:
 	noremap <C-Down> <C-e>
-	" ctrlQ attempts to quit vim:
-	noremap <C-q> :qa<Return>
+	" ctrlQ either closes the current help-pane or the current tab:
+	nnoremap <C-q> :call CloseTab()<Return>
+	" ctrlAltQ attempts to quit vim:
+	nnoremap <C-A-q> :qa<Return>
 	" ctrlX deletes current line:
 	nnoremap <C-x> Vx
 	inoremap <C-x> <C-o>Vx
