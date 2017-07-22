@@ -101,7 +101,7 @@ function grepr {
 	echo "$dostring" > "$fn"
 	chmod u+x "$fn" # enable execution for current user
 	. "$fn" # execute file in current shell
-	rm "$fn"
+	rm -f "$fn"
 }
 
 # [ Complex alias for builtin `ps` command ]
