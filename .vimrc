@@ -265,6 +265,28 @@ autocmd Syntax, php set comments+=://
 		return AtEndOfLine()? keySequence . "\<Right>" : keySequence
 	endfunction
 
+	function! GetSelectionText()
+		let [lnum1, col1] = getpos("'<")[1:2]
+		let [lnum2, col2] = getpos("'>")[1:2]
+		let lines = getline(lnum1, lnum2)
+		let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
+		let lines[0] = lines[0][col1 - 1:]
+		return join(lines, "\n")
+	endfunction
+
+	function! GetRegexFromSelection()
+		let txt = escape(GetSelectionText(),'/\')
+		let txt = substitute(txt,"\n",'\\n','g')
+		let txt = substitute(txt,"\t",'\\t','g')
+		return '\V' . txt	
+	endfunction
+
+	function! SelectionAsRegexToRegister(register)
+		" recall selection:
+		normal! gv
+		call setreg(a:register,GetRegexFromSelection())
+	endfunction
+
 	function! SaveSetting(settingName)
 		let estring = "let t:" . a:settingName . " = &" . a:settingName
 		exec estring
@@ -348,7 +370,8 @@ autocmd Syntax, php set comments+=://
 	inoremap <C-x> <C-o>Vx
 	" ctrlAltX deletes all lines:
 	noremap <silent> <C-A-x> :call SelectAllThenDo("normal x")<Return>
-	" ctrlS saves current file:
+	" 2: ctrlS saves current file:
+	vnoremap <C-s> <Esc>:w<Return>
 	nnoremap <C-s> :w <Return>
 	" ^ Note that many shell-clients bind ctrlS to send the freeze-output 
 	" signal (XOFF). This command won't work if that's not done. In most cases
@@ -378,8 +401,8 @@ autocmd Syntax, php set comments+=://
 	nnoremap <C-h> :%s/
 	" visual ctrlH starts replacement within selection:
 	vnoremap <C-h>  :s/
-	" ctrlR replaces the selected text:
-	vnoremap <C-r> "hy:%s/<C-r>h//<left>
+	" ctrlR starts a replace-command containing the selected text:
+	vnoremap <C-r> :call SelectionAsRegexToRegister('h')<Return>:<BS><BS><BS><BS><BS>%s/<C-r>h//<Left>
 	" credit: http://stackoverflow.com/questions/676600/
 	vmap <Return> <Del>
 	
@@ -433,7 +456,7 @@ autocmd Syntax, php set comments+=://
 	vnoremap <expr> x SmartX()
 
 	" shiftU redoes:
-	nmap U <C-r>
+	noremap U <C-r>
 	" insert-key enters replace-mode
 	nnoremap <Insert> i<Insert>
 
