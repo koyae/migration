@@ -302,6 +302,20 @@ function c_d {
 }
 
 
+# Shortcut for doing both `chown` and `chgrp`
+function choth {
+	usr="`whoami`"
+	if (( $# > 1 )); then
+		usr="$1"
+		shift
+	fi
+	for arg in "$@"; do
+		chown "$usr" "$arg"
+		chgrp "$usr" "$arg"
+	done
+}
+
+
 function ll {
 	if (( $# < 1 )) || [[ "$1" = -* && $# -eq 1 ]]; then
 	# if no arguments or only option-flags given, work on the current dir and
