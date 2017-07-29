@@ -47,11 +47,11 @@ function set_up() {
 
   if (
    location.host.indexOf(".media.tumblr.")!==-1 
-   && path.match(/_500\.[a-zA-Z0-9]{3,4}/)!==null
+   && path.match(/_5[0-9]0\.[a-zA-Z0-9]{3,4}/)!==null
   ) {
-  // if we're viewing an image at low rez, automatically bump it up to the
-  // high-rez version:
-   location.replace( path.replace(/_500\./,"_1280.") );
+  // if we're viewing an image at low rez - generally 500 or 540 if inline,
+  // automatically bump it up to the high-rez version:
+   location.replace( path.replace(/_5[0-9]0\./,"_1280.") );
   }
   
   window.addEventListener(
