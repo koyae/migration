@@ -85,6 +85,7 @@ A few of the functions and scripts in this repo rely on additional packages. Oth
 
 #### Nice-to-have packages
 
+* dos2unix
 * git
 * ssh
 * ssh-keygen
