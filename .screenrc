@@ -1,2 +1,3 @@
 mousetrack on
 vbell off
+defscrollback 10000
