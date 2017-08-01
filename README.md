@@ -102,4 +102,8 @@ A few of the functions and scripts in this repo rely on additional packages. Oth
 
 #### ssh-agent / askpass stuff
 
-	Once the above steps are complete, ensure that the SSH\_ASKPASS shell-variable points to one of the askpass executables which come with whichever package you chose e.g. "/usr/libexec/gnome-ssh-askpass".
+Once the above steps are complete, log back into Cygwin and `echo $SSH_ASKPASS`ensure that the SSH\_ASKPASS shell-variable points to one of the askpass executables which come with whichever package you chose e.g. "/usr/libexec/gnome-ssh-askpass". If it's incorrect, `export SSH_ASKPASS=<path>` in ~/export\_local
+
+Once there, test whether this configuration is correct by running the "XWin Server" executable and then opening Cygwin. The icon to start the server should appear on the start-menu after installing the xinit and xorg-server packages.
+
+Running this server also allows certain GUI-applications to be run on a remote server. Enable this by passing `-XY` when connecting via `ssh`. `xeyes` and `xclock` are simple examples to try if you're testing.

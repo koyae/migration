@@ -162,14 +162,26 @@ autocmd Syntax, php set comments+=://
 		"
 		" if the cursor is at the line's hard home, send it to the line's soft
 		" home.
-		let orig_pos = virtcol('.')
-		let virtual_home = 1 + orig_pos - orig_pos%winwidth('%') 
+		"
+		" Virtual home: the leftmost location of the screen accessible by the
+		" cursor without it changing lines visually. This is only different
+		" from the 'hard' home if the line is long enough that vim wraps it
+		" and will always match the hard home if 'nowrap' is set.
+		"
+		" Soft home: the leftmost absolute column (not visual) the cursor can
+		" visit on the current nonvisual line before reaching a whitespace.
+		"
+		" Hard home: the leftmost absolute column on the current nonvisual
+		" line.
+		let orig_pos = col('.')
+		let vorig_pos = virtcol('.')
+		let virtual_home = 1 + vorig_pos - vorig_pos%winwidth('%') + &tabstop*len(matchstr(getline('.'),'^\t*'))
 		let soft_home = match(getline('.'), '\S') + 1
 		let hard_home = 1
-		" echom "orig: " . orig_pos . " virt: " . virtual_home . " soft: " . soft_home
-		if orig_pos != virtual_home && orig_pos != hard_home && orig_pos != soft_home
+		" echom "orig: " . orig_pos . " vorig: " . vorig_pos . " virth: " . virtual_home . " softh: " . soft_home
+		if vorig_pos != virtual_home && orig_pos != hard_home && orig_pos != soft_home
 			return 'g^'
-		elseif orig_pos == virtual_home && orig_pos != soft_home
+		elseif vorig_pos == virtual_home && orig_pos != soft_home
 			return '^'
 		elseif orig_pos == soft_home 
 			return '0'
