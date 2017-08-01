@@ -1,5 +1,4 @@
 #!/bin/bash
-#!/bin/bash
 #calledvia=$_ # must be first line to work
 #if [[ $calledvia != $0 ]]
 # if .bashrc is being sourced from elsewhere
@@ -31,18 +30,16 @@ alias pwdp='pwd -P'
 alias ssh-add='ssh-add -c' # require confirmation if agent-forwarding is about to occur (see README about requirements)
 alias zip='zip -r' # zip recursively by default
 alias grepc='grep --color=always'
-shopt -s extglob # enable shell-extensions
+shopt -s extglob # enable shell-extensions such as negation-based matching
 git config --global push.default upstream
 git config --global color.ui auto # some systems oddly disable this
 PATH="~/bin2:$PATH"
 
-# keybinding stuff:
-stty stop ''; stty start ''; stty -ixon; stty -ixoff
-# ^ disable freeze and unfreeze commands to free ctrlS and ctrlQ
-bind '"":""'
-# ^ set ctrlBackspace to mimic ctrlW (delete previous word) in terminal
-bind '"[1;5D":"b"' # ctrlLeft moves cursor one word back
-bind '"[1;5C":"f"' # ctrlRight moves cursor one word forward
+bind '"[1;5D":"b"' 2>/dev/null # ctrlLeft moves cursor one word back
+bind '"[1;5C":"f"' 2>/dev/null # ctrlRight moves cursor one word forward
+bind '"":""' 2>/dev/null # ctrlBackspace deletes previous word
+
+# [ additional control-signal stuff located in .bash_profile ]
 
 # weird stuff:
 alias l='ls'
@@ -59,7 +56,7 @@ alias pyaml="python -c 'import sys, yaml, json; json.dump(yaml.load(sys.stdin), 
 
 # General envs:
 if [[ -f ~/export_envs ]]; then . ~/export_envs ; fi
-# ^ exports functions which should always be exported
+# ^ exports variables which should always be exported
 
 # Machine-specific aliases and envs:
 if [[ -f ~/export_local ]]; then . ~/export_local ; fi
