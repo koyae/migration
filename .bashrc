@@ -27,6 +27,7 @@ alias du='duc'
 alias df='df -h'
 alias reup='echo Reloading .bashrc && . ~/.bashrc'
 alias pwdp='pwd -P'
+alias ssh='ssh -a' # use local ssh-agent if available, but do not allow challenges to be forwarded from remote servers
 alias ssh-add='ssh-add -c' # require confirmation if agent-forwarding is about to occur (see README about requirements)
 alias zip='zip -r' # zip recursively by default
 alias grepc='grep --color=always'
