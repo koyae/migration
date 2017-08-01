@@ -66,6 +66,9 @@ A few of the functions and scripts in this repo rely on additional packages. Oth
 
 #### Required-for-certain-things packages
 
+* xinit - required to run XWin Server which allows `ssh-add -c` to work
+* xorg-server - required to run XWin Server which allows `ssh-add -c` to work
+* gnome-ssh-askpass or lxqt-openssh-askpass - required for displaying ssh-agent prompts
 * vim – required by `xviml`, `sviml`, `jvimn`, and "setup.sh"
 * grep – required by `grepr` function
 * hexdump – required by `debom` script
@@ -95,3 +98,8 @@ A few of the functions and scripts in this repo rely on additional packages. Oth
 * rsync
 * tr
 
+### Check configuration
+
+#### ssh-agent / askpass stuff
+
+	Once the above steps are complete, ensure that the SSH\_ASKPASS shell-variable points to one of the askpass executables which come with whichever package you chose e.g. "/usr/libexec/gnome-ssh-askpass".
