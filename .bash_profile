@@ -2,6 +2,12 @@
 
 # .bash_profile - stuff that only makes sense for interactive shells 
 
+# Since the presence of a .profile or .bash_profile in the home-directory
+# causes execution of .bashrc to be skipped by default, source it explicitly:
+if [ -f "$HOME/.bashrc" ]; then
+	. "$HOME/.bashrc"
+fi
+
 stty stop ''; stty start ''; stty -ixon; stty -ixoff
 # ^ disable freeze and unfreeze commands to free ctrlS and ctrlQ
 
