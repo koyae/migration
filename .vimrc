@@ -23,7 +23,7 @@ autocmd Syntax, php set comments+=://
 	:set <A-i>=i
 
 	let term=$TERM
-	if term == 'screen'
+	if term == 'screen' || term == "screen-256color" || term == "xterm-256color"
 	" if running from `screen`, assume xterm-signals:
 		:set term=xterm
 	endif
