@@ -31,6 +31,7 @@ autocmd Syntax, php set comments+=://
 "--------------------Plugin Imports------------------------:
 	:source ~/.vim/plugin/cmdalias.vim
 	execute pathogen#infect()
+	runtime macros/matchit.vim " allow jumping to matching XML tags using '%'
 
 "---------------------User settings------------------------:
 
