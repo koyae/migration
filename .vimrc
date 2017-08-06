@@ -353,11 +353,38 @@ autocmd Syntax, php set comments+=://
 			qall
 		endif
 	endfunction
-	 
+	
+	function! RepeatMacroOnSelection()
+	" inspired by: 
+	" github.com/stoeffel/.dotfiles/blob/2115ecff195d59db09260fbd31b7261126011b7b/vim/visual-at.vim 
+		echo "@" . getcmdline()
+		let char = nr2char(getchar())
+		let start = line("'<")
+		let goal = line("'>")
+		let its = 0
+		while its <= goal - start && line(".") <= goal 
+		" while the macro's inherent motion (assuming it has any) hasn't
+		" pushed us past the target line, and we have not done one iteration
+		" for each line, loop:
+			let startPos = line(".")
+			execute "normal @" . char
+			let its = its + 1
+			if line(".") == startPos
+			" If the macro does not change lines by itself, we do instead, so
+			" we don't stay in the loop forever:
+				execute "normal \<Down>"
+			endif
+		endwhile
+	endfunction
+
 
 "---------------------Novel keybindings--------------------:
+	
+	" @-key during visual selection repeats the specified macro for each
+	" selected line:
+	xnoremap @ :<C-u>call RepeatMacroOnSelection()<Return>
 
-" ctrlAltT tears out current pane and sends to a new tab:
+	" ctrlAltT tears out current pane and sends to a new tab:
 	nnoremap <C-A-t> :call PaneToTab()<Return>
 
 	" ctrlPageUp goes to next tab:
