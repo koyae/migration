@@ -436,17 +436,23 @@ autocmd Syntax, php set comments+=://
 
 "-- Navigation bindings:
 
-	" 3: home-key goes to the beginning of the virtual line, and toggles
+	" 6: home-key goes to the beginning of the virtual line, and toggles
 	" between soft home and hard home after tha :
 	nnoremap <expr> <Home> SmartHome('n')
+	nnoremap <expr> <kHome> SmartHome('n')
 	imap <expr> <Home> "\<C-o>" . SmartHome('i')
+	imap <expr> <kHome> "\<C-o>" . SmartHome('i')
 	vnoremap <expr> <Home> SmartHome(visualmode())
+	vnoremap <expr> <kHome> SmartHome(visualmode())
 	
-	" 3: end-key goes to the end of the virtual line or the actual end if
+	" 6: end-key goes to the end of the virtual line or the actual end if
 	" already there:
 	nnoremap <silent> <expr> <End> SmartEnd('n')
+	nnoremap <silent> <expr> <kEnd> SmartEnd('n')
 	inoremap <silent> <expr> <End> "\<C-o>" . SmartEnd('i')
+	inoremap <silent> <expr> <kEnd> "\<C-o>" . SmartEnd('i')
 	vnoremap <silent> <expr> <End> SmartEnd(visualmode())
+	vnoremap <silent> <expr> <kEnd> SmartEnd(visualmode())
 	 
 	"2: o-key and shiftO insert a line below or above the current one (without staying in insert mode)
 	" the x below deletes the autoindent whitespace 2:
