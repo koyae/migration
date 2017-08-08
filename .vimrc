@@ -311,7 +311,20 @@ autocmd Syntax, php set comments+=://
 	endfunction
 
 	function! JumpToChar(character,flags)
+	" Move to the specified character, or to the last character moved to.
+	" If 'v' is passed as a flag, return keystrokes for navigating to char.
+	" Otherwise just jump straight there and return nothing.
+		let keys=""
 		let char=a:character
+		let visual=0
+		let searchFlags=""
+		if match(a:flags,'b') != -1
+			let searchFlags = 'b'
+		endif
+		if match(a:flags,'v') != -1
+			let visual=1
+			let searchFlags .= 'n'
+		endif
 		if char == ''
 			let char = g:foundLast		
 		else
@@ -319,11 +332,35 @@ autocmd Syntax, php set comments+=://
 		endif
 		call SaveSetting('ignorecase')
 		call SaveSetting('smartcase')
-		let &ignorecase = 0
-		let &smartcase = 0
-		call search('\V' . char, 'w'. a:flags)
+		set noignorecase
+		set nosmartcase
+		if visual==1
+			echom "searchFlags: " . searchFlags
+			let goHere=searchpos('\V' . char, searchFlags)
+			" echom "start: [" . line(".") . ", " . col(".") . "] goal: [" . join(goHere,", ") . "]"
+			" if not searching backwards, direction is right on the line, and
+			" down the document:
+			let hDir = match(searchFlags,"b")!=-1 ? "\<Left>" : "\<Right>"
+			let vDir = match(searchFlags,"b")!=-1 ? "\<Up>" : "\<Down>"
+			if goHere[0] != 0
+				if goHere[0] != line(".")
+					" <lineNum>gg jumps to <lineNum> without leaving selection:
+					let keys .= goHere[0] . 'gg'
+					" 0 goes to the very start of the line:
+					let keys .= '0'
+					" this goes to the right the needed number of characters:
+					let keys .= strlen(matchstr(getline(goHere[0]),'\V\[^'.char.']\+')) . 'l'
+				else
+					let keys .= repeat(hDir,abs(col(".") - goHere[1]))
+				endif
+			endif
+		else
+			call search('\V' . char, 'w'. searchFlags)
+		endif
 		call RestoreSetting('ignorecase')
 		call RestoreSetting('smartcase')
+		echom keys	
+		return keys
 	endfunction
 
 	function! JumpToNextMatchingChar(flags)
@@ -334,7 +371,7 @@ autocmd Syntax, php set comments+=://
 	" Interactive character-jump function
 	function! FindChar(flags)
 		let char = nr2char( getchar() )
-		call JumpToChar(char,a:flags)
+		return JumpToChar(char,a:flags)
 	endfunction
 
 	function! CloseTab()
@@ -446,14 +483,20 @@ autocmd Syntax, php set comments+=://
 	" credit: http://stackoverflow.com/questions/676600/
 	vmap <Return> <Del>
 	
-	" f-key finds the next single character (accepted afterwards
+	" 2: f-key finds the next single character (accepted afterwards
 	" interactively) on multiple lines, rather than just the current one:
 	nnoremap <silent> f :call FindChar('')<Return>
-	" shiftF finds previous single character (accepted afterwards
-	" interactively)
+	vnoremap <silent> <expr> f FindChar('v')
+	" 2: shiftF finds previous single character (accepted afterwards
+	" interactively):
 	nnoremap <silent> F :call FindChar('b')<Return>
+	vnoremap <silent> <expr> F FindChar('vb')
+	" 2: semicolon-key repeats previous FindChar search:
 	nnoremap <silent> ; :call JumpToChar('','')<Return>
+	vnoremap <silent> <expr> ; JumpToChar('','v')
+	" 2: comma-key repeats previous FindChar search backwards:
 	nnoremap <silent> , :call JumpToChar('','b')<Return>
+	vnoremap <silent> <expr> , JumpToChar('','vb')
 
 "-------------------Keybinding overrides-------------------:
 

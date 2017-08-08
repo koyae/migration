@@ -49,6 +49,7 @@ alias cdP='cd "`pwd -P`"'
 alias cdgr='cd "`git rev-parse --show-toplevel`"'
 alias lastat='cd "$(cat ~/lastat)"'
 alias lastam='pwd > ~/lastat'
+alias ssh-remove='ssh-add -d'
 
 alias readreq='openssl req -noout -text -in'
 alias readcert='openssl x509 -noout -text -in'
