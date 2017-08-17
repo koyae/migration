@@ -2,3 +2,6 @@ mousetrack on
 vbell off
 defscrollback 10000
 term xterm-256color
+
+# ctrlC creates a new task and immediately offers to rename it
+bind ^C eval screen title
