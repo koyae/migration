@@ -35,6 +35,16 @@ PgUp:: ; pageUp-key
 	Send, {ShiftDown}{NumpadPgdn}{ShiftUp}
 	return
 
+^Home:: ; ctrlHome
+	; Below, send a normal ctrlHome if the right ctrl-key is used.
+	; If the left ctrl-key is used, simulate a ctrlDelete keypress instead.
+	GetKeyState, which, LCtrl
+	if which = D
+		Send, {CtrlDown}{Delete}{CtrlUp}
+	else
+		Send, {CtrlDown}{Home}{CtrlUp}
+	return
+
 F1:: ; F1-key
 	Send, {Escape}
 	return
