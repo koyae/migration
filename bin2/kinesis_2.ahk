@@ -40,9 +40,9 @@ PgUp:: ; pageUp-key
 	; If the left ctrl-key is used, simulate a ctrlDelete keypress instead.
 	GetKeyState, which, LCtrl
 	if which = D
-		Send, {CtrlDown}{Delete}{CtrlUp}
+		Send, {CtrlDown}{NumpadDel}{CtrlUp}
 	else
-		Send, {CtrlDown}{Home}{CtrlUp}
+		Send, {CtrlDown}{NumpadHome}{CtrlUp}
 	return
 
 F1:: ; F1-key
