@@ -50,6 +50,7 @@ alias cdgr='cd "`git rev-parse --show-toplevel`"'
 alias lastat='cd "$(cat ~/lastat)"'
 alias lastam='pwd > ~/lastat'
 alias ssh-remove='ssh-add -d'
+alias psql='psql $( [ -d /d/Job/chapow/back ] && echo -v home=/d/Job/chapow/back || echo -v home=/tmp)'
 
 alias readreq='openssl req -noout -text -in'
 alias readcert='openssl x509 -noout -text -in'
