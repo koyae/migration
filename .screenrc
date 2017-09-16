@@ -7,3 +7,9 @@ term xterm-256color
 # preset name automatically:
 bind ^c eval screen "title ''" title
 bind "" copy
+
+layout new
+screen
+split -v
+focus
+screen

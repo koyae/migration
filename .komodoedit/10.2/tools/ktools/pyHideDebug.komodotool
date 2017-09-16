@@ -1,0 +1,26 @@
+{
+  "keyboard_shortcut": "", 
+  "name": "pyHideDebug", 
+  "language": "JavaScript", 
+  "trigger": "trigger_postopen", 
+  "value": [
+    "komodo.assertMacroVersion(3);", 
+    "if (komodo.view) { komodo.view.setFocus(); }", 
+    "ko.find.replaceAllInMacro(", 
+    "\twindow, // editor", 
+    "\t0, // context", 
+    "\t'^(\\\\s+)([^ #].* # PRODREM)', // search-pattern", 
+    "\t'\\\\1# \\\\2', // replace-pattern", 
+    "\tfalse, // loud?", 
+    "\t2, // patternType", 
+    "\t1, // case sens", 
+    "\tfalse, // searchBackward?", 
+    "\tfalse // whole-word match?", 
+    ");"
+  ], 
+  "version": "1.1.5", 
+  "rank": 100, 
+  "trigger_enabled": false, 
+  "async": false, 
+  "type": "macro"
+}
