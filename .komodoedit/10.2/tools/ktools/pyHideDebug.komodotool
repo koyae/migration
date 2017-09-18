@@ -1,5 +1,5 @@
 {
-  "keyboard_shortcut": "", 
+  "keyboard_shortcut": "Ctrl+Alt+P", 
   "name": "pyHideDebug", 
   "language": "JavaScript", 
   "trigger": "trigger_postopen", 
