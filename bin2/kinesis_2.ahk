@@ -5,34 +5,40 @@
 ; a vertical row to the right of the Enter key as the Freestyle does, but in a 
 ; different sequence than the freestyle.
 
+#UseHook
+
 Pgdn:: ; pageDown-key
-	Send, {NumpadEnd}
+	Send, {End}
 	return
 ^PgDn:: ; ctrlPagedown
-	Send, {CtrlDown}{NumpadEnd}{CtrlUp}
+	Send, {CtrlDown}{End}{CtrlUp}
 	return
 +Pgdn:: ; shiftPagedown
-	Send, {ShiftDown}{NumpadEnd}{ShiftUp}
+	Send, {ShiftDown}{End}{ShiftUp}
 	return
 
 End:: ; end-key
-	Send, {NumpadPgup}
+	Send, {PgUp}
 	return
 ^End:: ; ctrlEnd
-	Send, {CtrlDown}{NumpadPgup}{CtrlUp}
+	Send, {CtrlDown}{Pgup}{CtrlUp}
 	return
 +End:: ; shiftEnd
-	Send, {ShiftDown}{NumpadEnd}{ShiftUp}
+	Send, {ShiftDown}{End}{ShiftUp}
+	return
+^+End:: ; ctrlShiftEnd
+	Send, {ShiftDown}{CtrlDown}{PgUp}{CtrlUp}{ShiftUp}
 	return
 
+
 PgUp:: ; pageUp-key
-	Send, {NumpadPgdn}
+	Send, {Pgdn}
 	return
 ^PgUp:: ; ctrlPageup
-	Send, {CtrlDown}{NumpadPgdn}{CtrlUp}
+	Send, {CtrlDown}{Pgdn}{CtrlUp}
 	return
 +PgUp:: ; shiftPageup
-	Send, {ShiftDown}{NumpadPgdn}{ShiftUp}
+	Send, {ShiftDown}{Pgdn}{ShiftUp}
 	return
 
 ^Home:: ; ctrlHome
@@ -40,18 +46,36 @@ PgUp:: ; pageUp-key
 	; If the left ctrl-key is used, simulate a ctrlDelete keypress instead.
 	GetKeyState, which, LCtrl
 	if which = D
-		Send, {CtrlDown}{NumpadDel}{CtrlUp}
+		Send, {CtrlDown}{Del}{CtrlUp}
 	else
-		Send, {CtrlDown}{NumpadHome}{CtrlUp}
+		Send, {CtrlDown}{Home}{CtrlUp}
 	return
 
 F1:: ; F1-key
 	Send, {Escape}
 	return
 
+F7:: ; F7-key
+	Send, {F5}
+	return
+
 Pause:: ; pauseBreak-key
 	Send, {Delete}
 	return
 ^Pause:: ; ctrlPausebreak
-	Send, {CtrlDown}{Pause}{CtrlUp}
+	Send, {CtrlDown}{Delete}{CtrlUp}
+	return
++Pause:: ; shiftPausebreak pastes
+	Send, {ShiftDown}{Insert}{ShiftUp}
+	return
+	
+!1:: ; altOne / alt1
+!-:: ; altMinus / alt-
+	Winset, AlwaysOnTop, , A
+	return
+	
+; META CONTROLS:
+
+^+F5:: ; ctrlShiftF5
+	Reload
 	return
