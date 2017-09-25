@@ -2,6 +2,7 @@
 autocmd BufNewFile,BufRead, *.postgre setf pgsql
 autocmd BufNewFile,BufRead, pom.xml,web.xml set tabstop=2 expandtab shiftwidth=2
 autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
+autocmd BufNewFile,BufRead, .screenrc* setf screen
 " allow PHP comments to rewrap correctly:
 autocmd Syntax, php set comments+=://
 
