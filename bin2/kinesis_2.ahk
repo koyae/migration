@@ -2,19 +2,22 @@
 
 ; The mappings reduce the amount of reach and switch a few keys around in the
 ; Home column so they match that of the ASUS HL90, which had the same keys in
-; a vertical row to the right of the Enter key as the Freestyle does, but in a 
+; a vertical row to the right of the Enter key as the Freestyle does, but in a
 ; different sequence than the freestyle.
 
 #UseHook
 
-Pgdn:: ; pageDown-key
+PgDn:: ; pageDown-key
 	Send, {End}
 	return
 ^PgDn:: ; ctrlPagedown
 	Send, {CtrlDown}{End}{CtrlUp}
 	return
-+Pgdn:: ; shiftPagedown
++PgDn:: ; shiftPagedown
 	Send, {ShiftDown}{End}{ShiftUp}
+	return
+^+PgDn:: ; ctrlShiftPagedown
+	Send, {CtrlDown}{ShiftDown}{End}{ShiftUp}{CtrlUp}
 	return
 
 End:: ; end-key
@@ -32,13 +35,13 @@ End:: ; end-key
 
 
 PgUp:: ; pageUp-key
-	Send, {Pgdn}
+	Send, {PgDn}
 	return
 ^PgUp:: ; ctrlPageup
-	Send, {CtrlDown}{Pgdn}{CtrlUp}
+	Send, {CtrlDown}{PgDn}{CtrlUp}
 	return
 +PgUp:: ; shiftPageup
-	Send, {ShiftDown}{Pgdn}{ShiftUp}
+	Send, {ShiftDown}{PgDn}{ShiftUp}
 	return
 
 ^Home:: ; ctrlHome
@@ -68,12 +71,12 @@ Pause:: ; pauseBreak-key
 +Pause:: ; shiftPausebreak pastes
 	Send, {ShiftDown}{Insert}{ShiftUp}
 	return
-	
+
 !1:: ; altOne / alt1
 !-:: ; altMinus / alt-
 	Winset, AlwaysOnTop, , A
 	return
-	
+
 ; META CONTROLS:
 
 ^+F5:: ; ctrlShiftF5
