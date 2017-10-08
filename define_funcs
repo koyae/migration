@@ -167,6 +167,10 @@ function nuke {
 	done
 }
 
+function hashdeebhide {
+	sed -i 's/^\([ \t]\+\)\([^ #].* # PRODREM\)/\1# \2/' "$1"
+}
+
 # Uncompress tar'd files:
 function untar {
 	if (( $# < 1 )); then
