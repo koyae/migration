@@ -5,13 +5,24 @@ defscrollback 10000
 # file, otherwise, it can be empty or absent:
 source .screenrc1
 
-# ctrlC creates a new task and immediately offers to rename it, clearing the
-# preset name automatically:
-bind ^c eval screen "title ''" title
-bind "" copy
-
 layout new
 screen
 split -v
 focus
 screen
+ 
+# <screenprefix> then ctrlC creates a new task and immediately offers to rename it,
+# clearing the preset name automatically to empty before prompting for a new one:
+bind ^c eval screen "title ''" title
+# <screenprefix> then shiftA clears the old title when renaming a task:
+bind A eval screen "title ''" title
+
+# <screenprefix> then Enter-key initiates copy-mode
+bind "" copy
+
+#CtrlA then Up-key enters copy-mode and moves the cursor up
+bindkey "^A^[OA" eval copy "stuff k"
+# ctrlA then Left-key enters copy-mode and moves the cursor left
+bindkey "^A^[OC" eval copy "stuff L"
+# ctrlA then Right-key enters copy-mode and moves the cursor right
+bindkey "^A^[OD" eval copy "stuff h"
