@@ -104,6 +104,6 @@ A few of the functions and scripts in this repo rely on additional packages. Oth
 
 Once the above steps are complete, log back into Cygwin and `echo $SSH_ASKPASS`ensure that the SSH\_ASKPASS shell-variable points to one of the askpass executables which come with whichever package you chose e.g. "/usr/libexec/gnome-ssh-askpass". If it's incorrect, `export SSH_ASKPASS=<path>` in ~/export\_local
 
-Once there, test whether this configuration is correct by running the "XWin Server" executable and then opening Cygwin. The icon to start the server should appear on the start-menu after installing the xinit and xorg-server packages.
+Once there, test whether this configuration is correct by running the "XWin Server" executable and then opening Cygwin. The icon to start the server should appear on the start-menu after installing the xinit and xorg-server packages. If it does not appear, you can launch the server from Cygwin with `startxwin` (/usr/bin/startxwin). If you wish to prevent the server from closing along with the Cygwin window, you'll need to add `exec sleep infinity` to the last line of `startxwin`, per superuser.com/questions/435768 and x.cygwin.com/docs/faq/cygwin-x-faq.html#q-startxwinrc-exit. Note that it is not secure to invoke Xwin.exe directly, because this skirts its permissions-mechanisms.
 
 Running this server also allows certain GUI-applications to be run on a remote server. Enable this by passing `-XY` when connecting via `ssh`. `xeyes` and `xclock` are simple examples to try if you're testing.
