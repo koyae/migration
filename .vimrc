@@ -542,6 +542,7 @@ autocmd Syntax, php set comments+=://
 
 	" s-key does not yank, just deletes then enters insert-mode:
 	vnoremap <expr> s SmartS()
+	nnoremap <expr> s SmartS()
 	" x-key does not yank, just deletes:
 	vnoremap <expr> x SmartX()
 
