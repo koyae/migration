@@ -15,7 +15,7 @@ screen
 # clearing the preset name automatically to empty before prompting for a new one:
 bind ^c eval screen "title ''" title
 # <screenprefix> then shiftA clears the old title when renaming a task:
-bind A eval screen "title ''" title
+bind A eval "title ''" title
 
 # <screenprefix> then Enter-key initiates copy-mode
 bind "" copy
