@@ -51,6 +51,10 @@ alias lastat='cd "$(cat ~/lastat)"'
 alias lastam='pwd > ~/lastat'
 alias ssh-remove='ssh-add -d'
 alias psql='psql $( [ -d /d/Job/chapow/back ] && echo -v home=/d/Job/chapow/back || echo -v home=/tmp)'
+read -r -d "" gitrwt <<-'EOF'
+	vim .git/config -c 'call search("worktree = ","e")' -c 'normal! ld$a'"`pwd`" -c 'wq'
+EOF
+alias gitrwt="$gitrwt"
 
 alias readreq='openssl req -noout -text -in'
 alias readcert='openssl x509 -noout -text -in'

@@ -450,6 +450,7 @@ autocmd Syntax, php set comments+=://
 	noremap <silent> <C-A-x> :call SelectAllThenDo("normal x")<Return>
 	" 2: ctrlS saves current file:
 	vnoremap <C-s> <Esc>:w<Return>
+	inoremap <C-S> <Esc>:w<Return>i<Right>
 	nnoremap <C-s> :w <Return>
 	" ^ Note that many shell-clients bind ctrlS to send the freeze-output 
 	" signal (XOFF). This command won't work if that's not done. In most cases

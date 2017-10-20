@@ -62,6 +62,14 @@ F7:: ; F7-key
 	Send, {F5}
 	return
 
+PrintScreen:: ; printscreen-key
+	Send, {Insert}
+	return
+
+!Home:: ; altHome (sent when the Web key is pressed)
+	Send, {PrintScreen}
+	return
+
 Pause:: ; pauseBreak-key
 	Send, {Delete}
 	return
@@ -72,7 +80,6 @@ Pause:: ; pauseBreak-key
 	Send, {ShiftDown}{Insert}{ShiftUp}
 	return
 
-!1:: ; altOne / alt1
 !-:: ; altMinus / alt-
 	Winset, AlwaysOnTop, , A
 	return
