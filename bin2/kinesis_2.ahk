@@ -61,6 +61,9 @@ F1:: ; F1-key
 F7:: ; F7-key
 	Send, {F5}
 	return
+^F7:: ; ctrlF7
+	Send, {CtrlDown}{F5}{CtrlUp}
+	return
 
 PrintScreen:: ; printscreen-key
 	Send, {Insert}
