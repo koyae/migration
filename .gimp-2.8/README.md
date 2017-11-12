@@ -4,15 +4,23 @@ Below, the precise directories used may need to change depending upon the versio
 * _version_ e.g. 2.8
 * _cygwinDirectory_ the directory that Cygwin treats as "/"
 * _gimpInstallDir_ the top-level directory into which GIMP was installed (only refers to Windows systems)
+* `<your_cygwin_home>` the home (~) directory for the account you're currently using (only refers to Windows systems) e.g. "C:\\cygwin\\home\\koyae"
 
-# menurc
+# menurc and sessionrc
 
-On Windows, `menurc` should be `mklink`'d to the following locations:
+On Windows, it's easiest just to link all preference-related stuff using `mklink` from an elevated Windows CMD-prompt:
 
-* "C:\\Program Files\\Git\\.gimp-_version_\\menurc" (or wherever Git Bash is installed, assuming it is installed)
-* "_cygwinDirectory_\\home\\_userName_\\.gimp-_version_\\menurc" (assuming Cygwin is installed but the repo is not in ~/)
-* "_gimpInstallDir_\\etc\\gimp\\_majorVersion_\\menurc"
-* "%USERPROFILE%\\.gimp-_version_\\menurc"
+```bat
+cd %USERPROFILE%
+mklink /D .gimp-2.8 "<your_cygwin_home>\.gimp-2.8"
+```
+
+Alternatively, "menurc" and "sessionrc" can be `mklink`'d to the following location(s):
+
+* "C:\\Program Files\\Git\\.gimp-_version_\\\<whateverrc>" (or wherever Git Bash is installed, assuming it is installed)
+* "_cygwinDirectory_\\home\\_userName_\\.gimp-_version_\\\<whateverrc>" (assuming Cygwin is installed but the repo is not in ~/)
+* "_gimpInstallDir_\\etc\\gimp\\_majorVersion_\\\<whateverrc>"
+* "%USERPROFILE%\\.gimp-_version_\\\<whateverrc>"
 
 On Linux, it can be left where it is. If desired, it can also be presumably symlinked to:
 
