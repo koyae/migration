@@ -8,6 +8,7 @@
 // @include http://*.tumblr.com/*
 // @include https://*.tumblr.com/*
 // @exclude https://tumblr.com/*
+// @exclude https://www.tumblr.com/*
 // @exclude http://*.tumblr.com/post/*
 // @exclude http://*.tumblr.com/image/*
 // @exclude https://*.tumblr.com/post/*
@@ -22,6 +23,7 @@
 // console.log("LOADED");
 
 var path = location.pathname;
+var domain = location.host;
 var pageCap = path.match(/^\/page\/(\d+)/);
 var page = (pageCap===null)? 1 : Number(pageCap[1]);
 
@@ -45,13 +47,19 @@ function handle_keyup(event) {
 
 function set_up() {
 
+  console.log("AAYYYY!");
+  
   if (
    location.host.indexOf(".media.tumblr.")!==-1 
-   && path.match(/_5[0-9]0\.[a-zA-Z0-9]{3,4}/)!==null
+   && path.match(/_\d\d\d\d?\.[a-zA-Z0-9]{3,4}/)!==null
   ) {
   // if we're viewing an image at low rez - generally 500 or 540 if inline,
   // automatically bump it up to the high-rez version:
-   location.replace( path.replace(/_5[0-9]0\./,"_1280.") );
+   location.replace(
+     'http://' 
+     + domain.replace(/..\.media.tumblr.com/,'data.tumblr.com')
+     + path.replace(/_\d\d\d\d?\./,"_raw.") 
+   );
   }
   
   window.addEventListener(
