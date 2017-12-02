@@ -194,8 +194,10 @@ autocmd Syntax, php set comments+=://
 
  
 	function! SmartEnd(mode)
-		call SaveSetting('belloff')	
-		set belloff=all
+		if exists('+belloff')
+			call SaveSetting('belloff')	
+			set belloff=all
+		endif
 		let orig_pos = virtcol('.')
 		let virtual_end = 0
 		if orig_pos < winwidth('%') 
@@ -209,7 +211,9 @@ autocmd Syntax, php set comments+=://
 		else
 			return 'g$'
 		endif
-		call RestoreSetting('belloff')
+		if exists('+belloff')
+			call RestoreSetting('belloff')
+		endif
 	endfunction
 
 	"function! ToReplaceWithinSelection()
