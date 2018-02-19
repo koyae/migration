@@ -1,0 +1,31 @@
+{
+  "keyboard_shortcut": "Alt+Shift+S", 
+  "name": "c4spoilertext", 
+  "language": "JavaScript", 
+  "trigger": "trigger_postopen", 
+  "value": [
+    "// Macro recorded on: Sun Feb 18 2018 00:03:00 GMT-0700 (Mountain Standard Time)", 
+    "komodo.assertMacroVersion(3);", 
+    "", 
+    "var scimoz = ko.views.manager.currentView.scimoz;", 
+    "", 
+    "if (komodo.view) { komodo.view.setFocus(); }", 
+    "", 
+    "var selection = scimoz.selText;", 
+    "if (selection) {", 
+    "\tko.commands.doCommand('cmd_delete');", 
+    "}", 
+    "komodo.view.selection = '[spoiler]';", 
+    "komodo.view.selection = '[/spoiler]';", 
+    "ko.commands.doCommand('cmd_wordLeft');", 
+    "ko.commands.doCommand('cmd_wordLeft');", 
+    "ko.commands.doCommand('cmd_left');", 
+    "ko.commands.doCommand('cmd_left');", 
+    "komodo.view.selection = selection;"
+  ], 
+  "version": "1.1.5", 
+  "rank": 100, 
+  "trigger_enabled": false, 
+  "async": false, 
+  "type": "macro"
+}
