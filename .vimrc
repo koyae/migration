@@ -615,10 +615,8 @@ autocmd Syntax, php set comments+=://
 	" enter-key acts like enter:
 	nmap <silent> <expr> <Return> ToInsertCr()
 	"inoremap <silent> <expr> <Return> ToInsertCr()
-	" 3: shiftI, 8-key and 9-key begin insert above 3:
+	" shiftI begins insert above: 
 	nmap <silent> <expr> <S-i> InsertLineAbove()
-	nmap <silent> <expr> 8 InsertLineAbove()
-	nmap <silent> <expr> 9 InsertLineAbove()
 	" k-key begins insert below:
 	nmap <silent> <expr> k InsertLineBelow()   
 	"<A-i> i\<End>\<End>\<CR>
