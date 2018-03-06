@@ -304,6 +304,7 @@ syn match pgsqlType          "%\(row\)\?type\>"
 syn match pgsqlType          "\<with\(out\)\?\_s\+time\_s\+zone\>"
 
 " Section: Variable types 
+syn match  pgsqlType		 "\<name\>"
 syn match  pgsqlType		 "\<float\>"
 syn region pgsqlType		 start="\<float\_s*(" end=")" contains=pgsqlNumber,pgsqlVariable
 syn match  pgsqlType		 "\<double\_s\+precision\>"
