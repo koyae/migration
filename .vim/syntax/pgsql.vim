@@ -228,7 +228,7 @@ syn match   pgsqlConstant	 "\<null\>"
 syn region pgsqlIdentifier	 start=+"+  skip=+\\\\\|\\"+  end=+"+
 syn region pgsqlIdentifier	 start=+U&"+  skip=+\\\\\|\\"+  end=+"+
 
-syn region pgsqlString		 start=+'+  skip=+\\\\\|\\'+  end=+'+
+syn region pgsqlString		 start=+'+  skip=+\\\\+  end=+'+
 syn region pgsqlString		 start=+U&'+  skip=+\\\\\|\\'+  end=+'+
 
 syn match pgsqlString		 "\$\w*\$"
