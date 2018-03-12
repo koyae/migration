@@ -49,10 +49,13 @@ syn match pgsqlKeyword      "\<if\>"
 syn match pgsqlOperator     "\<in\>"
 syn match pgsqlKeyword	    "\<key\>"
 syn match pgsqlKeyword      "\<language\>"
+syn match pgsqlKeyword      "\<nologin\>"
 syn match pgsqlKeyword      "\<nothing\>"
+syn match pgsqlKeyword      "\<notice\>"
 syn match pgsqlKeyword      "\<on\>"
 syn match pgsqlKeyword	    "\<only\>"
 syn match pgsqlKeyword	    "\<options\>"
+syn match pgsqlKeyword	    "\<raise\>"
 syn match pgsqlKeyword	    "\<range\>"
 syn match pgsqlKeyword      "\<returns\>"
 syn match pgsqlKeyword	    "\<row\>"
@@ -225,7 +228,7 @@ syn match   pgsqlConstant	 "\<null\>"
 
 " Section: Strings 
 " Strings (single- and double-quote)
-syn region pgsqlIdentifier	 start=+"+  skip=+\\\\\|\\"+  end=+"+
+syn region pgsqlIdentifier	 start=+"+  skip=+\\\\+  end=+"+
 syn region pgsqlIdentifier	 start=+U&"+  skip=+\\\\\|\\"+  end=+"+
 
 syn region pgsqlString		 start=+'+  skip=+\\\\+  end=+'+
