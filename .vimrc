@@ -192,6 +192,181 @@ autocmd Syntax, php set comments+=://
 		endif
 	endfunction
 
+	" Capitalize the character under the cursor if it is a keyword
+	" Currently only works from normal mode
+	function! PgCap(...)
+		if a:0
+			set syntax=pgsql
+			let kwType = synIDattr(  synID( line('.'), col('.'), 1 ), "name"  )
+		elseif a:0==2
+			set syntax=pgsql
+			let kwType = synIDattr(  synID( a:1, a:2, 1 ), "name"  )
+		elseif a:0==1
+			let kwType = a:1
+		endif
+		if index(['pgsqlKeyword','pgsqlOperator'],l:kwType) >= 0
+			normal! vgU
+		endif
+	endfunction
+
+	" To(toLine,toColumn[,fromLine='.'[,luddite=false,lineInject='',colInject='']])
+	" Return the keystrokes for moving the cursor to the specified line+column
+	function! To(line,toCol,...)
+		let toLine = (type(a:line)==v:t_number)? a:line : line(a:line)
+		let fromLine = get(a:, 1, '.')
+		let fromLine = (type(l:fromLine)==v:t_number)? l:fromLine :	line(l:fromLine)
+		let luddite = get(a:, 2, 0)
+		let lineInject = get(a:, 3, '')
+		let colInject = get(a:, 4, '')
+		let rString = ''
+		let fromCol = '.'
+		if l:luddite
+"			echom l:lineToBe . ' -> ' . l:toLine
+			let lineToBe = l:fromLine
+			" ^ This is the line we expect to land on after each set of actions
+			let postInject = ''
+			if l:fromLine < l:toLine
+			" If we'll be moving to a lower line from the current position...
+				" first allow the cursor to move to the end of the line:
+				let rString = ToCol(
+				\	[l:lineToBe,'$'], l:fromCol, 1, l:colInject
+				\ )
+				" for subsequent lines, we'll always start from the first
+				" column, and will inject a '0' keystroke after moving down
+				" each line to make sure of this:
+				let fromCol = 1
+				let postInject = '0'
+				while l:lineToBe < l:toLine - 1
+				" for as long as we have not accumulated enough actions to get
+				" us to the penultimate line yet, accumulate more actions:
+					let rString = l:rString
+						\ . ToLine(l:lineToBe + 1, l:lineToBe, 1, l:lineInject, '0')
+						\ . ToCol([l:lineToBe + 1,'$'], l:fromCol, 1, l:colInject)
+					let fromCol = 1
+					let lineToBe += 1
+				endwhile
+				" Handle last line separately
+				let rString = l:rString
+					\ . ToLine(
+					\	l:toLine, l:lineToBe, 1, l:lineInject, l:postInject
+					\ ) . ToCol([l:lineToBe + 1,a:toCol], l:fromCol, 1, l:colInject)
+			else
+			" If we're already on the right line, we just need to navigate to
+			" the desired column:
+				let rString = ToCol(
+				\	[l:toLine,a:toCol], l:fromCol, 1, l:colInject
+				\ )
+			endif
+		else
+			let rString = ToLine(l:toLine, l:fromLine, 0, l:lineInject)
+				\ . ToCol(a:toCol, 1, 0, l:colInject)
+		endif
+		return l:rString
+	endfunction
+
+	" ToLine(toLine[,fromLine='.'[,luddite=false,inject=''[,postInject='']]])
+	" Return the keystrokes for moving the cursor to the specified line 
+	" (normal/visual mode)
+	function! ToLine(line,...)
+		" Copy value and handle specials if necessary:
+		let toLine = (type(a:line)==v:t_string)? line(a:line) : a:line
+		let fromLine = get(a:, 1, '.')
+		" Handle specials if necessary:
+		if type(l:fromLine) == v:t_string
+			let fromLine = line(l:fromLine)
+		endif
+		let luddite = get(a:, 2, 0)
+		let inject = get(a:, 3, '')
+		let postInject = get(a:, 4, '')
+		if l:toLine == l:fromLine
+			return '' . l:postInject
+		else
+			if l:luddite
+				let difference = l:toLine - l:fromLine
+				if l:difference > 0
+					return repeat(l:inject . 'j' . l:postInject, l:difference)
+				else
+					return repeat(l:inject . 'k' . l:postInject, abs(l:difference))
+				endif
+			else
+				return l:inject . l:toLine . 'gg' . l:postInject
+		endif
+	endfunction
+
+	" ToCol(toCol[,fromCol='.'[,luddite=false[,inject='']]])
+	" Return the keystrokes for moving the cursor to the specified column
+	" (normal/visual mode)
+	" Function assumes we are already on the same line.
+	" If not, see ToLine()
+	"
+	" luddite  --  hit 'r' or 'h' repeatedly (repeating `inject` action each
+	"              time) rather than jumping straight to the desired column
+	"
+	" inject   --  before each navigation-action, execute this string of
+	"              keystrokes. If `luddite`=0 this will occur once. 
+	"              If `luddite`=true this will occur for each column between
+	"              the current cursor-position and the target column `toCol`
+	"
+	function! ToCol(col,...)
+		" Copy and handle specials if necessary:
+		let toCol = ColTidy(a:col)
+		let fromCol = ColTidy(get(a:, 1, '.'))
+		let luddite = get(a:, 2, 0)
+		let inject = get(a:, 3, '')
+		if l:luddite
+			let difference = l:toCol - l:fromCol
+"			echom 'difference: ' . l:difference
+			if l:difference > 0
+				return repeat(l:inject . 'l', l:difference)
+			else
+				return repeat(l:inject . 'h', abs(l:difference))
+			endif
+		else
+			return l:inject . l:toCol . '|'
+		endif
+	endfunction
+
+	" Helper function for getting valid column-numbers back, assuming
+	" navigation in normal mode.
+	" Takes a column-number, column string ('^','$', or '.'), or a list in the
+	" form [line,column] and returns an integer
+	function! ColTidy(col)
+		if type(a:col)==v:t_list
+			let colNumber = (type(a:col[1])==v:t_number)? 
+				\ a:col[1] : col(a:col)
+			if l:colNumber > len(getline(a:col[0]))
+				" Prevent columns past EOL being used:
+				return len(getline(a:col[0]))
+			else
+				" Prevent column 0 being used:
+				return max([1,a:col[1]])
+			endif
+		elseif type(a:col)!=v:t_number
+			if a:col=='$'
+				" Prevent columns past EOL being used:
+				return col('$') - 1
+			elseif a:col=='^'
+				" Prevent column 0 being used:
+				return col('^') + 1
+			else
+				" Otherwise, we should be in bounds so go for it:
+				return col(a:col)
+			endif
+		else
+		" If we're not given a line-number, we just assume it's in bounds:
+			return a:col
+		endif
+	endfunction
+
+	if exists("*synstack")
+		function! SynStack()
+			echo map(synstack(line('.'),col('.')), 'synIDattr(v:val, "name")')
+		endfunction
+		" From :help synID:
+		function! CurSyn()
+			return synIDattr(synID(line('.'),col('.'),1),"name")
+		endfunction
+	endif
  
 	function! SmartEnd(mode)
 		if exists('+belloff')
