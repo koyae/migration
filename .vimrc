@@ -192,12 +192,18 @@ autocmd Syntax, php set comments+=://
 		endif
 	endfunction
 
-	" Capitalize the character under the cursor if it is a keyword
-	" Currently only works from normal mode
+	" Capitalize the character under the cursor if it is a Postgres keyword
+	" Currently only works from normal mode.
+	"
+	" The easiest way to use this function for the moment is with the
+	" following invocation, starting with the cursor on the first line on
+	" which capitalization should start.
+	"
+	" :exec 'silent! normal!' . To('$','$','.',1,'',":call PgCap()\<Enter>")
 	function! PgCap(...)
+		let kwType = synIDattr(  synID( line('.'), col('.'), 1 ), "name"  )
 		if a:0
 			set syntax=pgsql
-			let kwType = synIDattr(  synID( line('.'), col('.'), 1 ), "name"  )
 		elseif a:0==2
 			set syntax=pgsql
 			let kwType = synIDattr(  synID( a:1, a:2, 1 ), "name"  )
@@ -253,6 +259,7 @@ autocmd Syntax, php set comments+=://
 			else
 			" If we're already on the right line, we just need to navigate to
 			" the desired column:
+				"echom "LOGIC"
 				let rString = ToCol(
 				\	[l:toLine,a:toCol], l:fromCol, 1, l:colInject
 				\ )
