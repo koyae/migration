@@ -93,6 +93,7 @@ A few of the functions and scripts in this repo rely on additional packages. Oth
 * ssh
 * ssh-keygen
 * openssl
+* gnupg2 (for `gpg2`)
 * screen or tmux
 * df
 * rsync
