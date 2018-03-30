@@ -21,3 +21,14 @@ if [[ $(uname) = *cygwin*  ]] || [[ $(uname) = *CYGWIN* ]]; then
 	fi
 fi
 
+if [ -f "$APPDATA/postgresql/root.crt" ]; then
+	export PGSSLROOTCERT="$APPDATA/postgresql/root.crt"
+fi
+
+if [ -f "$APPDATA/postgresql/client.crt" ]; then
+	export PGSSLCERT="$APPDATA/postgresql/client.crt"
+fi
+
+if [ -f "$APPDATA/postgresql/client.key" ]; then
+	export PGSSLKEY="$APPDATA/postgresql/client.key"
+fi
