@@ -79,6 +79,20 @@ else
 	USERPROFILE="/cygdrive/c/Users/`whoami`"
 fi
 
+if [ -f "$APPDATA/postgresql/root.crt" ]; then
+	export PGSSLROOTCERT="$APPDATA/postgresql/root.crt"
+else
+	echo "$APPDATA/postgresql/root.crt" not found
+fi
+
+if [ -f "$APPDATA/postgresql/client.crt" ]; then
+	export PGSSLCERT="$APPDATA/postgresql/client.crt"
+fi
+
+if [ -f "$APPDATA/postgresql/client.key" ]; then
+	export PGSSLKEY="$APPDATA/postgresql/client.key"
+fi
+
 ####: Aliases and shell-tweaks ####
 
 # If not running interactively, don't do anything
