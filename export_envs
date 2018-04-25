@@ -4,6 +4,36 @@
 #
 # Export cross-system and local machine settings
 #
+# These should be settings which affect system-behaviors and utilities, but not
+# settings like PATH or GLOBIGNORE which affect the behavior of invocations in
+# bash itself
+#
+
+
+APPDATA="/cygdrive/c/Users/`whoami`/AppData/Roaming"
+if ! [[ -d "$APPDATA" ]]; then
+	unset APPDATA
+else
+	USERPROFILE="/cygdrive/c/Users/`whoami`"
+fi
+
+
+# PostgreSQL stuff:
+
+if [ -f "$APPDATA/postgresql/root.crt" ]; then
+	export PGSSLROOTCERT="$APPDATA/postgresql/root.crt"
+else
+	echo "$APPDATA/postgresql/root.crt" not found
+fi
+
+if [ -f "$APPDATA/postgresql/client.crt" ]; then
+	export PGSSLCERT="$APPDATA/postgresql/client.crt"
+fi
+
+if [ -f "$APPDATA/postgresql/client.key" ]; then
+	export PGSSLKEY="$APPDATA/postgresql/client.key"
+fi
+
 export EDITOR="vim"
 export HISTIGNORE="ls" # don't store plain ls-commands in bash history
 export HISTFILESIZE=100000

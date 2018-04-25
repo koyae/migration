@@ -51,10 +51,13 @@ alias lastat='cd "$(cat ~/lastat)"'
 alias lastam='pwd > ~/lastat'
 alias ssh-remove='ssh-add -d'
 alias psql='psql $( [ -d /d/Job/chapow/back ] && echo -v home=/d/Job/chapow/back || echo -v home=/tmp)'
+
+# reset git working tree location, if it's borked:
 read -r -d "" gitrwt <<-'EOF'
 	vim .git/config -c 'call search("worktree = ","e")' -c 'normal! ld$a'"`pwd`" -c 'wq'
 EOF
 alias gitrwt="$gitrwt"
+unset gitrwt
 
 alias readreq='openssl req -noout -text -in'
 alias readcert='openssl x509 -noout -text -in'
@@ -72,26 +75,6 @@ if [[ -f ~/export_local ]]; then . ~/export_local ; fi
 # ^.. or describe local file-structure
 # ^ May export additional functions.
 
-APPDATA="/cygdrive/c/Users/`whoami`/AppData/Roaming"
-if ! [[ -d "$APPDATA" ]]; then
-	unset APPDATA
-else
-	USERPROFILE="/cygdrive/c/Users/`whoami`"
-fi
-
-if [ -f "$APPDATA/postgresql/root.crt" ]; then
-	export PGSSLROOTCERT="$APPDATA/postgresql/root.crt"
-else
-	echo "$APPDATA/postgresql/root.crt" not found
-fi
-
-if [ -f "$APPDATA/postgresql/client.crt" ]; then
-	export PGSSLCERT="$APPDATA/postgresql/client.crt"
-fi
-
-if [ -f "$APPDATA/postgresql/client.key" ]; then
-	export PGSSLKEY="$APPDATA/postgresql/client.key"
-fi
 
 ####: Aliases and shell-tweaks ####
 
