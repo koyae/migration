@@ -50,7 +50,7 @@ function up {
 	fi
 	declare -a ladder
 	while [ "$path" != "/" ]; do
-		ladder+=($path)
+		ladder+=("$path")
 		path=`dirname "$path"`
 	done
 	cd "${ladder[$rungnum]}"
