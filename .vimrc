@@ -55,7 +55,7 @@ autocmd Syntax, php set comments+=://
 	:set autoindent " keep the current indentation on new <CR>. Negate with :setlocal noautoindent
 	:set splitright " make :vs open on right instead of bumping current pane over
 	:set splitbelow " make :split open files on the bottom instead of bumping current pane down
-	:set tabstop=4 " make tab-characters display as 4 spaces instead of default 8 
+	:set tabstop=4 " make tab-characters display as 4 spaces instead of default 8
 	:set shiftwidth=0 " make '>' (angle bracket) always just match `tabstop`
 	:set ignorecase smartcase "searching is non-case-sensitive unless there's a cap
 	:set shellcmdflag=-ic
@@ -72,7 +72,7 @@ autocmd Syntax, php set comments+=://
 	:Alias W w
 	:command! Reup source ~/.vimrc
 	:Alias reup Reup
- 
+
 "-------------------Functions------------------------------:
 
 " I use the convention "before" in function names to connote one character before
@@ -80,7 +80,7 @@ autocmd Syntax, php set comments+=://
 " To connote the LINE before the cursor's current position, I use "above".
 " In turn "below" means the opposite.
 
-" Note `function!` forces overwrite if necessary on creation of a funciton	
+" Note `function!` forces overwrite if necessary on creation of a funciton
 
 	function! PaneToTab()
 		let buffer_number = bufnr('%')
@@ -109,9 +109,9 @@ autocmd Syntax, php set comments+=://
 	function! InsertCharAfterCurrentChar(char)
 		silent! exec "normal a" . a:char
 	endfunction
- 	
+
 	function! ToInsertBeforeCurrentChar(char)
-		silent! exec "normal a" . "\<Left>". a:char 
+		silent! exec "normal a" . "\<Left>". a:char
 		return "i" . a:char . "\<Esc>"
 	endfunction
 
@@ -123,7 +123,7 @@ autocmd Syntax, php set comments+=://
 	endfunction
 
 	" Returns a string to insert a new line relative to the current line
-	" 
+	"
 	" preCr		--		a key or combination of keys in the form of a string
 	"					to press before <CR> is input, after determining the current line's indent level
 	" postCr	--		a key or combination of key in the form of a string
@@ -187,7 +187,7 @@ autocmd Syntax, php set comments+=://
 			return 'g^'
 		elseif vorig_pos == virtual_home && orig_pos != soft_home
 			return '^'
-		elseif orig_pos == soft_home 
+		elseif orig_pos == soft_home
 			return '0'
 		elseif orig_pos == hard_home
 			return '^'
@@ -274,7 +274,7 @@ autocmd Syntax, php set comments+=://
 	endfunction
 
 	" ToLine(toLine[,fromLine='.'[,luddite=false,inject=''[,postInject='']]])
-	" Return the keystrokes for moving the cursor to the specified line 
+	" Return the keystrokes for moving the cursor to the specified line
 	" (normal/visual mode)
 	function! ToLine(line,...)
 		" Copy value and handle specials if necessary:
@@ -312,7 +312,7 @@ autocmd Syntax, php set comments+=://
 	"              time) rather than jumping straight to the desired column
 	"
 	" inject   --  before each navigation-action, execute this string of
-	"              keystrokes. If `luddite`=0 this will occur once. 
+	"              keystrokes. If `luddite`=0 this will occur once.
 	"              If `luddite`=true this will occur for each column between
 	"              the current cursor-position and the target column `toCol`
 	"
@@ -341,7 +341,7 @@ autocmd Syntax, php set comments+=://
 	" form [line,column] and returns an integer
 	function! ColTidy(col)
 		if type(a:col)==v:t_list
-			let colNumber = (type(a:col[1])==v:t_number)? 
+			let colNumber = (type(a:col[1])==v:t_number)?
 				\ a:col[1] : col(a:col)
 			if l:colNumber > len(getline(a:col[0]))
 				" Prevent columns past EOL being used:
@@ -376,19 +376,19 @@ autocmd Syntax, php set comments+=://
 			return synIDattr(synID(line('.'),col('.'),1),"name")
 		endfunction
 	endif
- 
+
 	function! SmartEnd(mode)
 		if exists('+belloff')
-			call SaveSetting('belloff')	
+			call SaveSetting('belloff')
 			set belloff=all
 		endif
 		let orig_pos = virtcol('.')
 		let virtual_end = 0
-		if orig_pos < winwidth('%') 
+		if orig_pos < winwidth('%')
 			let virtual_end = col('$')
 		else
 			let virtual_end = orig_pos + winwidth('%') - 1
-			let virtual_end = virtual_end - virtual_end%winwidth('%') 
+			let virtual_end = virtual_end - virtual_end%winwidth('%')
 		endif
 		if orig_pos == virtual_end
 			return '$'
@@ -426,7 +426,7 @@ autocmd Syntax, php set comments+=://
 		endif
 	endfunction
 
- 
+
 " helper-function: return booleanishly to indicate whether there are multiple
 " lines selected:
 	function! MultipleLinesSelected()
@@ -444,7 +444,7 @@ autocmd Syntax, php set comments+=://
         return "i\<CR>\<Esc>"
     endfunction
 
-" nnoremaped to <Del>    
+" nnoremaped to <Del>
     function! SmartDelete()
         return AtEndOfLine()? "a\<Del>\<Esc>" : "x"
     endfunction
@@ -458,7 +458,7 @@ autocmd Syntax, php set comments+=://
 			return OnlyWhitespaceOnLine()? 'V"_x' : '"_x'
 		endif
 	endfunction
-	
+
 	function! SmartS()
 		let keySequence = '"_xi'
 		" If replacing (characters up to) the last character, make sure to
@@ -480,7 +480,7 @@ autocmd Syntax, php set comments+=://
 		let txt = escape(GetSelectionText(),'/\')
 		let txt = substitute(txt,"\n",'\\n','g')
 		let txt = substitute(txt,"\t",'\\t','g')
-		return '\V' . txt	
+		return '\V' . txt
 	endfunction
 
 	function! SelectionAsRegexToRegister(register)
@@ -515,7 +515,7 @@ autocmd Syntax, php set comments+=://
 			let searchFlags .= 'n'
 		endif
 		if char == ''
-			let char = g:foundLast		
+			let char = g:foundLast
 		else
 			let g:foundLast = a:character
 		endif
@@ -548,7 +548,7 @@ autocmd Syntax, php set comments+=://
 		endif
 		call RestoreSetting('ignorecase')
 		call RestoreSetting('smartcase')
-		echom keys	
+		echom keys
 		return keys
 	endfunction
 
@@ -579,16 +579,16 @@ autocmd Syntax, php set comments+=://
 			qall
 		endif
 	endfunction
-	
+
 	function! RepeatMacroOnSelection()
-	" inspired by: 
-	" github.com/stoeffel/.dotfiles/blob/2115ecff195d59db09260fbd31b7261126011b7b/vim/visual-at.vim 
+	" inspired by:
+	" github.com/stoeffel/.dotfiles/blob/2115ecff195d59db09260fbd31b7261126011b7b/vim/visual-at.vim
 		echo "@" . getcmdline()
 		let char = nr2char(getchar())
 		let start = line("'<")
 		let goal = line("'>")
 		let its = 0
-		while its <= goal - start && line(".") <= goal 
+		while its <= goal - start && line(".") <= goal
 		" while the macro's inherent motion (assuming it has any) hasn't
 		" pushed us past the target line, and we have not done one iteration
 		" for each line, loop:
@@ -605,7 +605,7 @@ autocmd Syntax, php set comments+=://
 
 
 "---------------------Novel keybindings--------------------:
-	
+
 	" @-key during visual selection repeats the specified macro for each
 	" selected line:
 	xnoremap @ :<C-u>call RepeatMacroOnSelection()<Return>
@@ -640,19 +640,19 @@ autocmd Syntax, php set comments+=://
 	vnoremap <C-s> <Esc>:w<Return>
 	inoremap <C-S> <Esc>:w<Return>i<Right>
 	nnoremap <C-s> :w <Return>
-	" ^ Note that many shell-clients bind ctrlS to send the freeze-output 
+	" ^ Note that many shell-clients bind ctrlS to send the freeze-output
 	" signal (XOFF). This command won't work if that's not done. In most cases
 	" it can be disabled from .bashrc
-	
+
 	" altS clears trailing whitespace if present then places a semicolon at EOL:
-	nnoremap <silent> <A-s> :call InsertAtEOL(';',1)<Return> 
+	nnoremap <silent> <A-s> :call InsertAtEOL(';',1)<Return>
 	" alt-0 clears trailing whitespace if present then places ')' at EOL:
 	nnoremap <silent> <A-)> :call InsertAtEOL(')',1)<Return>
 	" openParen surrounds current selection in parentheses from visual mode:
 	vnoremap <silent> ( <Esc>`<i(<Esc>`><Right>a)<Esc>
 	" closeParen does the same as above:
 	vnoremap <silent> ) <Esc>`<i(<Esc>`><Right>a)<Esc>
-	
+
 	" altI adds '>' to the beginning of lines:
 	vmap <A-i> :s/^./>\0/<Return>:noh <Return>
 	nmap <A-i> :%s/^./>\0/<Return>:noh <Return>
@@ -672,7 +672,7 @@ autocmd Syntax, php set comments+=://
 	vnoremap <C-r> :call SelectionAsRegexToRegister('h')<Return>:<BS><BS><BS><BS><BS>%s/<C-r>h//<Left>
 	" credit: http://stackoverflow.com/questions/676600/
 	vmap <Return> <Del>
-	
+
 	" 2: f-key finds the next single character (accepted afterwards
 	" interactively) on multiple lines, rather than just the current one:
 	nnoremap <silent> f :call FindChar('')<Return>
@@ -697,14 +697,14 @@ autocmd Syntax, php set comments+=://
 "-- Navigation bindings:
 
 	" 6: home-key goes to the beginning of the virtual line, and toggles
-	" between soft home and hard home after tha :
+	" between soft home and hard home after that:
 	nnoremap <expr> <Home> SmartHome('n')
 	nnoremap <expr> <kHome> SmartHome('n')
 	imap <expr> <Home> "\<C-o>" . SmartHome('i')
 	imap <expr> <kHome> "\<C-o>" . SmartHome('i')
 	vnoremap <expr> <Home> SmartHome(visualmode())
 	vnoremap <expr> <kHome> SmartHome(visualmode())
-	
+
 	" 6: end-key goes to the end of the virtual line or the actual end if
 	" already there:
 	nnoremap <silent> <expr> <End> SmartEnd('n')
@@ -713,7 +713,7 @@ autocmd Syntax, php set comments+=://
 	inoremap <silent> <expr> <kEnd> "\<C-o>" . SmartEnd('i')
 	vnoremap <silent> <expr> <End> SmartEnd(visualmode())
 	vnoremap <silent> <expr> <kEnd> SmartEnd(visualmode())
-	 
+
 	"2: o-key and shiftO insert a line below or above the current one (without staying in insert mode)
 	" the x below deletes the autoindent whitespace 2:
 	nmap <silent> <expr> o InsertLineBelow() . "\<Esc>"
@@ -749,10 +749,15 @@ autocmd Syntax, php set comments+=://
  	" U-key capitalizes any alphas in selection:
 	vnoremap <silent> U gU
 	" u-key lowercases any alphas in selection:
-	vnoremap <silent> u gu 
+	vnoremap <silent> u gu
 
 
 "-- Selection stuff
+
+	" 2: shiftHome and shiftEnd select from current position to whatever
+	" positions these are happed to jump to:
+	nmap <S-Home> v<Home>
+	nmap <S-End> v<End>
 
 	" shiftRight starts visual selection to the right:
  	nmap <S-Right> v<Right>
@@ -779,7 +784,7 @@ autocmd Syntax, php set comments+=://
 	nnoremap <silent> j :call JumpToNextMatchingChar('')<Return>
 
 	" ctrlBackspace deletes previous word:
-	nmap  i<C-w><Esc>x 
+	nmap  i<C-w><Esc>x
 
 	" altD eats next word / deletes next word:
 	nnoremap <silent> <A-d> :call EatNextWord() <Return>
@@ -788,32 +793,32 @@ autocmd Syntax, php set comments+=://
 	" ctrlA does select all:
 	nnoremap <C-a> gg<S-v>G
 
-"-- Normal-mode passthroughs for 
+"-- Normal-mode passthroughs for
 
 	" backslash-key, forwardslash-key, double-quote-key
 	for v in ["javascript","php","java","c","cpp","cs"]
 		let cmdstr = "autocmd Syntax, " . v . " nmap <silent> <expr> "
 		let cmdstr = cmdstr . "/ ToInsertBeforeCurrentChar('/')"
-		execute cmdstr 
+		execute cmdstr
 	endfor
 	nmap <silent> <expr> \ ToInsertBeforeCurrentChar('\')
-	autocmd Syntax, vim nmap <expr> <silent> " ToInsertBeforeCurrentChar('"') 
+	autocmd Syntax, vim nmap <expr> <silent> " ToInsertBeforeCurrentChar('"')
 	" space inserts a space in front of current character:
 	noremap <silent> <expr> <Space> ToInsertBeforeCurrentChar(" ")
 	" enter-key acts like enter:
 	nmap <silent> <expr> <Return> ToInsertCr()
 	"inoremap <silent> <expr> <Return> ToInsertCr()
-	" shiftI begins insert above: 
+	" shiftI begins insert above:
 	nmap <silent> <expr> <S-i> InsertLineAbove()
 	" k-key begins insert below:
-	nmap <silent> <expr> k InsertLineBelow()   
+	nmap <silent> <expr> k InsertLineBelow()
 	"<A-i> i\<End>\<End>\<CR>
 	" tab-key indents current line
 	nmap <Tab> i<Home><Tab><Esc><Home>
-	" backspace-key deletes one character back 
+	" backspace-key deletes one character back
 	nmap <BS> i<BS><Esc><Right>
 	" delete-key acts like x unless at end of line
-	nnoremap <silent> <expr> <Del> SmartDelete()  
+	nnoremap <silent> <expr> <Del> SmartDelete()
 	nnoremap <silent> <expr> x SmartX()
 	" ctrlDelete deletes rest of line
-	nmap <C-kDel> v<S-$><Left>x 
+	nmap <C-kDel> v<S-$><Left>x
