@@ -1,3 +1,5 @@
+" Strip trailing whitespace on save:
+autocmd BufWritePre * :%s/\s\+$//e
 " Custom handling by filetype:
 autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 autocmd BufNewFile,BufRead, pom.xml,web.xml set tabstop=2 expandtab shiftwidth=2

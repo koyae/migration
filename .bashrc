@@ -3,10 +3,10 @@
 #if [[ $calledvia != $0 ]]
 # if .bashrc is being sourced from elsewhere
 #fi
- 
+
 #### Function-definitions: ####
 
-. ~/define_funcs
+. "$HOME/define_funcs"
 
 ####: Function-definitions ####
 
@@ -18,14 +18,14 @@ if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
-# Shell tweaks: 
+# Shell tweaks:
 alias mv='mv -i'
 alias cp='cp -i'
 alias cd='c_d'
 alias ls='ls --color'
 alias du='duc'
 alias df='df -h'
-alias reup='echo Reloading .bashrc && . ~/.bashrc'
+alias reup='echo Reloading .bashrc && . "$HOME/.bashrc" || . ~/.bashrc'
 alias pwdp='pwd -P'
 alias ssh='ssh -a' # use local ssh-agent if available, but do not allow challenges to be forwarded from remote servers
 alias ssh-add='ssh-add -c' # require confirmation if agent-forwarding is about to occur (see README about requirements)
@@ -34,7 +34,7 @@ alias grepc='grep --color=always'
 shopt -s extglob # enable shell-extensions such as negation-based matching
 git config --global push.default upstream
 git config --global color.ui auto # some systems oddly disable this
-PATH="~/bin2:$PATH"
+PATH="$HOME/bin2:$PATH"
 
 bind '"[1;5D":"b"' 2>/dev/null # ctrlLeft moves cursor one word back
 bind '"[1;5C":"f"' 2>/dev/null # ctrlRight moves cursor one word forward
@@ -47,8 +47,8 @@ alias l='ls'
 alias down='cd'
 alias cdP='cd "`pwd -P`"'
 alias cdgr='cd "`git rev-parse --show-toplevel`"'
-alias lastat='cd "$(cat ~/lastat)"'
-alias lastam='pwd > ~/lastat'
+alias lastat='cd "$(cat "$HOME/lastat")"'
+alias lastam='pwd > "$HOME/lastat"'
 alias ssh-remove='ssh-add -d'
 alias psql='psql $( [ -d /d/Job/chapow/back ] && echo -v home=/d/Job/chapow/back || echo -v home=/tmp)'
 
@@ -65,11 +65,24 @@ alias pyaml="python -c 'import sys, yaml, json; json.dump(yaml.load(sys.stdin), 
 # ^ Prettify YAML by converting it into JSON. Use by piping in a file with '<' operator.
 
 # General envs:
-if [[ -f ~/export_envs ]]; then . ~/export_envs ; fi
+if [[ -f $HOME/export_envs ]]; then
+	. "$HOME/export_envs"
+else
+	echo '$HOME not set.'
+	if [[ -f ~/export_envs ]]; then
+		. ~/export_envs
+	fi
+fi
 # ^ exports variables which should always be exported
 
 # Machine-specific aliases and envs:
-if [[ -f ~/export_local ]]; then . ~/export_local ; fi
+if [[ -f $HOME/export_local ]]; then
+	. "$HOME/export_local"
+else
+	if [[ -f ~/export_local ]]; then
+		. ~/export_local
+	fi
+fi
 # ^ settings for local machine which may not work on other machines
 # ^.. such as configs for uncommon programs or aliases which depend on
 # ^.. or describe local file-structure
@@ -79,7 +92,7 @@ if [[ -f ~/export_local ]]; then . ~/export_local ; fi
 ####: Aliases and shell-tweaks ####
 
 # If not running interactively, don't do anything
-[[ "$-" != *i* ]] && return
+# [[ "$-" != *i* ]] && exit
 
 # Shell Options
 #
@@ -156,7 +169,7 @@ if [[ -f ~/export_local ]]; then . ~/export_local ; fi
 # alias l='ls -CF'                              #
 
 # b) function cd_func
-# This function defines a 'cd' replacement function capable of keeping, 
+# This function defines a 'cd' replacement function capable of keeping,
 # displaying and accessing history of visited directories, up to 10 entries.
 # To use it, uncomment it, source this file and try 'cd --'.
 # acd_func 1.0.5, 10-nov-2004
@@ -165,15 +178,15 @@ if [[ -f ~/export_local ]]; then . ~/export_local ; fi
 # {
 #   local x2 the_new_dir adir index
 #   local -i cnt
-# 
+#
 #   if [[ $1 ==  "--" ]]; then
 #     dirs -v
 #     return 0
 #   fi
-# 
+#
 #   the_new_dir=$1
 #   [[ -z $1 ]] && the_new_dir=$HOME
-# 
+#
 #   if [[ ${the_new_dir:0:1} == '-' ]]; then
 #     #
 #     # Extract dir N from dirs
@@ -183,21 +196,21 @@ if [[ -f ~/export_local ]]; then . ~/export_local ; fi
 #     [[ -z $adir ]] && return 1
 #     the_new_dir=$adir
 #   fi
-# 
+#
 #   #
 #   # '~' has to be substituted by ${HOME}
 #   [[ ${the_new_dir:0:1} == '~' ]] && the_new_dir="${HOME}${the_new_dir:1}"
-# 
+#
 #   #
 #   # Now change to the new dir and add to the top of the stack
 #   pushd "${the_new_dir}" > /dev/null
 #   [[ $? -ne 0 ]] && return 1
 #   the_new_dir=$(pwd)
-# 
+#
 #   #
 #   # Trim down everything beyond 11th entry
 #   popd -n +11 2>/dev/null 1>/dev/null
-# 
+#
 #   #
 #   # Remove any other occurence of this dir, skipping the top of the stack
 #   for ((cnt=1; cnt <= 10; cnt++)); do
@@ -209,8 +222,8 @@ if [[ -f ~/export_local ]]; then . ~/export_local ; fi
 #       cnt=cnt-1
 #     fi
 #   done
-# 
+#
 #   return 0
 # }
-# 
+#
 # alias cd=cd_func
