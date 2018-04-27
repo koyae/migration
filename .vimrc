@@ -748,8 +748,8 @@ autocmd Syntax, php set comments+=://
 	" x-key does not yank, just deletes:
 	vnoremap <expr> x SmartX()
 	" p-key and shiftP do not yank, just delete:
-	vnoremap <expr> p SmartX() . 'p'
-	vnoremap <expr> P SmartX() . 'p'
+	vnoremap <expr> p SmartX() . 'P'
+	vnoremap <expr> P SmartX() . 'P'
 
 
 	" shiftU redoes:
