@@ -8,6 +8,8 @@ autocmd BufNewFile,BufRead, .screenrc* setf screen
 " allow PHP comments to rewrap correctly:
 autocmd Syntax, php set comments+=://
 
+
+
 "--------------------Compatibility settings----------------:
 	:set nocompatible
 	:set <S-Left>=[D
@@ -613,10 +615,14 @@ autocmd Syntax, php set comments+=://
 	" ctrlAltT tears out current pane and sends to a new tab:
 	nnoremap <C-A-t> :call PaneToTab()<Return>
 
-	" ctrlPageUp goes to next tab:
-	noremap <silent> <C-PgUp> gT
-	" ctrlPageDown goes to previous tab:
-	noremap <silent> <C-PgDown> gt
+	" ctrlPageup goes to next tab:
+	noremap <C-PgUp> gT
+	" ctrlPagedown goes to previous tab:
+	noremap <C-PgDown> gt
+	" ctrlShiftPageup moves current tab toward to an earlier position:
+	noremap [5;6~ :-tabmove<Return>
+	" ctrlShiftPagedown moves current tab toward to an earlier position:
+	noremap [6;6~ :+tabmove<Return>
 	" altDown swaps current line(s) with below, keeping selection if needed:
 	nnoremap <A-Up> dd<Up><S-p>
 	vnoremap <A-Up> d<Up><S-p>`[V`]
@@ -648,9 +654,9 @@ autocmd Syntax, php set comments+=://
 	nnoremap <silent> <A-s> :call InsertAtEOL(';',1)<Return>
 	" alt-0 clears trailing whitespace if present then places ')' at EOL:
 	nnoremap <silent> <A-)> :call InsertAtEOL(')',1)<Return>
-	" openParen surrounds current selection in parentheses from visual mode:
+	" shift8/openParen surrounds current selection in parentheses from visual mode:
 	vnoremap <silent> ( <Esc>`<i(<Esc>`><Right>a)<Esc>
-	" closeParen does the same as above:
+	" shift9/closeParen does the same as above:
 	vnoremap <silent> ) <Esc>`<i(<Esc>`><Right>a)<Esc>
 
 	" altI adds '>' to the beginning of lines:
@@ -670,8 +676,15 @@ autocmd Syntax, php set comments+=://
 	vnoremap <C-h>  :s/
 	" ctrlR starts a replace-command containing the selected text:
 	vnoremap <C-r> :call SelectionAsRegexToRegister('h')<Return>:<BS><BS><BS><BS><BS>%s/<C-r>h//<Left>
-	" credit: http://stackoverflow.com/questions/676600/
-	vmap <Return> <Del>
+	" :credit http://stackoverflow.com/questions/676600/
+	" shiftR in visual mode starts a replace-command on the selected text
+	" (set up to only affect text until the end of the line):
+	vnoremap R :call SelectionAsRegexToRegister('h')<Return>:<BS><BS><BS><BS><BS>s/\%><C-r>=col('.')<Return>c<C-r>h//<Left>
+	" shiftR in normal mode replaces from current cursor position until EOL:
+	nnoremap R :s/\%><C-r>=col('.')<Return>c//<Left><Left>
+	" :credit https://www.reddit.com/r/vim/comments/5zbyfw/tn/dewvpfw/
+	" enter-key copies in visual mode:
+	vmap <Return> y
 
 	" 2: f-key finds the next single character (accepted afterwards
 	" interactively) on multiple lines, rather than just the current one:
@@ -736,7 +749,7 @@ autocmd Syntax, php set comments+=://
 	vnoremap <expr> x SmartX()
 	" p-key and shiftP do not yank, just delete:
 	vnoremap <expr> p SmartX() . 'p'
-	vnoremap <expr> P SmartX() . 'P'
+	vnoremap <expr> P SmartX() . 'p'
 
 
 	" shiftU redoes:
