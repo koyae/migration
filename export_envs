@@ -15,23 +15,23 @@ if ! [[ -d "$APPDATA" ]]; then
 	unset APPDATA
 else
 	USERPROFILE="/cygdrive/c/Users/`whoami`"
-fi
 
+	# PostgreSQL stuff:
 
-# PostgreSQL stuff:
+	if [ -f "$APPDATA/postgresql/root.crt" ]; then
+		export PGSSLROOTCERT="$APPDATA/postgresql/root.crt"
+	else
+		echo "$APPDATA/postgresql/root.crt" not found
+	fi
 
-if [ -f "$APPDATA/postgresql/root.crt" ]; then
-	export PGSSLROOTCERT="$APPDATA/postgresql/root.crt"
-else
-	echo "$APPDATA/postgresql/root.crt" not found
-fi
+	if [ -f "$APPDATA/postgresql/client.crt" ]; then
+		export PGSSLCERT="$APPDATA/postgresql/client.crt"
+	fi
 
-if [ -f "$APPDATA/postgresql/client.crt" ]; then
-	export PGSSLCERT="$APPDATA/postgresql/client.crt"
-fi
+	if [ -f "$APPDATA/postgresql/client.key" ]; then
+		export PGSSLKEY="$APPDATA/postgresql/client.key"
+	fi
 
-if [ -f "$APPDATA/postgresql/client.key" ]; then
-	export PGSSLKEY="$APPDATA/postgresql/client.key"
 fi
 
 export EDITOR="vim"
