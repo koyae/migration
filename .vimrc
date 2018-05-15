@@ -104,10 +104,6 @@ autocmd Syntax, php set comments+=://
 		exec a:commandString
 	endfunction
 
-	function! GoopyMalchik()
-		call SelectAllThenDo(':call ChangeSqlCase()')
-	endfunction
-
 	function! InsertCharAfterCurrentChar(char)
 		silent! exec "normal a" . a:char
 	endfunction
@@ -203,7 +199,7 @@ autocmd Syntax, php set comments+=://
 	" following invocation, starting with the cursor on the first line on
 	" which capitalization should start.
 	"
-	" :exec 'silent! normal!' . To('$','$','.',1,'',":call PgCap()\<Enter>")
+	" :exec 'silent! normal! ' . To('$','$','.',1,'',":call PgCap()\<Enter>")
 	function! PgCap(...)
 		let kwType = synIDattr(  synID( line('.'), col('.'), 1 ), "name"  )
 		if a:0
@@ -758,7 +754,7 @@ autocmd Syntax, php set comments+=://
 	nnoremap <Insert> i<Insert>
 
 	" shiftU capitalizes SQL keywords:
-	vnoremap <silent> <C-u> :call ChangeSqlCase() <Return><Return>
+	nnoremap <silent> <C-u> :exec 'silent! normal! ' . To('$','$','.',1,'',":call PgCap()\<Enter>")
  	" U-key capitalizes any alphas in selection:
 	vnoremap <silent> U gU
 	" u-key lowercases any alphas in selection:
