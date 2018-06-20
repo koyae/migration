@@ -210,7 +210,7 @@ function unlock {
 	else
 		for arg in "$@"; do
 		# ^ loop through arguments as needed
-			rm "."$arg".swp"
+			rm ."$arg".swp
 		done
 	fi
 }

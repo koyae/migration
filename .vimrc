@@ -24,8 +24,10 @@ autocmd Syntax, php set comments+=://
 	:set <C-A-x>=
 	:set <C-A-t>=
 	:set <C-A-q>=
+	:set <A-1>=1
 	:set <A-d>=d
 	:set <A-i>=i
+	:set <A-p>=p
 
 	let term=$TERM
 	if term == 'screen' || term == "screen-256color" || term == "xterm-256color"
@@ -210,7 +212,7 @@ autocmd Syntax, php set comments+=://
 		elseif a:0==1
 			let kwType = a:1
 		endif
-		if index(['pgsqlKeyword','pgsqlOperator'],l:kwType) >= 0
+		if index(['pgsqlKeyword','pgsqlOperator','pgsqlType','pgsqlVariable'],l:kwType) >= 0
 			normal! vgU
 		endif
 	endfunction
@@ -648,8 +650,13 @@ autocmd Syntax, php set comments+=://
 
 	" altS clears trailing whitespace if present then places a semicolon at EOL:
 	nnoremap <silent> <A-s> :call InsertAtEOL(';',1)<Return>
-	" alt-0 clears trailing whitespace if present then places ')' at EOL:
+	" alt0 clears trailing whitespace if present then places ')' at EOL:
 	nnoremap <silent> <A-)> :call InsertAtEOL(')',1)<Return>
+	" alt1 clears trailing whitespace if present then places a comma at EOL:
+	nnoremap <silent> <A-1> :call InsertAtEOL(',',1)<Return>
+	" altP clears trailing whitespace if present then pastes at EOL, then
+	" jumps to start of paste:
+	nnoremap <silent> <A-p> :call InsertAtEOL('',1)<Return>:s/,$/, /e\|noh<Return>$p`[
 	" shift8/openParen surrounds current selection in parentheses from visual mode:
 	vnoremap <silent> ( <Esc>`<i(<Esc>`><Right>a)<Esc>
 	" shift9/closeParen does the same as above:
@@ -754,7 +761,7 @@ autocmd Syntax, php set comments+=://
 	nnoremap <Insert> i<Insert>
 
 	" shiftU capitalizes SQL keywords:
-	nnoremap <silent> <C-u> :exec 'silent! normal! ' . To('$','$','.',1,'',":call PgCap()\<Enter>")
+	nnoremap <silent> <C-u> :exec 'silent! normal! ' . To('$','$','.',1,'',":call PgCap() \<Enter>")
  	" U-key capitalizes any alphas in selection:
 	vnoremap <silent> U gU
 	" u-key lowercases any alphas in selection:
