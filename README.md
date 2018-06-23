@@ -70,6 +70,7 @@ A few of the functions and scripts in this repo rely on additional packages. Oth
 * xorg-server - required to run XWin Server which allows `ssh-add -c` to work
 * gnome-ssh-askpass or lxqt-openssh-askpass - required for displaying ssh-agent prompts
 * vim – required by `xviml`, `sviml`, `jvimn`, and "setup.sh"
+* socat - required by .vimrc's PipeToSocket() function
 * grep – required by `grepr` function
 * hexdump – required by `debom` script
 * tail – required by `debom` script

@@ -1,14 +1,15 @@
 " Strip trailing whitespace on save:
 autocmd BufWritePre * :%s/\s\+$//e
 " Custom handling by filetype:
-autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 autocmd BufNewFile,BufRead, pom.xml,web.xml set tabstop=2 expandtab shiftwidth=2
 autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 autocmd BufNewFile,BufRead, .screenrc* setf screen
-" allow PHP comments to rewrap correctly:
-autocmd Syntax, php set comments+=://
-
-
+" allow various comments to rewrap correctly:
+autocmd BufNewFile,BufRead, *.php,*.inc,*.module set comments=://
+autocmd BufNewFile,BufRead, *.vim,.vimrc set comments+=:\\\\|
+" ^ allow line-extension character
+autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
+	\| set comments=:--
 
 "--------------------Compatibility settings----------------:
 	:set nocompatible
@@ -17,6 +18,7 @@ autocmd Syntax, php set comments+=://
 	:set <C-Left>=OD
 	:set <C-Right>=OC
 	:set <A-=>==
+	:set <A-x>=x
 	:set <A-z>=z
 	:set <A-s>=s
 	:set <A-(>=9
@@ -467,6 +469,8 @@ autocmd Syntax, php set comments+=://
 		return AtEndOfLine()? keySequence . "\<Right>" : keySequence
 	endfunction
 
+	" Return the user's current selection as a string
+	" GetCurrentSelection
 	function! GetSelectionText()
 		let [lnum1, col1] = getpos("'<")[1:2]
 		let [lnum2, col2] = getpos("'>")[1:2]
@@ -603,6 +607,36 @@ autocmd Syntax, php set comments+=://
 		endwhile
 	endfunction
 
+	" PipeToSocket(text[,socketPath])
+	" Write the current selection to the socket at the given path.
+	"
+	" This can be useful in the case that an application is listening for
+	" input on a given socket but you don't want/need to leave vim to
+	" communicate with it. Having a process listen to a socket in place of
+	" stdin can be initialized like:
+	" 	`socat UNIX-LISTEN:/tmp/sock STDOUT | psql <connectionOptions>`
+	" After that you can pipe stuff to this socket using socat, and it will be
+	" read by whatever application you piped into before (psql, in the above
+	" example). You can even have another terminal window (or pane) open which
+	" displays the results there. This allows you to see the output even if
+	" you're not touching the console directly.
+	" More info can be found at: https://unix.stackexchange.com/a/384162/153690
+	function! PipeToSocket(...)
+		let text = a:0 >= 1 ? a:1 : GetSelectionText()
+		let socketPath = a:0 >= 2 ? a:2 : '/tmp/sock'
+		let text = printf(
+			\ 'printf %s %s | socat STDIN UNIX-CONNECT:%s',
+			\ shellescape('%s\n'),
+			\ shellescape(text),
+			\ shellescape(socketPath)
+		\ )
+		echo system(text)
+	endfunction
+
+	function! PipeToSocketTest(...)
+		let socketPath = a:0
+		call PipeToSocket('SELECT 1;',socketPath)
+	endfunction
 
 "---------------------Novel keybindings--------------------:
 
@@ -621,12 +655,12 @@ autocmd Syntax, php set comments+=://
 	noremap [5;6~ :-tabmove<Return>
 	" ctrlShiftPagedown moves current tab toward to an earlier position:
 	noremap [6;6~ :+tabmove<Return>
-	" altDown swaps current line(s) with below, keeping selection if needed:
-	nnoremap <A-Up> dd<Up><S-p>
-	vnoremap <A-Up> d<Up><S-p>`[V`]
 	" altUp swaps current line(s) with above, keeping selection if needed:
+	vnoremap <A-Up> <Esc>`<V`>d<Up>P`[V`]
+	nnoremap <A-Up> dd<Up>P
+	" altDown swaps current line(s) with below, keeping selection if needed:
+	vnoremap <A-Down> <Esc>`<V`>d<End>p`[V`]
 	nnoremap <A-Down> ddp
-	vnoremap <A-Down> d<Down><End>p`[V`]
 	" ctrlUp scrolls screen up one line without moving cursor:
 	noremap <C-Up> <C-y>
 	" ctrlDown scrolls screen down one line without moving cursor:
@@ -635,9 +669,12 @@ autocmd Syntax, php set comments+=://
 	nnoremap <C-q> :call CloseTab()<Return>
 	" ctrlAltQ attempts to quit vim:
 	nnoremap <C-A-q> :qa<Return>
-	" ctrlX deletes current line:
-	nnoremap <C-x> Vx
-	inoremap <C-x> <C-o>Vx
+	" altX deletes the last character on the current line:
+	nmap <A-x> m`$x``
+	imap <A-x> <C-o>m`<C-o>$<Backspace><C-o>``
+	" ctrlX deletes the current line (without overwriting clipboard register)
+	nmap <C-x> Vx
+	imap <C-x> <C-o>Vx
 	" ctrlAltX deletes all lines:
 	noremap <silent> <C-A-x> :call SelectAllThenDo("normal x")<Return>
 	" 2: ctrlS saves current file:
@@ -657,10 +694,20 @@ autocmd Syntax, php set comments+=://
 	" altP clears trailing whitespace if present then pastes at EOL, then
 	" jumps to start of paste:
 	nnoremap <silent> <A-p> :call InsertAtEOL('',1)<Return>:s/,$/, /e\|noh<Return>$p`[
-	" shift8/openParen surrounds current selection in parentheses from visual mode:
-	vnoremap <silent> ( <Esc>`<i(<Esc>`><Right>a)<Esc>
-	" shift9/closeParen does the same as above:
-	vnoremap <silent> ) <Esc>`<i(<Esc>`><Right>a)<Esc>
+	" shift9/openParen surrounds current selection in parentheses from visual mode:
+	vnoremap <silent> ( <Esc>`<i(<Esc>`>a<Right>)<Esc>
+	" shift0/closeParen does the same as above:
+	vnoremap <silent> ) <Esc>`<i(<Esc>`>a<Right>)<Esc>
+	" [quote-quote]
+	" doubleQuote-doubleQuote from Visual mode surrounds selection in quotes:
+	vnoremap <silent> "" <Esc>`<i"<Esc>`>a<Right>"<Esc>
+	" doubleQuote-singleQuote from Visual mode surrounds selection in quotes:
+	vnoremap <silent> "' <Esc>`<i'<Esc>`>a<Right>'<Esc>
+	" singleQuote-singleQuote from Visual mode surrounds selection in quotes:
+	vnoremap <silent> '' <Esc>`<i'<Esc>`>a<Right>'<Esc>
+	" doubleQuote-backtick from Visual mode surrounds selection in backticks:
+	vnoremap <silent> "` <Esc>`<i`<Esc>`>a<Right>`<Esc>
+
 
 	" altI adds '>' to the beginning of lines:
 	vmap <A-i> :s/^./>\0/<Return>:noh <Return>
@@ -673,6 +720,7 @@ autocmd Syntax, php set comments+=://
 
 	" ctrlF opens search mode:
 	nnoremap <C-f> /
+	vnoremap <C-f> /
 	" normal ctrlH starts a document-wide replace:
 	nnoremap <C-h> :%s/
 	" visual ctrlH starts replacement within selection:
@@ -760,6 +808,9 @@ autocmd Syntax, php set comments+=://
 	" insert-key enters replace-mode
 	nnoremap <Insert> i<Insert>
 
+	" F5 pipes selected text to a socket:
+	vnoremap <F5> :call PipeToSocket()<Return>
+
 	" shiftU capitalizes SQL keywords:
 	nnoremap <silent> <C-u> :exec 'silent! normal! ' . To('$','$','.',1,'',":call PgCap() \<Enter>")
  	" U-key capitalizes any alphas in selection:
@@ -811,12 +862,6 @@ autocmd Syntax, php set comments+=://
 
 "-- Normal-mode passthroughs for
 
-	" backslash-key, forwardslash-key, double-quote-key
-	for v in ["javascript","php","java","c","cpp","cs"]
-		let cmdstr = "autocmd Syntax, " . v . " nmap <silent> <expr> "
-		let cmdstr = cmdstr . "/ ToInsertBeforeCurrentChar('/')"
-		execute cmdstr
-	endfor
 	nmap <silent> <expr> \ ToInsertBeforeCurrentChar('\')
 	autocmd Syntax, vim nmap <expr> <silent> " ToInsertBeforeCurrentChar('"')
 	" space inserts a space in front of current character:
