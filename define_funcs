@@ -161,7 +161,7 @@ function prepend {
 		echo "Note that since this command is a wrapper for sed, characters such as"
 		echo "backslashes require double-escaping, once for the shell and once"
 		echo "again for sed; for one backslash to be included in the prepended"
-		echo "output string, the substring '\\\\\\\\' (four backslashes) must"
+		echo "output string, the substring \\\\\\\\ (four backslashes) must"
 		echo "appear in the input to the command."
 	else
 		prefix=$"$1"
@@ -285,6 +285,35 @@ function jvimn {
 		kill -INT $$
 	fi
 	python -m json.tool "$1" | vim -
+}
+
+function headlessql {
+# start psql in a loop that listens forever to a FIFO file
+	if [ $# -lt 1 ]; then
+		1>&2 echo "headlessql warning: no connection-information given."
+	fi
+	if [ "$PGPASSWORD" = "" ]; then
+		printf 'PGPASSWORD is unset. Set it now?'
+		read -n 1
+		if [ "$REPLY" == "y" ]; then
+			echo 'Please input PGPASSWORD.'
+			read -s
+			export PGPASSWORD="$REPLY"
+		fi
+	fi
+	fifoPath="/tmp/fif"
+	if [ $# -gt 1 ]; then
+		fifoPath="$2"
+	fi
+	mkfifo "$fifoPath"
+	while [ 1 = 1 ]; do
+		psql "$1" -q --no-psqlrc -v VERBOSITY=default -v QUIET=off -f "$fifoPath"
+	done
+	# socket-approach is simpler to express because it doesn't require a loop
+	# but at least for psql, a bad SQL-command will break it, so that doesn't
+	# fly. Anyways for posterity, here's what it looks like:
+	# socketPath="/tmp/sock"
+	# socat UNIX-LISTEN:"$socketPath",fork STDOUT | psql "$1" 2>&1
 }
 
 function fnd {

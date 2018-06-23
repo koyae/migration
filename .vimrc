@@ -607,6 +607,28 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 		endwhile
 	endfunction
 
+	" AppendToFile(text[,fifoPath])
+	" Append the current selection or given text to a specified file.
+	"
+	" The primary intent of this file is to allow writing to fifo-files which
+	" are being read within a continuous loop by one or more outside
+	" utilities, to allow code-snippets to be executed from vim without
+	" changing windows/panes.
+	"
+	" #PipeToFile
+	"
+	function! AppendToFile(...)
+		let text = a:0 >= 1 ? a:1 : GetSelectionText()
+		let fifoPath = a:0 >= 2 ? a:2 : '/tmp/fif'
+		let text = printf(
+			\ 'printf %s %s >> %s',
+			\ shellescape('%s\n'),
+			\ shellescape(text),
+			\ shellescape(fifoPath)
+		\ )
+		call system(text)
+	endfunction
+
 	" PipeToSocket(text[,socketPath])
 	" Write the current selection to the socket at the given path.
 	"
@@ -630,7 +652,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 			\ shellescape(text),
 			\ shellescape(socketPath)
 		\ )
-		echo system(text)
+		call system(text)
 	endfunction
 
 	function! PipeToSocketTest(...)
@@ -809,7 +831,8 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	nnoremap <Insert> i<Insert>
 
 	" F5 pipes selected text to a socket:
-	vnoremap <F5> :call PipeToSocket()<Return>
+	vnoremap <F5> :<BS><BS><BS><BS><BS>call AppendToFile()<Return>
+	nmap <F5> ggVG<F5><C-o><C-o>
 
 	" shiftU capitalizes SQL keywords:
 	nnoremap <silent> <C-u> :exec 'silent! normal! ' . To('$','$','.',1,'',":call PgCap() \<Enter>")
