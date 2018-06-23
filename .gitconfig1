@@ -19,7 +19,7 @@
 	# Date:  %cd
 	#
 	#    %s
-	# 
+	#
 	# "
 	# Thanks to answers:
 	# 	stackoverflow.com/a/11884798/3159183
@@ -32,6 +32,7 @@
 # allow overriding of builtin commands natively, even if it's just to add
 # common flags.)
 	dif = diff --cached
+	uno = status -uno
 	kommit = commit --author='patrickegon@outlook.com'
 [status]
 	submodulessummary = 1
