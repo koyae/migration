@@ -31,9 +31,21 @@ function set_aws_credentials {
 	fi
 	credentials="$(gpg2 -o- "$1" 2>/dev/null)"
 	succ=$?
+	if [ succ -eq 0 ]; then
+		1>&2 echo "Success."
+	else
+		1>&2 echo "Failed. Bad password?"
+	fi
 	export AWS_ACCESS_KEY_ID=$(printf "%s" "$credentials" | head -n 1)
 	export AWS_SECRET_ACCESS_KEY=$(printf "%s" "$credentials" | awk 'NR==2')
 	return $succ
+}
+
+function set_pg_credentials {
+	echo "Please enter your PostgreSQL password."
+	read -s
+	export PGPASSWORD="$REPLY"
+	1>&2 echo "Password set."
 }
 
 # shortcut for making script-files
