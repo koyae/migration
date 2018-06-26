@@ -618,12 +618,22 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" #PipeToFile
 	"
 	function! AppendToFile(...)
+		" First, we define a dictionary of suffixes (with vim &syntax values
+		" as keys) to allow lookup of an appropriate statement/call to place
+		" at the end of the file. This line should print a statement to make
+		" it clear that the process watching the FIFO-file for commands to
+		" execute has completed all of them, since it may be hard to tell
+		" otherwise whether it's frozen, still working, or done
+		let suffdict = {
+			\ 'pgsql': "\nSELECT '(vim) All done (vim)';"
+		\ }
+		let suffdict.sql = suffdict.pgsql
 		let text = a:0 >= 1 ? a:1 : GetSelectionText()
 		let fifoPath = a:0 >= 2 ? a:2 : '/tmp/fif'
 		let text = printf(
 			\ 'printf %s %s >> %s',
 			\ shellescape('%s\n'),
-			\ shellescape(text),
+			\ shellescape(text . get(suffdict,&syntax,'')),
 			\ shellescape(fifoPath)
 		\ )
 		call system(text)

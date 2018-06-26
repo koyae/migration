@@ -23,15 +23,38 @@ function s3cmd {
 	fi
 }
 
+# set_aws_credentials [<aws_credentials_file_path>[.gpg]]
+# If path is omitted, function looks for ~/.aws_credentials_path for default
+# Otherwise it asks interactively
 function set_aws_credentials {
 	location="$1"
-	if [ $# -eq 0 ]; then
-		1>&2 echo "Need to know location of GPG'd credentials-file."
-		return 1
+	home=""
+	if [ -d "$HOME" ] || [ -L "$HOME" ]; then
+		home="$HOME"
+	elif [ -d "~" ] || [ -L "~" ]; then
+		home="~"
 	fi
-	credentials="$(gpg2 -o- "$1" 2>/dev/null)"
+	default_storage_path="$home/.aws_credentials_path"
+	if [ "$location" = "" ] && [ "$HOME" != "" ]; then
+		location="$(cat "$default_storage_path")"
+	fi
+	if [ "$location" = "" ]; then
+		echo "Please enter location of credentials file."
+		read
+		location="$REPLY"
+	else
+		1>&2 printf 'Using location "%s"\n' "$location"
+		1>&2 printf '(Provide an argument to use a different path.)\n'
+	fi
+	if [ -e "$location" ]; then
+		printf '%s' "$location" > "$default_storage_path"
+	else
+		1>&2 printf 'Bad locaton "%s"\n' "$locaton"
+		exit 1
+	fi
+	credentials="$(gpg2 -o- "$location" 2>/dev/null)"
 	succ=$?
-	if [ succ -eq 0 ]; then
+	if [ $succ -eq 0 ]; then
 		1>&2 echo "Success."
 	else
 		1>&2 echo "Failed. Bad password?"
@@ -319,7 +342,8 @@ function headlessql {
 	fi
 	mkfifo "$fifoPath"
 	while [ 1 = 1 ]; do
-		psql "$1" -q --no-psqlrc -v VERBOSITY=default -v QUIET=off -f "$fifoPath"
+		psql "$1" -q --no-psqlrc -v VERBOSITY=default -v QUIET=off \
+			-v ON_ERROR_STOP=on -v ON_ERROR_ROLLBACK=on -f "$fifoPath"
 	done
 	# socket-approach is simpler to express because it doesn't require a loop
 	# but at least for psql, a bad SQL-command will break it, so that doesn't
