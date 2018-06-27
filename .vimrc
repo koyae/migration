@@ -17,6 +17,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:set <S-Right>=[C
 	:set <C-Left>=OD
 	:set <C-Right>=OC
+	:set <A-c>=c
 	:set <A-=>==
 	:set <A-x>=x
 	:set <A-z>=z
@@ -39,6 +40,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 
 "--------------------Plugin Imports------------------------:
 	:source ~/.vim/plugin/cmdalias.vim
+	" grab everything from ~/.vim/bundle
 	execute pathogen#infect()
 	runtime macros/matchit.vim " allow jumping to matching XML tags using '%'
 
@@ -70,7 +72,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:set formatoptions+=j " allow vim's re-wrapping functionality to join as well as split
 	:set formatoptions-=r " don't repeat the single-line comment symbol when pressing enter
 
-"-- cmdalias.vim aliases
+"-- cmdalias.vim aliases:
 	:Alias Wq wq
 	:Alias WQ wq
 	:Alias qw wq
@@ -438,9 +440,10 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	endfunction
 
 " nnoremapped to <Return>
-    function! ToInsertCr()
+    function! SmartReturn()
         "let indentLevel = GetCurrentIndentLevel()
-        if AtEndOfLine()
+		let terminalChar = matchstr( getline('.'),'\%' . col('.') . 'c.' )
+        if AtEndOfLine() && terminalChar!=')'
             return "a\<CR>\<Space>\<Esc>"
         endif
         return "i\<CR>\<Esc>"
@@ -717,12 +720,16 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" signal (XOFF). This command won't work if that's not done. In most cases
 	" it can be disabled from .bashrc
 
+	" altS clears trailing whitespace if present then places a colon at EOL:
+	nnoremap <silent> <A-c> :call InsertAtEOL(':',1)<Return>
+	inoremap <silent> <A-c> <C-o>:call InsertAtEOL(':',1)<Return>
 	" altS clears trailing whitespace if present then places a semicolon at EOL:
 	nnoremap <silent> <A-s> :call InsertAtEOL(';',1)<Return>
 	" alt0 clears trailing whitespace if present then places ')' at EOL:
 	nnoremap <silent> <A-)> :call InsertAtEOL(')',1)<Return>
 	" alt1 clears trailing whitespace if present then places a comma at EOL:
 	nnoremap <silent> <A-1> :call InsertAtEOL(',',1)<Return>
+	inoremap <silent> <A-1> <C-o>:call InsertAtEOL(',',1)<Return>
 	" altP clears trailing whitespace if present then pastes at EOL, then
 	" jumps to start of paste:
 	nnoremap <silent> <A-p> :call InsertAtEOL('',1)<Return>:s/,$/, /e\|noh<Return>$p`[
@@ -840,9 +847,15 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" insert-key enters replace-mode
 	nnoremap <Insert> i<Insert>
 
-	" F5 pipes selected text to a socket:
+	" F5-key pipes selected text to a file:
 	vnoremap <F5> :<BS><BS><BS><BS><BS>call AppendToFile()<Return>
+	vnoremap <F1> :<BS><BS><BS><BS><BS>call AppendToFile()<Return>
 	nmap <F5> ggVG<F5><C-o><C-o>
+	" F5-key just sends current line from insert-mode:
+	imap <F5> <F1>
+	" F1-key just sends current line to file:
+	nmap <F1> V<F5>
+	imap <F1> <C-o>mp<C-o><F1><C-o>`p;
 
 	" shiftU capitalizes SQL keywords:
 	nnoremap <silent> <C-u> :exec 'silent! normal! ' . To('$','$','.',1,'',":call PgCap() \<Enter>")
@@ -896,12 +909,11 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 "-- Normal-mode passthroughs for
 
 	nmap <silent> <expr> \ ToInsertBeforeCurrentChar('\')
-	autocmd Syntax, vim nmap <expr> <silent> " ToInsertBeforeCurrentChar('"')
 	" space inserts a space in front of current character:
 	noremap <silent> <expr> <Space> ToInsertBeforeCurrentChar(" ")
 	" enter-key acts like enter:
-	nmap <silent> <expr> <Return> ToInsertCr()
-	"inoremap <silent> <expr> <Return> ToInsertCr()
+	nmap <silent> <expr> <Return> SmartReturn()
+	"inoremap <silent> <expr> <Return> SmartReturn()
 	" shiftI begins insert above:
 	nmap <silent> <expr> <S-i> InsertLineAbove()
 	" k-key begins insert below:

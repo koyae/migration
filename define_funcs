@@ -342,7 +342,10 @@ function headlessql {
 	fi
 	mkfifo "$fifoPath"
 	while [ 1 = 1 ]; do
-		psql "$1" -q --no-psqlrc -v VERBOSITY=default -v QUIET=off \
+		# try to disable the pager, since we generally only want to look at the
+		# window rather than touch it
+		export PAGER=""
+		psql "$1" -q --no-psqlrc -v VERBOSITY=default -v QUIET=off --expanded \
 			-v ON_ERROR_STOP=on -v ON_ERROR_ROLLBACK=on -f "$fifoPath"
 	done
 	# socket-approach is simpler to express because it doesn't require a loop

@@ -51,6 +51,7 @@ alias lastat='cd "$(cat "$HOME/lastat")"'
 alias lastam='pwd > "$HOME/lastat"'
 alias ssh-remove='ssh-add -d'
 alias psql='psql $( [ -d /d/Job/chapow/back ] && echo -v home=/d/Job/chapow/back || echo -v home=/tmp)'
+alias k1="kill %1"
 
 # reset git working tree location, if it's borked:
 read -r -d "" gitrwt <<-'EOF'
