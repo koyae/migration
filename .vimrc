@@ -39,7 +39,8 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	endif
 
 "--------------------Plugin Imports------------------------:
-	:source ~/.vim/plugin/cmdalias.vim
+	filetype plugin on
+	source ~/.vim/plugin/cmdalias.vim
 	" grab everything from ~/.vim/bundle
 	execute pathogen#infect()
 	runtime macros/matchit.vim " allow jumping to matching XML tags using '%'
@@ -440,19 +441,25 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	endfunction
 
 " nnoremapped to <Return>
-    function! SmartReturn()
-        "let indentLevel = GetCurrentIndentLevel()
+	function! SmartReturn()
+		"let indentLevel = GetCurrentIndentLevel()
 		let terminalChar = matchstr( getline('.'),'\%' . col('.') . 'c.' )
-        if AtEndOfLine() && terminalChar!=')'
-            return "a\<CR>\<Space>\<Esc>"
-        endif
-        return "i\<CR>\<Esc>"
-    endfunction
+		if AtEndOfLine() && terminalChar!=')' && terminalChar!='('
+			return "a\<CR>\<Space>\<Esc>"
+		endif
+		return "i\<CR>\<Esc>"
+	endfunction
 
 " nnoremaped to <Del>
-    function! SmartDelete()
-        return AtEndOfLine()? "a\<Del>\<Esc>" : "x"
-    endfunction
+	function! SmartDelete()
+		" If we're deleting from the end of the current line, immediately eat
+		" any whitespace that's at the beginning of the next line, since this
+		" is pretty much universally unwanted for pulling stuff from below
+		" lines onto current:
+		return AtEndOfLine()?
+			\ "j:s/^\\s\\+//e | noh\<Return>0i\<BS>\<C-o>mp\<Esc>`p"
+			\ : "x"
+	endfunction
 
 	function! SmartX()
 		" Delete the whole line if we have only whitespace and it is the only
