@@ -31,6 +31,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:set <A-d>=d
 	:set <A-i>=i
 	:set <A-p>=p
+	:set <C-S-g>=
 
 	let term=$TERM
 	if term == 'screen' || term == "screen-256color" || term == "xterm-256color"
@@ -635,7 +636,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 		" execute has completed all of them, since it may be hard to tell
 		" otherwise whether it's frozen, still working, or done
 		let suffdict = {
-			\ 'pgsql': "\nSELECT '(vim) All done (vim)';"
+			\ 'pgsql': "\n;SELECT '(vim) All done (vim)';"
 		\ }
 		let suffdict.sql = suffdict.pgsql
 		let text = a:0 >= 1 ? a:1 : GetSelectionText()
@@ -764,9 +765,18 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 
 "-- Find and replace stuff
 
-	" ctrlF opens search mode:
+	" ctrlF opens search-mode:
 	nnoremap <C-f> /
-	vnoremap <C-f> /
+	vnoremap <C-f> "fy/\V<C-r>f
+	" hash-key searches on current selection as a token:
+	vnoremap * "fy/\V\<<C-r>f\><Return>
+	vmap # "fy?\V\<<C-r>f\><Return>
+	" ctrlG searches on current selection (if present, otherwise repeats last)
+	nnoremap <C-g> n
+	vmap <C-g> <C-f><Return>
+	" ctrlShiftG searches backward on current selection (if present, otherwise repeats last)
+	nnoremap <C-S-g> N
+	vnoremap <C-S-g> "fy?\V<C-r>f<Return>
 	" normal ctrlH starts a document-wide replace:
 	nnoremap <C-h> :%s/
 	" visual ctrlH starts replacement within selection:
