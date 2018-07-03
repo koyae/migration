@@ -24,9 +24,6 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:set <A-s>=s
 	:set <A-(>=9
 	:set <A-)>=0
-	:set <A-[>=[
-	" ^ This appears to be causing headaches and trash to get spammed into
-	" command-bar on start. Dunno why, exactly
 	:set <C-A-x>=
 	:set <C-A-t>=
 	:set <C-A-q>=
@@ -758,7 +755,8 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	vnoremap <silent> '' <Esc>`<i'<Esc>`>a<Right>'<Esc>
 	" doubleQuote-backtick from Visual mode surrounds selection in backticks:
 	vnoremap <silent> "` <Esc>`<i`<Esc>`>a<Right>`<Esc>
-	inoremap <A-[> ['']<C-o>2h
+	" altOpenbracket starts plain literal array-access:
+	inoremap <Esc>[ ['']<Left><Left>
 
 	" altI adds '>' to the beginning of lines:
 	vmap <A-i> :s/^./>\0/<Return>:noh <Return>

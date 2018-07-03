@@ -11,7 +11,7 @@ screen
 split -v
 focus
 screen
- 
+
 # <screenprefix> then ctrlC creates a new task and immediately offers to rename it,
 # clearing the preset name automatically to empty before prompting for a new one:
 bind ^c eval screen "title ''" title
