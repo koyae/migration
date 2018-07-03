@@ -24,6 +24,9 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:set <A-s>=s
 	:set <A-(>=9
 	:set <A-)>=0
+	:set <A-[>=[
+	" ^ This appears to be causing headaches and trash to get spammed into
+	" command-bar on start. Dunno why, exactly
 	:set <C-A-x>=
 	:set <C-A-t>=
 	:set <C-A-q>=
@@ -69,6 +72,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:set shiftwidth=0 " make '>' (angle bracket) always just match `tabstop`
 	:set ignorecase smartcase "searching is non-case-sensitive unless there's a cap
 	:set shellcmdflag=-ic
+	" :set ttimeout
 
 "-- Formatting behavior:
 	:set formatoptions+=j " allow vim's re-wrapping functionality to join as well as split
@@ -411,13 +415,13 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	"endfunction
 
 " helper-function
-    function! AtEndOfLine()
-        let textAfterCursor = strpart(getline('.'),col('.'))
-        if textAfterCursor==""
-            return 1
-        endif
-        return 0
-    endfunction
+  function! AtEndOfLine()
+      let textAfterCursor = strpart(getline('.'),col('.'))
+      if textAfterCursor==""
+          return 1
+      endif
+      return 0
+  endfunction
 
 " helper-function: return whether there's only whitespace on a line or not
 	function! OnlyWhitespaceOnLine()
@@ -754,7 +758,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	vnoremap <silent> '' <Esc>`<i'<Esc>`>a<Right>'<Esc>
 	" doubleQuote-backtick from Visual mode surrounds selection in backticks:
 	vnoremap <silent> "` <Esc>`<i`<Esc>`>a<Right>`<Esc>
-
+	inoremap <A-[> ['']<C-o>2h
 
 	" altI adds '>' to the beginning of lines:
 	vmap <A-i> :s/^./>\0/<Return>:noh <Return>
@@ -876,7 +880,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 
 	" shiftU capitalizes SQL keywords:
 	nnoremap <silent> <C-u> :exec 'silent! normal! ' . To('$','$','.',1,'',":call PgCap() \<Enter>")
- 	" U-key capitalizes any alphas in selection:
+	" U-key capitalizes any alphas in selection:
 	vnoremap <silent> U gU
 	" u-key lowercases any alphas in selection:
 	vnoremap <silent> u gu
@@ -890,7 +894,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	nmap <S-End> v<End>
 
 	" shiftRight starts visual selection to the right:
- 	nmap <S-Right> v<Right>
+	nmap <S-Right> v<Right>
 	" shiftLeft starts visual selection to the left:
 	nmap <S-Left> v<Left>
 	" ctrlShiftRight starts visual selection by word to the left:
