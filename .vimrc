@@ -755,8 +755,10 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	vnoremap <silent> '' <Esc>`<i'<Esc>`>a<Right>'<Esc>
 	" doubleQuote-backtick from Visual mode surrounds selection in backticks:
 	vnoremap <silent> "` <Esc>`<i`<Esc>`>a<Right>`<Esc>
-	" altOpenbracket starts plain literal array-access:
-	inoremap <Esc>[ ['']<Left><Left>
+	" altOpenbracket starts plain literal array-access (we tell xterm to
+	" send F1[ rather than the real thing because actual [ prefixes all
+	" kinds of things, including really basic stuff like <Del>)
+	inoremap <F1>[ ['']<Left><Left>
 
 	" altI adds '>' to the beginning of lines:
 	vmap <A-i> :s/^./>\0/<Return>:noh <Return>
@@ -794,6 +796,8 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" :credit https://www.reddit.com/r/vim/comments/5zbyfw/tn/dewvpfw/
 	" enter-key copies in visual mode:
 	vmap <Return> y
+	" qq dismisses search-highlighting:
+	nnoremap qq :noh<Return>
 
 	" 2: f-key finds the next single character (accepted afterwards
 	" interactively) on multiple lines, rather than just the current one:
