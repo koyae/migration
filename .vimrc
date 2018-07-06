@@ -5,7 +5,6 @@ autocmd BufNewFile,BufRead, pom.xml,web.xml set tabstop=2 expandtab shiftwidth=2
 autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 autocmd BufNewFile,BufRead, .screenrc* setf screen
 " allow various comments to rewrap correctly:
-autocmd BufNewFile,BufRead, *.php,*.inc,*.module set comments=://
 autocmd BufNewFile,BufRead, *.vim,.vimrc set comments+=:\\\\|
 " ^ allow line-extension character
 autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
@@ -17,6 +16,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:set <S-Right>=[C
 	:set <C-Left>=OD
 	:set <C-Right>=OC
+	:set <A-a>=a
 	:set <A-c>=c
 	:set <A-=>==
 	:set <A-x>=x
@@ -151,6 +151,12 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	"function! GetCurrentIndentLevel()
 		"return matchstr(getline('.'),'\_$\s\+')
 	"endfunction
+
+	" GetCurrentCharUnderCursor([offset])
+	function! GetCharFromCursor(...)
+		let offset = a:0 >= 1 ? a:1 : 0
+		return matchstr(getline('.'),'\%' . (col('.') + offset) . 'c.')
+	endfunction
 
 	function! InsertLineBelow()
 		return "i\<C-o>$\<CR>"
