@@ -42,7 +42,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 "--------------------Plugin Imports------------------------:
 	filetype plugin on
 	source ~/.vim/plugin/cmdalias.vim
-	" grab everything from ~/.vim/bundle
+	" grab everything from ~/.vim/bundle:
 	execute pathogen#infect()
 	runtime macros/matchit.vim " allow jumping to matching XML tags using '%'
 
@@ -50,7 +50,14 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 
 "-- Display
 	colorscheme koyae
-	syntax on
+	" 4: Only turn on syntax highlighting once; this avoids turning
+	" highlighting off when viewing/editing an unrecognized filetype for which
+	" the user has already manually performed `set syntax=<syntax>` or `set
+	" filetype=<filetype>`:
+	let g:koyaeSyntaxEnabled = 1
+	if !exists('g:koyaeSyntaxEnabled')
+		syntax enable
+	endif " :4
 	let g:is_posix=1 " this will be right on 99% of systems
 	if exists('+breakindent')
 		:set breakindent " paragraphs moved all the way over if there's an indent in front (long line soft wrap)
@@ -702,9 +709,9 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" ctrlPagedown goes to previous tab:
 	noremap <C-PgDown> gt
 	" ctrlShiftPageup moves current tab toward to an earlier position:
-	noremap [5;6~ :-tabmove<Return>
+	noremap [5;6~ :tabmove -1<Return>
 	" ctrlShiftPagedown moves current tab toward to an earlier position:
-	noremap [6;6~ :+tabmove<Return>
+	noremap [6;6~ :tabmove +1<Return>
 	" altUp swaps current line(s) with above, keeping selection if needed:
 	vnoremap <A-Up> <Esc>`<V`>d<Up>P`[V`]
 	nnoremap <A-Up> dd<Up>P
@@ -740,11 +747,12 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	inoremap <silent> <A-c> <C-o>:call InsertAtEOL(':',1)<Return>
 	" altS clears trailing whitespace if present then places a semicolon at EOL:
 	nnoremap <silent> <A-s> :call InsertAtEOL(';',1)<Return>
+	inoremap <silent> <A-s> <C-o>:call InsertAtEOL(';',1)<Return>
 	" alt0 clears trailing whitespace if present then places ')' at EOL:
 	nnoremap <silent> <A-)> :call InsertAtEOL(')',1)<Return>
 	" alt1 clears trailing whitespace if present then places a comma at EOL:
 	nnoremap <silent> <A-1> :call InsertAtEOL(',',1)<Return>
-	inoremap <silent> <A-1> <C-o>:call InsertAtEOL(',',1)<Return>
+	imap <silent> <A-1> <C-o><A-1><Right>
 	" altP clears trailing whitespace if present then pastes at EOL, then
 	" jumps to start of paste:
 	nnoremap <silent> <A-p> :call InsertAtEOL('',1)<Return>:s/,$/, /e\|noh<Return>$p`[
