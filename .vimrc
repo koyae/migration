@@ -18,6 +18,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:set <C-Right>=OC
 	:set <A-a>=a
 	:set <A-c>=c
+	:set <A-g>=g
 	:set <A-=>==
 	:set <A-x>=x
 	:set <A-z>=z
@@ -774,6 +775,12 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" kinds of things, including really basic stuff like <Del>)
 	inoremap <F1>[ ['']<Left><Left>
 
+	" shiftTab reduces indent
+	nnoremap <S-Tab> <<Left>
+	vnoremap <S-Tab> <gv
+	imap <S-Tab> <C-o><S-Tab>
+	nnoremap <Tab> ><Right>
+
 	" altI adds '>' to the beginning of lines:
 	vmap <A-i> :s/^./>\0/<Return>:noh <Return>
 	nmap <A-i> :%s/^./>\0/<Return>:noh <Return>
@@ -786,7 +793,9 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" ctrlF opens search-mode:
 	nnoremap <C-f> /
 	vnoremap <C-f> "fy/\V<C-r>f
-	" hash-key searches on current selection as a token:
+	" hash-key and star-key (asterisk-key) search on current selection as a token:
+	" TODO: we'll need to actually escape the clipboard-contents instead of
+	" using \V, since \V disables use of \< and \>
 	vnoremap * "fy/\V\<<C-r>f\><Return>
 	vmap # "fy?\V\<<C-r>f\><Return>
 	" ctrlG searches on current selection (if present, otherwise repeats last)
@@ -868,6 +877,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	inoremap <Up> <C-o>gk
 	inoremap <Down> <C-o>gj
 
+	nnoremap <A-g> :
 
 	" s-key does not yank, just deletes then enters insert-mode:
 	vnoremap <expr> s SmartS()
@@ -932,6 +942,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" j-key jumps to the next character which matches the one under the
 	" cursor:
 	nnoremap <silent> j :call JumpToNextMatchingChar('')<Return>
+	nnoremap <silent> J :call JumpToNextMatchingChar('b')<Return>
 
 	" ctrlBackspace deletes previous word:
 	nmap  i<C-w><Esc>x
@@ -956,8 +967,6 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" k-key begins insert below:
 	nmap <silent> <expr> k InsertLineBelow()
 	"<A-i> i\<End>\<End>\<CR>
-	" tab-key indents current line
-	nmap <Tab> i<Home><Tab><Esc><Home>
 	" backspace-key deletes one character back
 	nmap <BS> i<BS><Esc><Right>
 	" delete-key acts like x unless at end of line
