@@ -757,10 +757,14 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" altP clears trailing whitespace if present then pastes at EOL, then
 	" jumps to start of paste:
 	nnoremap <silent> <A-p> :call InsertAtEOL('',1)<Return>:s/,$/, /e\|noh<Return>$p`[
-	" shift9/openParen surrounds current selection in parentheses from visual mode:
+	" shift9/openparen surrounds current selection in parentheses from visual mode:
 	vnoremap <silent> ( <Esc>`<i(<Esc>`>a<Right>)<Esc>
-	" shift0/closeParen does the same as above:
+	" shift0/closeparen does the same as above:
 	vnoremap <silent> ) <Esc>`<i(<Esc>`>a<Right>)<Esc>
+	" shiftOpenbracket/openbrace wraps selection in braces:
+	vnoremap { <Esc>`<i{<Esc>`>a<Right>}<Esc>
+	" shiftClosebracket/closebrace wraps selection in braces:
+	vnoremap } <Esc>`<i{<Esc>`>a<Right>}<Esc>
 	" [quote-quote]
 	" doubleQuote-doubleQuote from Visual mode surrounds selection in quotes:
 	vnoremap <silent> "" <Esc>`<i"<Esc>`>a<Right>"<Esc>
