@@ -1,7 +1,8 @@
-inoremap <F4> $
-nnoremap <expr> <F4> ToInsertBeforeCurrentChar('$')
-inoremap <F6> $this->
-inoremap <expr> <A-a> ArrayHelp()
+
+inoremap <buffer> <F4> $
+nnoremap <buffer> <expr> <F4> ToInsertBeforeCurrentChar('$')
+inoremap <buffer> <F6> $this->
+inoremap <buffer> <expr> <A-a> ArrayHelp()
 
 " Insert the comment leader when pressing <Enter> from Insert mode:
 setlocal formatoptions+=r
