@@ -32,6 +32,9 @@ alias ssh-add='ssh-add -c' # require confirmation if agent-forwarding is about t
 alias zip='zip -r' # zip recursively by default
 alias grepc='grep --color=always'
 shopt -s extglob # enable shell-extensions such as negation-based matching
+# prevent spaces from automatically appearing by default after pressing tab-key
+# for completion, since this is obnoxious when typing long paths:
+complete -D -o default -o nospace
 git config --global push.default upstream
 git config --global color.ui auto # some systems oddly disable this
 PATH="$HOME/bin2:$PATH"
