@@ -1,7 +1,12 @@
 
+" F3-key adds an array-association arrow, with spaces on either side of it:
+inoremap <buffer> <F3> => <C-o>:s/\([^ ]\)=>/\1 =>/e<Return><End>
+" F4-key adds a dollar-sign:
 inoremap <buffer> <F4> $
 nnoremap <buffer> <expr> <F4> ToInsertBeforeCurrentChar('$')
+" F6-key adds '$this->':
 inoremap <buffer> <F6> $this->
+" altA adds either "array()" or "['']", depending on context:
 inoremap <buffer> <expr> <A-a> ArrayHelp()
 
 " Insert the comment leader when pressing <Enter> from Insert mode:

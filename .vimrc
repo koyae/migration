@@ -751,6 +751,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	inoremap <silent> <A-s> <C-o>:call InsertAtEOL(';',1)<Return>
 	" alt0 clears trailing whitespace if present then places ')' at EOL:
 	nnoremap <silent> <A-)> :call InsertAtEOL(')',1)<Return>
+	imap <A-)> <C-o>mo<C-o><A-)><C-o>`o
 	" alt1 clears trailing whitespace if present then places a comma at EOL:
 	nnoremap <silent> <A-1> :call InsertAtEOL(',',1)<Return>
 	imap <silent> <A-1> <C-o><A-1><Right>
