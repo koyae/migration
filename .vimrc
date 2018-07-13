@@ -90,7 +90,10 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:Alias Q q
 	:Alias W w
 	:command! Reup source ~/.vimrc
+	" Create a new tab with the desired help-page inside of it:
+	:command! -nargs=1 Tabh :tabnew | :h <args> | normal! <C-w><Up>:q<Return>
 	:Alias reup Reup
+	:Alias tabh Tabh
 
 "-------------------Functions------------------------------:
 
