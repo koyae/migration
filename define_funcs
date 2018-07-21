@@ -330,7 +330,7 @@ function headlessql {
 	if [ "$PGPASSWORD" = "" ]; then
 		printf 'PGPASSWORD is unset. Set it now?'
 		read -n 1
-		if [ "$REPLY" == "y" ]; then
+		if [ "$REPLY" = "y" ]; then
 			printf '\nPlease input PGPASSWORD.\n'
 			read -s
 			export PGPASSWORD="$REPLY"
