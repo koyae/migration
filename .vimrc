@@ -460,13 +460,15 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	endfunction
 
 " nnoremapped to <Return>
+" SmartEnter
 	function! SmartReturn()
 		"let indentLevel = GetCurrentIndentLevel()
 		let terminalChar = matchstr( getline('.'),'\%' . col('.') . 'c.' )
-		if AtEndOfLine() && terminalChar!=')' && terminalChar!='('
+		let pushTheseDown = ['(',')','{','}','[',']']
+		if AtEndOfLine() && index(pushTheseDown,terminalChar)==-1
 			return "a\<CR>\<Space>\<Esc>"
 		endif
-		return "i\<CR>\<Esc>"
+		return "i\<CR>\<Esc>$"
 	endfunction
 
 " nnoremaped to <Del>
