@@ -27,3 +27,12 @@ bindkey "^A^[OA" eval copy "stuff k"
 bindkey "^A^[OC" eval copy "stuff L"
 # ctrlA then Right-key enters copy-mode and moves the cursor right
 bindkey "^A^[OD" eval copy "stuff h"
+
+# ctrlL enters command-mode:
+bindkey "^L" colon
+
+# Home-key just goes to the begining of the line in copy mode:
+markkeys "\^=\201"
+# End-key just goes to the end of the line in end mode:
+markkeys "$=\205"
+
