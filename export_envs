@@ -35,6 +35,7 @@ else
 fi
 
 export EDITOR="vim"
+export VISUAL="vim"
 export HISTIGNORE="ls" # don't store plain ls-commands in bash history
 export HISTFILESIZE=100000
 #^ store up to the last 100,000 commands, truncating away the oldest ones on
