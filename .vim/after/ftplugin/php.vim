@@ -25,7 +25,7 @@ endfunction
 
 function! ArrayHelp()
 	let c = GetCharFromCursor(-1)
-	if col('.') == 1 || match(c,'\v[\t (]') == 0
+	if col('.') == 1 || match(c,'\v[\t (,]') == 0
 		return "array()\<Left>"
 	else
 		let l:hack = "\<C-o>" . ':inoremap <Tab> <Right><Right><C-o>:call UnmapI()<Return>' . "\<Return>"
