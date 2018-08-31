@@ -894,7 +894,9 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	nnoremap <expr> s SmartS()
 	" x-key does not yank, just deletes:
 	vnoremap <expr> x SmartX()
-	" p-key and shiftP do not yank, just delete:
+	" shiftX does not yank, just deletes:
+	nmap X <Left>x
+	" p-key and shiftP do not yank, just paste:
 	vnoremap <expr> p SmartX() . 'P'
 	vnoremap <expr> P SmartX() . 'P'
 
