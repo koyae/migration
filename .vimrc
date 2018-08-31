@@ -583,13 +583,13 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 		endif
 		call RestoreSetting('ignorecase')
 		call RestoreSetting('smartcase')
-		echom keys
+		" echom keys
 		return keys
 	endfunction
 
 	function! JumpToNextMatchingChar(flags)
 		let char = matchstr(getline('.'), '\%' . col('.') . 'c.')
-		call JumpToChar(char,a:flags)
+		return JumpToChar(char,a:flags)
 	endfunction
 
 	" Interactive character-jump function
@@ -737,7 +737,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	imap <A-x> <C-o>m`<C-o>$<Backspace><C-o>``
 	" ctrlX deletes the current line (without overwriting clipboard register)
 	nmap <C-x> Vx
-	imap <C-x> <C-o>Vx
+	imap <C-x> <C-o><C-x>
 	" ctrlAltX deletes all lines:
 	noremap <silent> <C-A-x> :call SelectAllThenDo("normal x")<Return>
 	" 2: ctrlS saves current file:
@@ -949,8 +949,8 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	vnoremap <C-Left> <S-Left>
 	":4 sadly the previous two aliases do not quite work in PuTTY
 
-	" j-key jumps to the next character which matches the one under the
-	" cursor:
+	" j-key jumps to the next/previous character which matches the one under
+	" the cursor:
 	nnoremap <silent> j :call JumpToNextMatchingChar('')<Return>
 	nnoremap <silent> J :call JumpToNextMatchingChar('b')<Return>
 

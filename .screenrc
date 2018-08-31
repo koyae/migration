@@ -24,9 +24,9 @@ bind "" copy
 #CtrlA then Up-key enters copy-mode and moves the cursor up
 bindkey "^A^[OA" eval copy "stuff k"
 # ctrlA then Left-key enters copy-mode and moves the cursor left
-bindkey "^A^[OC" eval copy "stuff L"
+bindkey "^A^[OC" eval copy "stuff h"
 # ctrlA then Right-key enters copy-mode and moves the cursor right
-bindkey "^A^[OD" eval copy "stuff h"
+bindkey "^A^[OD" eval copy "stuff l"
 
 # ctrlL enters command-mode:
 bindkey "^L" colon
