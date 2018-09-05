@@ -736,7 +736,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	nmap <A-x> m`$x``
 	imap <A-x> <C-o>m`<C-o>$<Backspace><C-o>``
 	" ctrlX deletes the current line (without overwriting clipboard register)
-	nmap <C-x> Vx
+	nmap <C-x> V<Del>
 	imap <C-x> <C-o><C-x>
 	" ctrlAltX deletes all lines:
 	noremap <silent> <C-A-x> :call SelectAllThenDo("normal x")<Return>
@@ -975,7 +975,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	nmap <silent> <expr> <Return> SmartReturn()
 	"inoremap <silent> <expr> <Return> SmartReturn()
 	" shiftI begins insert above:
-	nmap <silent> <expr> <S-i> InsertLineAbove()
+	nmap <S-i> <Up>k
 	" k-key begins insert below:
 	nmap <silent> <expr> k InsertLineBelow()
 	"<A-i> i\<End>\<End>\<CR>
