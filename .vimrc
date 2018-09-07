@@ -887,6 +887,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	inoremap <Up> <C-o>gk
 	inoremap <Down> <C-o>gj
 
+	" altG opens command-bar
 	nnoremap <A-g> :
 
 	" s-key does not yank, just deletes then enters insert-mode:
@@ -900,6 +901,10 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	vnoremap <expr> p SmartX() . 'P'
 	vnoremap <expr> P SmartX() . 'P'
 
+	" g-then-i goes to the next matching indent:
+	nnoremap gi :call search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%>' . line('.') . 'l\S', 'e')<Return>
+	" g-then-shiftI goes to the previous matching indent:
+	nnoremap gI :call search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%<' . line('.') . 'l\S', 'be')<Return>
 
 	" shiftU redoes:
 	noremap U <C-r>
@@ -944,11 +949,12 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" allow shiftRight to stay held while selecting without jumping by word
 	vmap <S-Right> <Right>
 	" ctrlRight keeps the cursor on the right side of words when jumping:
-	nnoremap <C-Right> <C-Right>he
+	nnoremap <C-Right> e
+	nnoremap <C-Left> b
 	" ctrlRight jumps by word like in most text editors:
-	vnoremap <C-Right> <S-Right>
+	vnoremap <C-Right> e
 	" ctrlLeft jumps by word like in most text editors:
-	vnoremap <C-Left> <S-Left>
+	vnoremap <C-Left> b
 	":4 sadly the previous two aliases do not quite work in PuTTY
 
 	" j-key jumps to the next/previous character which matches the one under
@@ -975,6 +981,8 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	nmap <silent> <expr> <Return> SmartReturn()
 	"inoremap <silent> <expr> <Return> SmartReturn()
 	" shiftI begins insert above:
+	" TODO: clone indent from line above or current line depending on which
+	" one(s) are blank
 	nmap <S-i> <Up>k
 	" k-key begins insert below:
 	nmap <silent> <expr> k InsertLineBelow()
