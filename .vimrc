@@ -17,7 +17,13 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 " require making a function-call in every macro. So instead, I'll lay out some
 " conventions for how to store data:
 "
-" register 's' is used to preserve the contents of the default register '"'
+" register 's': used to temporarily hold the contents of the default register '"'
+" in some cases this is unavoidable because of `diw` and similar
+"
+" register 'p' is used instead of the default register to avoid overwriting it
+" in the first place. This should theoretically be used more often than register
+" 's'.
+"
 " mark '`' is used to temporarily store the last cursor position in macros
 
 
@@ -29,6 +35,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:set <C-Right>=OC
 	:set <A-a>=a
 	:set <A-c>=c
+	:set <A-e>=e
 	:set <A-g>=g
 	:set <A-r>=r
 	:set <A-=>==
@@ -191,6 +198,9 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 		return "i\<End>\<Home>\<CR>\<Up>"
 	endfunction
 
+	function! SetEncloseWithFunctionCallFunctionName()
+		let g:EncloseWithFunctionCallFunctionName = input("Function name? ")
+	endfunction
 
 	" Function adapted from http://vim.wikia.com/wiki/Smart_home#More_features
 	function! SmartHome(mode)
@@ -763,6 +773,16 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" 2: altR removes the function-call currently under the cursor
 	nmap <A-r> :normal viwxm`%x``x<Return>
 	imap <A-r> <C-o><A-r>
+	" 2: ctrlE sets enclosure function and encloses the current word or
+	" selection with a function-call:
+	nnoremap <C-e> :call SetEncloseWithFunctionCallFunctionName()<Return>
+	imap <C-e> <C-o><C-e>
+	" 4: altE encloses the current word or selection with a function-call:
+	nmap <A-e> :let @p=g:EncloseWithFunctionCallFunctionName
+		\ \| normal viw(%"pP`[<Return>
+	imap <A-e> <C-o><A-e>
+	vmap <A-e> <A-g>let @p=g:EncloseWithFunctionCallFunctionName<Return>gv(%"pP
+	" ^ set register, restore selection, jump to matching parenthesis, paste
 
 	" altS clears trailing whitespace if present then places a colon at EOL:
 	nnoremap <silent> <A-c> :call InsertAtEOL(':',1)<Return>
@@ -899,8 +919,9 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	inoremap <Up> <C-o>gk
 	inoremap <Down> <C-o>gj
 
-	" altG opens command-bar
+	" 2: altG opens command-bar:
 	nnoremap <A-g> :
+	vmap <A-g> :<BS><BS><BS><BS><BS>
 
 	" s-key does not yank, just deletes then enters insert-mode:
 	vnoremap <expr> s SmartS()
