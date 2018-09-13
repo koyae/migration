@@ -10,6 +10,17 @@ autocmd BufNewFile,BufRead, *.vim,.vimrc set comments+=:\\\\|
 autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	\| set comments=:--
 
+" Conventions:
+"
+" Sophisticated macros may naturally, require storage of clipboard or
+" cursor-location info, but perfect data-hiding is impractical, as it would
+" require making a function-call in every macro. So instead, I'll lay out some
+" conventions for how to store data:
+"
+" register 's' is used to preserve the contents of the default register '"'
+" mark '`' is used to temporarily store the last cursor position in macros
+
+
 "--------------------Compatibility settings----------------:
 	:set nocompatible
 	:set <S-Left>=[D
@@ -19,6 +30,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:set <A-a>=a
 	:set <A-c>=c
 	:set <A-g>=g
+	:set <A-r>=r
 	:set <A-=>==
 	:set <A-x>=x
 	:set <A-z>=z
@@ -748,6 +760,10 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" signal (XOFF). This command won't work if that's not done. In most cases
 	" it can be disabled from .bashrc
 
+	" 2: altR removes the function-call currently under the cursor
+	nmap <A-r> :normal viwxm`%x``x<Return>
+	imap <A-r> <C-o><A-r>
+
 	" altS clears trailing whitespace if present then places a colon at EOL:
 	nnoremap <silent> <A-c> :call InsertAtEOL(':',1)<Return>
 	inoremap <silent> <A-c> <C-o>:call InsertAtEOL(':',1)<Return>
@@ -780,10 +796,6 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	vnoremap <silent> '' <Esc>`<i'<Esc>`>a<Right>'<Esc>
 	" doubleQuote-backtick from Visual mode surrounds selection in backticks:
 	vnoremap <silent> "` <Esc>`<i`<Esc>`>a<Right>`<Esc>
-	" altOpenbracket starts plain literal array-access (we tell xterm to
-	" send F1[ rather than the real thing because actual [ prefixes all
-	" kinds of things, including really basic stuff like <Del>)
-	inoremap <F1>[ ['']<Left><Left>
 
 	" shiftTab reduces indent
 	nnoremap <S-Tab> <<Left>
