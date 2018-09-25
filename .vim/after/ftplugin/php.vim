@@ -53,7 +53,7 @@ endfunction
 function! ArrayHelp()
 	let c = GetCharFromCursor(-1)
 	if col('.') == 1 || match(c,'\v[\t (,]') == 0
-		return "array()\<Left>" . GetTabUnsetHack("<End>")
+		return "array()\<Left>"
 	else
 		return "['']\<Left>\<Left>" . GetTabUnsetHack('<Right><Right>')
 	endif
