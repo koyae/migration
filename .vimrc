@@ -34,6 +34,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:set <C-Left>=OD
 	:set <C-Right>=OC
 	:set <A-a>=a
+	:set <A-b>=b
 	:set <A-c>=c
 	:set <A-e>=e
 	:set <A-g>=g
@@ -822,6 +823,10 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	vnoremap <S-Tab> <gv
 	imap <S-Tab> <C-o><S-Tab>
 	nnoremap <Tab> ><Right>
+
+	" altB groups a selected set of arguments spread across multiple lines onto
+	" one line:
+	vnoremap <A-b> :s/,\n\s*/, /<Return>
 
 	" altI adds '>' to the beginning of lines:
 	vmap <A-i> :s/^./>\0/<Return>:noh <Return>
