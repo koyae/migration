@@ -804,10 +804,10 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	vnoremap <silent> ( <Esc>`<i(<Esc>`>a<Right>)<Esc>
 	" shift0/closeparen does the same as above:
 	vnoremap <silent> ) <Esc>`<i(<Esc>`>a<Right>)<Esc>
-	" shiftOpenbracket/openbrace wraps selection in braces:
-	vnoremap { <Esc>`<i{<Esc>`>a<Right>}<Esc>
-	" shiftClosebracket/closebrace wraps selection in braces:
-	vnoremap } <Esc>`<i{<Esc>`>a<Right>}<Esc>
+	" doubleQuote-shiftOpenbracket/openbrace wraps selection in braces:
+	vnoremap "{ <Esc>`<i{<Esc>`>a<Right>}<Esc>
+	" doubleQuote-shiftClosebracket/closebrace wraps selection in braces:
+	vnoremap "} <Esc>`<i{<Esc>`>a<Right>}<Esc>
 	" [quote-quote]
 	" doubleQuote-doubleQuote from Visual mode surrounds selection in quotes:
 	vnoremap <silent> "" <Esc>`<i"<Esc>`>a<Right>"<Esc>
