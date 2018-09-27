@@ -790,7 +790,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	inoremap <silent> <A-c> <C-o>:call InsertAtEOL(':',1)<Return>
 	" altS clears trailing whitespace if present then places a semicolon at EOL:
 	nnoremap <silent> <A-s> :call InsertAtEOL(';',1)<Return>
-	inoremap <silent> <A-s> <C-o>:call InsertAtEOL(';',1)<Return>
+	inoremap <silent> <A-s> <C-o>:call InsertAtEOL(';',1)<Return><Right>
 	" alt0 clears trailing whitespace if present then places ')' at EOL:
 	nnoremap <silent> <A-)> :call InsertAtEOL(')',1)<Return>
 	imap <A-)> <C-o>mo<C-o><A-)><C-o>`o
