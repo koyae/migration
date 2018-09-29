@@ -20,9 +20,9 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 " register 's': used to temporarily hold the contents of the default register '"'
 " in some cases this is unavoidable because of `diw` and similar
 "
-" register 'p' is used instead of the default register to avoid overwriting it
-" in the first place. This should theoretically be used more often than register
-" 's'.
+" Otherwise, register 'p' is used instead of the default register to avoid
+" overwriting it in the first place. This should theoretically be used more
+" often than register 's'.
 "
 " mark '`' is used to temporarily store the last cursor position in macros
 
@@ -114,6 +114,8 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:command! -nargs=1 Tabh :tabnew | :h <args> | normal! <C-w><Up>:q<Return>
 	:Alias reup Reup
 	:Alias tabh Tabh
+	:command! Hoh set hlsearch
+	Alias hoh Hoh
 
 "-------------------Functions------------------------------:
 
@@ -183,7 +185,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 		"return matchstr(getline('.'),'\_$\s\+')
 	"endfunction
 
-	" GetCurrentCharUnderCursor([offset])
+	" GetCharFromCursor([offset])
 	function! GetCharFromCursor(...)
 		let offset = a:0 >= 1 ? a:1 : 0
 		return matchstr(getline('.'),'\%' . (col('.') + offset) . 'c.')
@@ -547,6 +549,18 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 		call setreg(a:register,GetRegexFromSelection())
 	endfunction
 
+	function! RelimitRegister(regSymbol,limitChar,stripClass)
+		return Relimit(getreg(a:regSymbol),a:limitChar,a:stripClass)
+	endfunction
+
+	function! Relimit(string,limitChar,stripClass)
+		let selText = a:string
+		let selText = substitute(selText, '^' . a:stripClass, '', '')
+		let selText = substitute(selText, a:stripClass . '$', '', '')
+		let selText = a:limitChar . selText . a:limitChar
+		return selText
+	endfunction
+
 	function! SaveSetting(settingName)
 		let estring = "let t:" . a:settingName . " = &" . a:settingName
 		exec estring
@@ -809,12 +823,11 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" doubleQuote-shiftClosebracket/closebrace wraps selection in braces:
 	vnoremap "} <Esc>`<i{<Esc>`>a<Right>}<Esc>
 	" [quote-quote]
-	" doubleQuote-doubleQuote from Visual mode surrounds selection in quotes:
-	vnoremap <silent> "" <Esc>`<i"<Esc>`>a<Right>"<Esc>
-	" doubleQuote-singleQuote from Visual mode surrounds selection in quotes:
-	vnoremap <silent> "' <Esc>`<i'<Esc>`>a<Right>'<Esc>
-	" singleQuote-singleQuote from Visual mode surrounds selection in quotes:
-	vnoremap <silent> '' <Esc>`<i'<Esc>`>a<Right>'<Esc>
+	" "example text" "xxx" "non-target text"
+	" doubleQuote-doubleQuote mode surrounds selection in quotes:
+	vnoremap "" "pygv"=RelimitRegister('p','"',"'")<Return>P
+	" doubleQuote-singleQuote from Visual mode "encloses" selection in quotes:
+	vnoremap "' "pygv"=RelimitRegister('p',"'",'"')<Return>P
 	" doubleQuote-backtick from Visual mode surrounds selection in backticks:
 	vnoremap <silent> "` <Esc>`<i`<Esc>`>a<Right>`<Esc>
 
@@ -995,10 +1008,13 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	vnoremap <C-Left> b
 	":4 sadly the previous two aliases do not quite work in PuTTY
 
-	" j-key jumps to the next/previous character which matches the one under
+	" 2: j-key jumps to the next/previous character which matches the one under
 	" the cursor:
 	nnoremap <silent> j :call JumpToNextMatchingChar('')<Return>
+	vnoremap <silent> J :<C-u>let @p=escape(GetCharFromCursor(),'/') \| set nohlsearch<Return>gv?\V<C-r>p<Return>
+	" 2: shiftJ does the same only backwards:
 	nnoremap <silent> J :call JumpToNextMatchingChar('b')<Return>
+	vnoremap <silent> j :<C-u>let @p=escape(GetCharFromCursor(),'/') \| set nohlsearch<Return>gv/\V<C-r>p<Return>
 
 	" ctrlBackspace deletes previous word:
 	nmap  i<C-w><Esc>x
@@ -1010,7 +1026,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" ctrlA does select all:
 	nnoremap <C-a> gg<S-v>G
 
-"-- Normal-mode passthroughs for
+"-- Normal-mode passthroughs for select characters:
 
 	nmap <silent> <expr> \ ToInsertBeforeCurrentChar('\')
 	" space inserts a space in front of current character:
