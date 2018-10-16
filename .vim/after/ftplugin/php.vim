@@ -19,11 +19,11 @@ nnoremap <buffer> gZ ?^\s*function<Return>:set nohlsearch<Return>
 setlocal formatoptions+=r
 " This is most helpful for PHP's long '/*' doc comments.
 
-" The below string is taken from ~/.vim/indent/php.vim. While it's correct
+" The below string is modified from ~/.vim/indent/php.vim. While it's correct
 " there, certain combinations of options/extensions can screw with
 " include-order, which causes the string to get overridden. Solution for now
 " is just to set this here and not do `filetype indent on`
-setlocal comments=s1:/*,mb:*,ex:*/,://,:#
+setlocal comments=s1:/*,mb:*,ex:*/,://
 
 function! UnmapI()
 	iunmap <Tab>
@@ -59,6 +59,8 @@ function! ArrayHelp()
 	let c = GetCharFromCursor(-1)
 	if col('.') == 1 || match(c,'\v[\t (,]') == 0
 		return "array()\<Left>"
+	elseif c == "'"
+		return "\<Del>\<Backspace>"
 	else
 		return "['']\<Left>\<Left>" . GetTabUnsetHack('<Right><Right>')
 	endif

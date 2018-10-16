@@ -763,8 +763,10 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	nnoremap <A-Down> ddp
 	" ctrlUp scrolls screen up one line without moving cursor:
 	noremap <C-Up> <C-y>
+	inoremap <C-Up> <C-o><C-y>
 	" ctrlDown scrolls screen down one line without moving cursor:
 	noremap <C-Down> <C-e>
+	inoremap <C-Down> <C-o><C-e>
 	" ctrlQ either closes the current help-pane or the current tab:
 	nnoremap <C-q> :call CloseTab()<Return>
 	" ctrlAltQ attempts to quit vim:
@@ -822,6 +824,10 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	vnoremap "{ <Esc>`<i{<Esc>`>a<Right>}<Esc>
 	" doubleQuote-shiftClosebracket/closebrace wraps selection in braces:
 	vnoremap "} <Esc>`<i{<Esc>`>a<Right>}<Esc>
+	" doubleQuote-openbracket wraps selection in brackets:
+	vnoremap "[ <Esc>`<i[<Esc>`>a<Right>]<Esc>
+	" doubleQuote-closebracket wraps selection in brackets:
+	vnoremap "] <Esc>`<i[<Esc>`>a<Right>]<Esc>
 	" [quote-quote]
 	" "example text" "xxx" "non-target text"
 	" doubleQuote-doubleQuote mode surrounds selection in quotes:
