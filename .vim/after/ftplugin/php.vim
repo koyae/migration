@@ -12,8 +12,10 @@ inoremap <buffer> <expr> # DrupalFormKey("'")
 
 " gz jumps to the end of the current function or the start of the next one:
 nnoremap <buffer> gz /^\s*function\\|^\s*} \/\/ [a-zA-Z_0-9]\+() OUT<Return>:set nohlsearch<Return>
+vnoremap <buffer> gz /^\s*function\\|^\s*} \/\/ [a-zA-Z_0-9]\+() OUT<Return>
 " gZ jumps to the start of nearest function above:
 nnoremap <buffer> gZ ?^\s*function<Return>:set nohlsearch<Return>
+vnoremap <buffer> gZ ?^\s*function<Return>
 
 " Insert the comment leader when pressing <Enter> from Insert mode:
 setlocal formatoptions+=r
