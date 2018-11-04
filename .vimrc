@@ -808,9 +808,11 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" altUp swaps current line(s) with above, keeping selection if needed:
 	vnoremap <A-Up> <Esc>`<V`>d<Up>P`[V`]
 	nnoremap <A-Up> dd<Up>P
+	imap <A-Up> <C-o>:execute "normal \<lt>A-Up>"<Return>
 	" altDown swaps current line(s) with below, keeping selection if needed:
 	vnoremap <A-Down> <Esc>`<V`>d<End>p`[V`]
 	nnoremap <A-Down> ddp
+	imap <A-Down> <C-o>:execute "normal \<lt>A-Down>"<Return>
 	" ctrlUp scrolls screen up one line without moving cursor:
 	noremap <C-Up> <C-y>
 	inoremap <C-Up> <C-o><C-y>
