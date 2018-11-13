@@ -538,7 +538,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 		if AtEndOfLine() && index(pushTheseDown,terminalChar)==-1
 			return "a\<CR>\<Space>\<Esc>"
 		endif
-		return "i\<CR>\<Esc>$"
+		return "i\<CR>\<Esc>^"
 	endfunction
 
 " nnoremaped to <Del>
@@ -844,6 +844,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	imap <A-r> <C-o><A-r>
 	" 2: ctrlE sets enclosure function and encloses the current word or
 	" selection with a function-call:
+
 	nnoremap <C-e> :call SetEncloseWithFunctionCallFunctionName()<Return>
 	imap <C-e> <C-o><C-e>
 	" 4: altE encloses the current word or selection with a function-call:
