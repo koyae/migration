@@ -6,6 +6,8 @@ inoremap <buffer> <F4> $
 nnoremap <buffer> <expr> <F4> ToInsertBeforeCurrentChar('$')
 " F6-key adds '$this->':
 inoremap <buffer> <F6> $this->
+" F11-key searches for function under cursor within current file:
+nmap <buffer> <F11> viw<C-f><Home><Delete><Delete>^\s*function <End><Return>qqeeb
 " altA adds either "array()" or "['']", depending on context:
 inoremap <buffer> <expr> <A-a> ArrayHelp()
 inoremap <buffer> <expr> # DrupalFormKey("'")
