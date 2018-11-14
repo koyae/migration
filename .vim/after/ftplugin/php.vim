@@ -1,4 +1,6 @@
 
+" F2-key adds an object-access arrow:
+inoremap <buffer> <F2> ->
 " F3-key adds an array-association arrow, with spaces on either side of it:
 inoremap <buffer> <F3> => <C-o>:s/\([^ ]\)=>/\1 =>/e<Return><End>
 " F4-key adds a dollar-sign:
@@ -10,7 +12,7 @@ inoremap <buffer> <F6> $this->
 nmap <buffer> <F11> viw<C-f><Home><Delete><Delete>^\s*function <End><Return>qqeeb
 " altA adds either "array()" or "['']", depending on context:
 inoremap <buffer> <expr> <A-a> ArrayHelp()
-inoremap <buffer> <expr> # DrupalFormKey("'")
+inoremap <buffer> <expr> # match(getline('.'),'^\s*$')!=-1? DrupalFormKey("'") : '#'
 
 " gz jumps to the end of the current function or the start of the next one:
 nnoremap <buffer> gz /^\s*function\\|^\s*} \/\/ [a-zA-Z_0-9]\+() OUT<Return>:set nohlsearch<Return>
