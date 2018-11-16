@@ -224,8 +224,19 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 		return "i\<End>\<Home>\<CR>\<Up>"
 	endfunction
 
-	function! SetEncloseWithFunctionCallFunctionName()
+	" SetEncloseWithFunctionCallFunctionName([returnThis])
+	" Set the name of a function so that other macros/functions can access it
+	" and know what function to wrap things with when instructed.
+	"
+	" Using the optional argument for this function allows a string of the
+	" caller's choice to be returned which can be useful in <expr> bindings,
+	" such that actions are executed only after the user has responded to the
+	" input-prompt.
+	"
+	function! SetEncloseWithFunctionCallFunctionName(...)
+		let returnThis = a:0 >= 1 ? a:1 : ''
 		let g:EncloseWithFunctionCallFunctionName = input("Function name? ")
+		return returnThis
 	endfunction
 
 	" Function adapted from http://vim.wikia.com/wiki/Smart_home#More_features
@@ -851,6 +862,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	nmap <A-e> :let @p=g:EncloseWithFunctionCallFunctionName
 		\ \| normal viw(%"pP`[<Return>
 	imap <A-e> <C-o><A-e>
+	vmap <expr> <C-e> SetEncloseWithFunctionCallFunctionName("\<A-e>")
 	vmap <A-e> <A-g>let @p=g:EncloseWithFunctionCallFunctionName<Return>gv(%"pP
 	" ^ set register, restore selection, jump to matching parenthesis, paste
 
