@@ -1097,6 +1097,9 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" ctrlA does select all:
 	nnoremap <C-a> gg<S-v>G
 
+	" shiftV enters line-select mode and moves the cursor to the end:
+	nnoremap V :set nohlsearch<Return>V/.$<Return>
+
 "-- Normal-mode passthroughs for select characters:
 
 	nmap <silent> <expr> \ ToInsertBeforeCurrentChar('\')
