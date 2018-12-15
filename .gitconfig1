@@ -34,6 +34,9 @@
 	dif = diff --cached
 	uno = status -uno
 	kommit = commit --author='patrickegon@outlook.com'
+	# this can be used with "`pwd`" as its argument if the repo has changed
+	# locations or been mounted somewhere else:
+	rehome = config --path core.worktree
 [status]
 	submodulessummary = 1
 [alias "submodule"]

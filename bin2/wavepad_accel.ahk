@@ -30,7 +30,7 @@ restore_mouse_position(){
 toggle_play(){
 	global playing
 	if playing{
-		playing := false 
+		playing := false
 	} else {
 	playing := true
 	}
@@ -38,7 +38,7 @@ toggle_play(){
 } ; toggle_play OUT
 
 ; set global previewing volume
-set_volume(whatVolume){ 
+set_volume(whatVolume){
 	maximized := false
 	arbitrary := 0 ; this gets overwritten, but the value needs to change for WavePad to actually wake up
 	ControlSetText, Edit1, %arbitrary%
@@ -57,7 +57,7 @@ normalize_selection(level){
 	if level{
 		Send %level%
 	}
-	
+
 	Send {Enter}
 	return
 }
@@ -82,6 +82,10 @@ paste_file(fn) {
 
 ; BINDINGS:--------------------------------------------------------------------------------------------------
 
+; NOTE: ctrlSpace must be natively mapped to the function "Insert Silence at
+; current position", because legacy AHK gets messed up since the menu-item is
+; called "Insert Silence..." and doesn't appear to tolerate quoting.
+; This can be fixed if/when this file is migrated to AHK 2.0+
 
 +F4:: ;shiftF4
 	ExitApp
@@ -154,28 +158,29 @@ Space::
 	toggle_play()
 	return
 
-	
+
 ; copy sample background noise ;
 !c:: ; altC
 	WinMenuSelectItem, WavePad,,Effects,Noise Reduction,Grab Noise Sample from Selected Area
 	return
-	
+
 Esc::
 	global playing
 	playing := false
 	WinMenuSelectItem, WavePad,,Control,Stop
 	return
-	
+
 ; remove background noise based off sample ;
 !r:: ; altR
 	remove_noise()
 	return
-	
+
 \::
 	set_volume(-30)
-	return	
+	return
 
 ; deamp to 0%
+d:: ;
 Down:: ; downArrow
 	Send {CtrlDown}0{CtrlUp}
 	return
@@ -188,7 +193,7 @@ PgDn:: ; pageDown
 	Send 75 ; enter percentage
 	Send {Enter}
 	return
-	
+
 ; raise amplify menu
 `::
 	Send {LAlt}
@@ -196,24 +201,24 @@ PgDn:: ; pageDown
 	Send a ; &Amplify
 	return
 
-	
+
 ;open menu for dynamic range compression
 !d:: ; altD
 	raise_drc_menu()
 	return
 
-	
+
 ; Normalize to last value used
 PgUp:: ; pageUp
 	normalize_selection(0) ; normalize to last used value
 	return
-	
+
 Up::
 !Up:: ;altUp
 ^Up:: ;ctrlUp
 	normalize_selection(100)
 	return
-	
+
 !Right:: ;altRight
 ^Right:: ;ctrlRight
 	normalize_selection(85)
@@ -246,7 +251,7 @@ Up::
 ; block help files from appearing on press
 F1:: ; protect F1 protect
 	return
-	
+
 ; Zoom out
 F3::
 	yPos := -1
@@ -298,9 +303,9 @@ a:: ; A-key
 ; USAGE NOTE: this works best if the user holds down alt
 ; Emulating this was attempted but didn't seem effective
 !s:: ; altS -- adjust grid snap
-	
+
 	record_mouse_position()
-	
+
 	xLoc := -1 ; upper-right X of match
 	yLoc := -1 ; upper-right Y of match
 
@@ -308,51 +313,50 @@ a:: ; A-key
 	searchULY := 0 ; y-coord for upper-left of area to search
 	searchLRX := A_ScreenWidth - 1 ; x-coord for lower-right of area to search
 	searchLRY := A_ScreenHeight - 1 ; y-coord for lower-right of area to search
-	
+
 	findMe := "magnet.jpg"
 	findMe := A_ScriptDir . "\" . findMe
 	SetWorkingDir %A_ScriptDir% ; ImageSearch will WorkingDir for file, so look adjacent to script
-	
+
 	prevMode := A_CoordMode
-	
+
 	CoordMode, Pixel
 	ErrorLevel = 0
 	;ImageSearch, xLoc, yLoc, %searchULX%, %searchULY%, %searchLRX%, %searchLRY%, C:\magnet.jpg
 	ImageSearch, xLoc, yLoc, 0, 0, searchLRX, searchLRY, *20 %findMe%
 	; TrayTip, Current Error Level, %ErrorLevel%, 2, 1 ; 0 if img found and searched, 1 if not found, 2 if problem reading
-	
-	
+
+
 	; Adjust to hit center of button: dimensions(magnet.jpg)/2 (it's square):
 	xLoc := xLoc + 8
 	yLoc := yLoc + 8
 	;xLoc := 28
 	;yLoc := 92
-	
+
 	MouseClick, left, %xLoc%, %yLoc%, 1, 0, D ; left click+hold in center of button once with snap-movement to position
 	Sleep 150
-	Send b ; should flop whether 'beat' or 'bar' snapping is selected. 
-	;.. FL keeps track of which one is selected and starts with caret there, 
+	Send b ; should flop whether 'beat' or 'bar' snapping is selected.
+	;.. FL keeps track of which one is selected and starts with caret there,
 	;.. so we don't have to mess with doubletaps or whatever
 	Sleep 50
 	Send {Enter} ; confirm selection, exiting menu
 	MouseClick, left, %xLoc%, %yLoc%, 1, 0, U ; left click+hold in center of button once with snap-movement to position
 	restore_mouse_position()
 	; TrayTip, Current findMe Path, %findMe%, 2, 1 ; 0 if img found and searched, 1 if not found, 2 if problem reading
-	
+
 	humanLocation := "at" . xLoc . "," . yLoc
 	; TrayTip, Button Found, %xLoc% , 2, 1 ; 0 if img found and searched, 1 if not found, 2 if problem reading
 	; TrayTip [, Title, Text, Duration, 1/2/3 info/warning/error icons]
-	
+
 	CoordMode, Pixel, Relative
 	return
-	
+
 CapsLock:: ; Caplock
 	record_mouse_position()
-	; snap-click the location of the play-pause button 
+	; snap-click the location of the play-pause button
 	;.. which is fixed relative to the top of the window]:
-	MouseClick, left, 424, 52, 1, 0 
+	MouseClick, left, 424, 52, 1, 0
 	restore_mouse_position()
 	return
-	
-; #IfWinActive .flp OUT
 
+; #IfWinActive .flp OUT
