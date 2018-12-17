@@ -53,6 +53,14 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:set <A-i>=i
 	:set <A-p>=p
 	:set <C-S-g>=
+	:set ttimeout
+	:set ttimeoutlen=100
+	" ^ 2: This prevents the above key-codes from being easily confused by Esc
+	" being pressed followed promptly (but not instantaneously) by another
+	" key; without this setting leaving insert mode by pressing Esc followed
+	" promptly (though perhaps not instantaneously) by a keystroke meant to be
+	" received by normal mode can cause strange characters or other weird
+	" nonsense to be processed
 
 	let term=$TERM
 	if term == 'screen' || term == "screen-256color" || term == "xterm-256color"
