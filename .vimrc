@@ -1106,7 +1106,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	nnoremap <C-a> gg<S-v>G
 
 	" shiftV enters line-select mode and moves the cursor to the end:
-	nnoremap V :set nohlsearch<Return>V/.$<Return>
+	nnoremap V V$
 
 "-- Normal-mode passthroughs for select characters:
 
