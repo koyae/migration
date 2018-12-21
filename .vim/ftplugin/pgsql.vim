@@ -10,3 +10,6 @@ vnoremap <buffer> gZ :<C-u>call search('\V$$','b',line('.'))<Return>m``>v``?\V$$
 " already on the same line as the '$$'
 nnoremap <buffer> gz /\V$$<Return>
 nnoremap <buffer> gZ ?\V$$<Return>
+
+command! Re normal mwgzVgZ?^CREATE<Return><F5>`w
+Alias re Re

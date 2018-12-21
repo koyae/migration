@@ -12,7 +12,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 
 " Conventions:
 "
-" Sophisticated macros may naturally, require storage of clipboard or
+" Sophisticated macros may naturally require storage of clipboard or
 " cursor-location info, but perfect data-hiding is impractical, as it would
 " require making a function-call in every macro. So instead, I'll lay out some
 " conventions for how to store data:
@@ -25,6 +25,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 " often than register 's'.
 "
 " mark '`' is used to temporarily store the last cursor position in macros
+" mark 'w' is an alternate for the same purpose
 
 
 "--------------------Compatibility settings----------------:
@@ -1090,10 +1091,10 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" 2: j-key jumps to the next/previous character which matches the one under
 	" the cursor:
 	nnoremap <silent> j :call JumpToNextMatchingChar('')<Return>
-	vnoremap <silent> J :<C-u>let @p=escape(GetCharFromCursor(),'/') \| set nohlsearch<Return>gv?\V<C-r>p<Return>
+	vnoremap <silent> J :<C-u>let @p=escape(GetCharFromCursor(),'/$\') \| set nohlsearch<Return>gv?\V<C-r>p<Return>
 	" 2: shiftJ does the same only backwards:
 	nnoremap <silent> J :call JumpToNextMatchingChar('b')<Return>
-	vnoremap <silent> j :<C-u>let @p=escape(GetCharFromCursor(),'/') \| set nohlsearch<Return>gv/\V<C-r>p<Return>
+	vnoremap <silent> j :<C-u>let @p=escape(GetCharFromCursor(),'/$\') \| set nohlsearch<Return>gv/\V<C-r>p<Return>
 
 	" ctrlBackspace deletes previous word:
 	nmap  i<C-w><Esc>x
