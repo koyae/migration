@@ -20,6 +20,8 @@ bind A eval "title ''" title
 
 # <screenprefix> then Enter-key initiates copy-mode
 bind "" copy
+# <screenprefix> then question-mark-key starts a reverse search
+bind "?" eval copy "stuff ?"
 
 #CtrlA then Up-key enters copy-mode and moves the cursor up
 bindkey "^A^[OA" eval copy "stuff k"
