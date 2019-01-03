@@ -768,13 +768,15 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 		let suffdict.sql = suffdict.pgsql
 		let text = a:0 >= 1 ? a:1 : GetSelectionText()
 		let fifoPath = a:0 >= 2 ? a:2 : '/tmp/fif'
-		let text = printf(
-			\ 'printf %s %s >> %s',
-			\ shellescape('%s\n'),
-			\ shellescape(text . get(suffdict,&syntax,'')),
+		" Below, first backslash prevents vim from expandeding '%' to current
+		" filename and the second backslash allows the '\n' to actually reach
+		" `printf`:
+		silent execute
+			\ "!printf"
+			\ '\%s\\n'
+			\ shellescape(text . get(suffdict,&syntax,''))
+			\ . ' >>'
 			\ shellescape(fifoPath)
-		\ )
-		call system(text)
 	endfunction
 
 	" PipeToSocket(text[,socketPath])
