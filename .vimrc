@@ -767,6 +767,9 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 		\ }
 		let suffdict.sql = suffdict.pgsql
 		let text = a:0 >= 1 ? a:1 : GetSelectionText()
+		" Escape percent symbols so `!` doesn't expand them to the current
+		" filename:
+		let text = substitute(text,'%','\\%','g')
 		let fifoPath = a:0 >= 2 ? a:2 : '/tmp/fif'
 		" Below, first backslash prevents vim from expandeding '%' to current
 		" filename and the second backslash allows the '\n' to actually reach
