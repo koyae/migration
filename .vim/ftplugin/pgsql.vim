@@ -11,5 +11,6 @@ vnoremap <buffer> gZ :<C-u>call search('\V$$','b',line('.'))<Return>m``>v``?\V$$
 nnoremap <buffer> gz /\V$$<Return>
 nnoremap <buffer> gZ ?\V$$<Return>
 
-command! Re normal mwgzVgZ?^CREATE<Return><F5>`w
+command! Re normal mwgzVgZ?^[CD]<Return><F5>`w
+" ^ This covers CREATE statements, COMMENT statements, and DO statements
 Alias re Re
