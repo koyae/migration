@@ -567,9 +567,10 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 		" any whitespace that's at the beginning of the next line, since this
 		" is pretty much universally unwanted for pulling stuff from below
 		" lines onto current:
-		return AtEndOfLine()?
-			\ "j:s/^\\s\\+//e | noh\<Return>0i\<BS>\<C-o>mp\<Esc>`p"
-			\ : "x"
+		if AtEndOfLine()
+			return "j:s/^\\s\\+//e | noh\<Return>0i\<BS>\<C-o>mp\<Esc>`p"
+		else
+			return "x"
 	endfunction
 
 	function! SmartX()
@@ -1022,6 +1023,9 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	inoremap <Up> <C-o>gk
 	inoremap <Down> <C-o>gj
 
+	" h-key goes up one line
+	nnoremap h k
+
 	" 2: altG opens command-bar:
 	nnoremap <A-g> :
 	vmap <A-g> :<BS><BS><BS><BS><BS>
@@ -1055,7 +1059,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	imap <F5> <F1>
 	" F1-key just sends current line to file:
 	nmap <F1> V<F5>
-	imap <F1> <C-o>mp<C-o><F1><C-o>`p;
+	imap <F1> <C-o>mp<C-o><F1><C-o>`p
 
 	" shiftU capitalizes SQL keywords:
 	nnoremap <silent> <C-u> :exec 'silent! normal! ' . To('$','$','.',1,'',":call PgCap() \<Enter>")
@@ -1064,7 +1068,6 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" u-key lowercases any alphas in selection:
 	vnoremap <silent> u gu
 
-
 "-- Selection stuff
 
 	" 2: shiftHome and shiftEnd select from current position to whatever
@@ -1072,7 +1075,12 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	nmap <S-Home> v<Home>
 	nmap <S-End> v<End>
 
-	" shiftRight starts visual selection to the right:
+	" shiftW from normal mode selects current word cursor:
+	nnoremap W viw
+	" shiftW from visual mode deletes selection and trailing spaces:
+	vnoremap W w<Left>x
+
+	" shiftRight starts selection to the right:
 	nmap <S-Right> v<Right>
 	" shiftLeft starts visual selection to the left:
 	nmap <S-Left> v<Left>
@@ -1133,6 +1141,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	nmap <BS> i<BS><Esc><Right>
 	" delete-key acts like x unless at end of line
 	nnoremap <silent> <expr> <Del> SmartDelete()
+	imap <silent> <Del> <C-o>m`<Esc>``<Del>i
 	nnoremap <silent> <expr> x SmartX()
 	" ctrlDelete deletes rest of line
 	nmap <C-kDel> v<S-$><Left>x
