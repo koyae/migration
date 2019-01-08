@@ -775,12 +775,12 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 		" Below, first backslash prevents vim from expandeding '%' to current
 		" filename and the second backslash allows the '\n' to actually reach
 		" `printf`:
-		silent execute
-			\ "!printf"
-			\ '\%s\\n'
-			\ shellescape(text . get(suffdict,&syntax,''))
-			\ . ' >>'
-			\ shellescape(fifoPath)
+		" echom
+		call writefile(
+			\ split( text . get(suffdict,&syntax,''), "\n", 1 ),
+			\ fifoPath
+		\ )
+		" ^ vim.1045645.n5.nabble.com/Write-register-contents-to-file-tp5610081p5610229.html
 	endfunction
 
 	" PipeToSocket(text[,socketPath])
