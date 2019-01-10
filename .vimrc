@@ -1023,8 +1023,18 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	inoremap <Up> <C-o>gk
 	inoremap <Down> <C-o>gj
 
-	" h-key goes up one line
+	" h-key goes up one line (mnemonic: Higher):
 	nnoremap h k
+	" l-key goes down one line (mnemonic: Lower):
+	nnoremap l j
+
+	" equals-key helps to navigate to lower lines (avoids shift):
+	nnoremap = +
+	vnoremap = +
+
+	" shiftEquals gets swapped with standard plus-key functionality:
+	nnoremap + =
+	vnoremap + =
 
 	" 2: altG opens command-bar:
 	nnoremap <A-g> :
