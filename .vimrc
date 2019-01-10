@@ -570,7 +570,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 		if AtEndOfLine()
 			return "j:s/^\\s\\+//e | noh\<Return>0i\<BS>\<C-o>mp\<Esc>`p"
 		else
-			return "x"
+			return '"_x'
 	endfunction
 
 	function! SmartX()
