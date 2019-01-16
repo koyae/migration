@@ -1087,8 +1087,8 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 
 	" shiftW from normal mode selects current word cursor:
 	nnoremap W viw
-	" shiftW from visual mode deletes selection and trailing spaces:
-	vnoremap W w<Left>x
+	" shiftW from visual mode deletes selection and spaces:
+	vnoremap W w<Left>"_x
 
 	" shiftRight starts selection to the right:
 	nmap <S-Right> v<Right>
