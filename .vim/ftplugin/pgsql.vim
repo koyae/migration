@@ -14,3 +14,10 @@ nnoremap <buffer> gZ ?\V$$<Return>
 command! Re normal mwgZ:echo (search('\%'.line('.').'l^[CD]','b'))? 0 : search('^[CD]','b') <Return>^mugzgzV`u<F5>`w
 " ^ This covers CREATE statements, COMMENT statements, and DO statements
 Alias re Re
+
+" -- Ultisnips helpers:
+
+function PlpgBody()
+	return "DECLARE\nBEGIN\nEND;"
+endfunction
+

@@ -11,7 +11,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	\| set comments=:--
 
 " Conventions:
-"
+
 " Sophisticated macros may naturally require storage of clipboard or
 " cursor-location info, but perfect data-hiding is impractical, as it would
 " require making a function-call in every macro. So instead, I'll lay out some
@@ -26,6 +26,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 "
 " mark '`' is used to temporarily store the last cursor position in macros
 " mark 'w' is an alternate for the same purpose
+" mark 'u' is a secondary alternate for the same purpose
 
 
 "--------------------Compatibility settings----------------:
@@ -37,23 +38,25 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:set <A-a>=a
 	:set <A-b>=b
 	:set <A-c>=c
+	:set <A-d>=d
 	:set <A-e>=e
 	:set <A-g>=g
+	:set <A-p>=p
+	:set <A-q>=q
 	:set <A-r>=r
+	:set <A-s>=s
 	:set <A-=>==
 	:set <A-x>=x
 	:set <A-z>=z
-	:set <A-s>=s
 	:set <A-(>=9
 	:set <A-)>=0
 	:set <C-A-x>=
 	:set <C-A-t>=
 	:set <C-A-q>=
 	:set <A-1>=1
-	:set <A-d>=d
 	:set <A-i>=i
-	:set <A-p>=p
 	:set <C-S-g>=
+	:set <C-J>=
 	:set ttimeout
 	:set ttimeoutlen=100
 	" ^ 2: This prevents the above key-codes from being easily confused by Esc
@@ -75,6 +78,15 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" grab everything from ~/.vim/bundle:
 	execute pathogen#infect()
 	runtime macros/matchit.vim " allow jumping to matching XML tags using '%'
+
+" -- Ultisnips config:
+	" altQ expands snippet:
+	let g:UltiSnipsExpandTrigger="<A-q>"
+	" tab-key moves to next tabstop while snippets are active:
+	let g:UltiSnipsJumpForwardTrigger="<tab>"
+	" shiftTab moves to previous tabstop while snippets are active:
+	let g:UltiSnipsJumpBackwardTrigger="[Z"
+	let g:UltiSnipsEditSplit="vertical"
 
 "---------------------User settings------------------------:
 
@@ -768,9 +780,6 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 		\ }
 		let suffdict.sql = suffdict.pgsql
 		let text = a:0 >= 1 ? a:1 : GetSelectionText()
-		" Escape percent symbols so `!` doesn't expand them to the current
-		" filename:
-		let text = substitute(text,'%','\\%','g')
 		let fifoPath = a:0 >= 2 ? a:2 : '/tmp/fif'
 		" Below, first backslash prevents vim from expandeding '%' to current
 		" filename and the second backslash allows the '\n' to actually reach
@@ -986,7 +995,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 "-------------------Keybinding overrides-------------------:
 
 "-- Emmet bindings:
-	" altZ expands tags instead of Emmet's default two-step shortcut ctrlY-then-,
+	" altZ expands tags instead of Emmet's default ctrlY-then-comma:
 	imap <A-z> <C-Y>,
 
 "-- Navigation bindings:

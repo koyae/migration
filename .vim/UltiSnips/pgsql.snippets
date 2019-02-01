@@ -1,0 +1,6 @@
+snippet createplpg "Start a plpgsql function" b
+CREATE OR REPLACE FUNCTION ${1:functionName} RETURNS ${2:returnType} AS
+$$
+`!v PlpgBody()`
+$$ LANGUAGE plpgsql $0;
+endsnippet
