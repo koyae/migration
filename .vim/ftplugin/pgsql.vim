@@ -15,6 +15,9 @@ nmap <buffer> gs /^\(DECLARE\\|BEGIN\\|END;\)<Return>
 " gen-then-shiftS goes to previous plpgsql section:
 nmap <buffer> gS ?^\(DECLARE\\|BEGIN\\|END;\)<Return>
 
+" replace '00' with '--', since it's a common typo for me:
+ia 00 --
+
 command! Re normal mwgZ:echo (search('\%'.line('.').'l^[CD]','b'))? 0 : search('^[CD]','b') <Return>^mugzgzV`u<F5>`w
 " ^ This covers CREATE statements, COMMENT statements, and DO statements
 Alias re Re
