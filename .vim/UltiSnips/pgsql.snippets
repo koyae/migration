@@ -1,6 +1,32 @@
+
+
+snippet doplpg "Start an imperative plpgsql block" b
+DO LANGUAGE plpgsql $$
+`!v PlpgBody()`
+$$;
+endsnippet
+
+
 snippet createplpg "Start a plpgsql function" b
-CREATE OR REPLACE FUNCTION ${1:functionName} RETURNS ${2:returnType} AS
+CREATE OR REPLACE FUNCTION ${1:functionName}() RETURNS ${2:returnType} AS
 $$
 `!v PlpgBody()`
 $$ LANGUAGE plpgsql $0;
+endsnippet
+
+
+snippet dependencies "Create the dependencies/include/import section" b
+---- dependencies:
+
+-- -- for $1:
+-- \i '$2'
+
+---- :dependencies
+endsnippet
+
+
+snippet dependency "Add a dependency for import/include" b
+-- -- for $1
+-- \i '$2'
+
 endsnippet

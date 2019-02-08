@@ -16,11 +16,24 @@ nmap <buffer> gs /^\(DECLARE\\|BEGIN\\|END;\)<Return>
 nmap <buffer> gS ?^\(DECLARE\\|BEGIN\\|END;\)<Return>
 
 " replace '00' with '--', since it's a common typo for me:
-ia 00 --
+ia <buffer> 00 --
 
+" Highlight the COMMENT, DO, or CREATE statement in which the cursor currently
+" resides, and then press F5 to pipe the text to the outside (see .vimrc for
+" details on what that binding does from visual mode):
 command! Re normal mwgZ:echo (search('\%'.line('.').'l^[CD]','b'))? 0 : search('^[CD]','b') <Return>^mugzgzV`u<F5>`w
 " ^ This covers CREATE statements, COMMENT statements, and DO statements
 Alias re Re
+
+" Copy the filename of the current buffer to register p, expressing the path
+" as relative, under the assumption that the current working directory is in a
+" subdirectory of the same parent-dir in which the file's immediate
+" parent-folder resides:
+command! Thisfile let @p="'../" . expand('%:p:h:t') . "/" . expand('%:t') . "'"
+Alias thisfile Thisfile
+
+command! Scratch tabe scratch.postgre.sql
+Alias scratch Scratch
 
 " -- Ultisnips helpers:
 
