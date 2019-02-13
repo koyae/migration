@@ -130,14 +130,18 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:Alias qw wq
 	:Alias Q q
 	:Alias W w
+
+"-- Custom commands:
 	:command! Reup source ~/.vimrc
+	:Alias reup Reup
 	" Create a new tab with the desired help-page inside of it:
 	:command! -nargs=1 Tabh :tabnew | :h <args> | normal! <C-w><Up>:q<Return>
-	:Alias reup Reup
 	:Alias tabh Tabh
 	:command! -nargs=+ Resize :call Resize(<f-args>)
 	:command! Hoh set hlsearch
-	Alias hoh Hoh
+	:Alias hoh Hoh
+
+	:command! -range=% Imply <line1>,<line2>s/^./>\0/ | noh
 
 "-------------------Functions------------------------------:
 
@@ -864,6 +868,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" ctrlX deletes the current line (without overwriting clipboard register)
 	nmap <C-x> V<Del>
 	imap <C-x> <C-o><C-x>
+	vmap <C-x> x
 	" ctrlAltX deletes all lines:
 	noremap <silent> <C-A-x> :call SelectAllThenDo("normal x")<Return>
 	" 2: ctrlS saves current file:
@@ -936,12 +941,13 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" one line:
 	vnoremap <A-b> :s/,\n\s*/, /<Return>
 
-	" altI adds '>' to the beginning of lines:
-	vmap <A-i> :s/^./>\0/<Return>:noh <Return>
-	nmap <A-i> :%s/^./>\0/<Return>:noh <Return>
 	" altEquals adds a space after (sequences of) '>' which begin a line:
 	vmap <A-=> :sm/^\(>\+\)\([^ >]\)/\1 \2/ <Return>:noh <Return>
 	nmap <A-=> :%sm/^\(>\+\)\([^ >]\)/\1 \2/ <Return>:noh <Return>
+
+	" D-key-then-minus decrements the nearest integer at/after the cursor:
+	nnoremap d- <C-x>
+	nnoremap d+ <C-a>
 
 "-- Find and replace stuff
 
