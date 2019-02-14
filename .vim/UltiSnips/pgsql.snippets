@@ -1,21 +1,6 @@
 
 
-snippet doplpg "Start an imperative plpgsql block" b
-DO LANGUAGE plpgsql $$
-`!v PlpgBody()`
-$$;
-endsnippet
-
-
-snippet createplpg "Start a plpgsql function" b
-CREATE OR REPLACE FUNCTION ${1:functionName}() RETURNS ${2:returnType} AS
-$$
-`!v PlpgBody()`
-$$ LANGUAGE plpgsql $0;
-endsnippet
-
-
-snippet dependencies "Create the dependencies/include/import section" b
+snippet dependencies "Dependencies/include/import section" b
 ---- dependencies:
 
 -- -- for $1:
@@ -25,8 +10,52 @@ snippet dependencies "Create the dependencies/include/import section" b
 endsnippet
 
 
-snippet dependency "Add a dependency for import/include" b
+snippet dependency "Dependency import/include for top section" b
 -- -- for $1
--- \i '$2'
+-- \i $2
 
+endsnippet
+
+snippet disabletrigger "Disable one or a class of triggers" b
+ALTER TABLE ${1:tableName} DISABLE TRIGGER ${2:USER};
+endsnippet
+
+
+snippet doplpg "Imperative plpgsql block" b
+DO LANGUAGE plpgsql $$
+`!v PlpgBody()`
+$$;
+endsnippet
+
+
+snippet dropfunction "Drop a function" b
+DROP FUNCTION IF EXISTS ${1:functionName} ${2:CASCADE}; -- X
+endsnippet
+
+
+snippet commentfunction "Comment on a function" b
+COMMENT ON FUNCTION ${1:functionName} IS $$
+$0
+$$;
+endsnippet
+
+
+snippet createplpg "Definition for plpgsql function" b
+CREATE OR REPLACE FUNCTION ${1:functionName}() RETURNS ${2:returnType} AS
+$$
+`!v PlpgBody()`
+$$ LANGUAGE plpgsql $0;
+endsnippet
+
+
+snippet createsql "Defininition for sql function" b
+CREATE OR REPLACE FUNCTION ${1:functionName}() RETURNS ${2:returnType} AS
+$$
+	$3
+$$ LANGUAGE sql $0;
+endsnippet
+
+
+snippet enabletrigger "Enable one or a class of triggers" b
+ALTER TABLE ${1:tableName} ENABLE TRIGGER ${2:USER};
 endsnippet

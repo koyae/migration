@@ -12,11 +12,28 @@ nnoremap <buffer> gz /\V$$<Return>
 nnoremap <buffer> gZ ?\V$$<Return>
 " g-then-s goes to next plpgsql section:
 nmap <buffer> gs /^\(DECLARE\\|BEGIN\\|END;\)<Return>
-" gen-then-shiftS goes to previous plpgsql section:
+" g-key-then-shiftS goes to previous plpgsql section:
 nmap <buffer> gS ?^\(DECLARE\\|BEGIN\\|END;\)<Return>
+" altF flips current keyword to alternative:
+nmap <buffer> <A-f> W:<C-u>let @p=PgFlip(GetSelectionText())<Return>gvx"pP
+vmap <buffer> <A-f> :<C-u>let @p=PgFlip(GetSelectionText())<Return>gvx"pP
 
 " replace '00' with '--', since it's a common typo for me:
 ia <buffer> 00 --
+
+" Given a string (usually a keyword) return the common replacement for that
+" string
+function! PgFlip(str)
+	let dic = {
+		\ 'ENABLE': 'DISABLE',
+		\ 'DISABLE': 'ENABLE',
+		\ 'SELECT': 'PERFORM',
+		\ 'PERFORM': 'SELECT',
+		\ 'MIN': 'MAX',
+		\ 'MAX': 'MIN'
+	\ }
+	return get(dic, a:str, a:str)
+endfunction
 
 " Highlight the COMMENT, DO, or CREATE statement in which the cursor currently
 " resides, and then press F5 to pipe the text to the outside (see .vimrc for

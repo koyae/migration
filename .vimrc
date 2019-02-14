@@ -39,6 +39,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:set <A-b>=b
 	:set <A-c>=c
 	:set <A-d>=d
+	:set <A-f>=f
 	:set <A-e>=e
 	:set <A-g>=g
 	:set <A-p>=p
