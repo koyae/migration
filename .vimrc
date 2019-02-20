@@ -948,6 +948,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 
 	" D-key-then-minus decrements the nearest integer at/after the cursor:
 	nnoremap d- <C-x>
+	" D-key-then-plus increments the nearest integer at/after the cursor:
 	nnoremap d+ <C-a>
 
 "-- Find and replace stuff
