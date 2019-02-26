@@ -18,6 +18,9 @@ nmap <buffer> gS ?^\(DECLARE\\|BEGIN\\|END;\)<Return>
 nmap <buffer> <A-f> W:<C-u>let @p=PgFlip(GetSelectionText())<Return>gvx"pP
 vmap <buffer> <A-f> :<C-u>let @p=PgFlip(GetSelectionText())<Return>gvx"pP
 
+nmap <buffer> gk /\(^\s*\)\@<=\(INSERT\\|SELECT\\|DELETE\\|PERFORM\)<Return>
+nmap <buffer> gK ?\(^\s*\)\@<=\(INSERT\\|SELECT\\|DELETE\\|PERFORM\)<Return>
+
 " replace '00' with '--', since it's a common typo for me:
 ia <buffer> 00 --
 
@@ -25,6 +28,8 @@ ia <buffer> 00 --
 " string
 function! PgFlip(str)
 	let dic = {
+		\ 'delete': 'create',
+		\ 'create': 'delete',
 		\ 'ENABLE': 'DISABLE',
 		\ 'DISABLE': 'ENABLE',
 		\ 'SELECT': 'PERFORM',
