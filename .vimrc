@@ -141,6 +141,8 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:command! -nargs=+ Resize :call Resize(<f-args>)
 	:command! Hoh set hlsearch
 	:Alias hoh Hoh
+	" Count the number of commas on the current line:
+	:command! Comman keeppattern s/,//n
 
 	:command! -range=% Imply <line1>,<line2>s/^./>\0/ | noh
 
