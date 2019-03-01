@@ -35,7 +35,14 @@ function! PgFlip(str)
 		\ 'SELECT': 'PERFORM',
 		\ 'PERFORM': 'SELECT',
 		\ 'MIN': 'MAX',
-		\ 'MAX': 'MIN'
+		\ 'MAX': 'MIN',
+		\ 'new': 'old',
+		\ 'NEW': 'OLD',
+		\ '=' : '=ANY(',
+		\ '=ANY' : 'IN',
+		\ '=ANY(' : 'IN (',
+		\ 'IN (' : '=',
+		\ 'IN' : '='
 	\ }
 	return get(dic, a:str, a:str)
 endfunction
