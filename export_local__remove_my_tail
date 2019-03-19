@@ -3,4 +3,10 @@
 
 # Variables and functions which are specific to the local machine go here.
 # File should be sourced from ~/export_envs which should be sourced in .bashrc
- 
+
+# Examples:
+
+# function cdd {
+# 	cd "/somewhere/commonly/visited/$1"
+# }
+
