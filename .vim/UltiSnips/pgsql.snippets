@@ -59,3 +59,7 @@ endsnippet
 snippet enabletrigger "Enable one or a class of triggers" b
 ALTER TABLE ${1:tableName} ENABLE TRIGGER ${2:USER};
 endsnippet
+
+snippet sell "Select with limit - grab a single row from a table"
+SELECT ${2:*} FROM ${1:tableName} LIMIT 1;
+endsnippet
