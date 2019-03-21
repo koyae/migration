@@ -47,6 +47,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:set <A-r>=r
 	:set <A-s>=s
 	:set <A-=>==
+	:set <A-w>=w
 	:set <A-x>=x
 	:set <A-z>=z
 	:set <A-(>=9
@@ -141,6 +142,8 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:command! -nargs=+ Resize :call Resize(<f-args>)
 	:command! Hoh set hlsearch
 	:Alias hoh Hoh
+	" Count the number of commas on the current line:
+	:command! Comman keeppattern s/,//n
 
 	:command! -range=% Imply <line1>,<line2>s/^./>\0/ | noh
 
@@ -308,9 +311,9 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" 	be capitalized. If keywordType is omitted, use the keyword type of
 	" 	whatever character is under the cursor.
 	"
-	" 	PgCap(lineNumber, columnNumber) -> return keystrokes if the Capitalize
-	" 	the character under the cursor if it is a Postgres keyword Currently
-	" 	only works from normal mode.
+	" 	PgCap(lineNumber, columnNumber) -> return keystrokes to capitalize
+	" 	the character under the cursor if it is a Postgres keyword.
+	" 	(Currently only works from normal mode.)
 	"
 	" The easiest way to use this function for the moment is with the
 	" following invocation, starting with the cursor on the first line on
@@ -340,7 +343,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	"
 	" toColumn    --  desired final column-number or symbol like '$' or '^'
 	"
-	" luddite     --  boolean telling function whether to moves through each
+	" luddite     --  boolean telling function whether to move through each
 	" column before reaching the desired position instead of using vim's
 	" goto-line and goto-column jumps. Hitting each character in turn is
 	" necessary for some macros to work
@@ -378,7 +381,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 				while l:lineToBe < l:toLine - 1
 				" for as long as we have not accumulated enough actions to get
 				" us to the penultimate line yet, accumulate more actions:
-					let rString = l:rString
+					let rString .= l:colInject
 						\ . ToLine(l:lineToBe + 1, l:lineToBe, 1, l:lineInject, '0')
 						\ . ToCol([l:lineToBe + 1,'$'], l:fromCol, 1, l:colInject)
 					let fromCol = 1
@@ -454,13 +457,13 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 		let luddite = get(a:, 2, 0)
 		let inject = get(a:, 3, '')
 		if l:luddite
+			let rString = ''
 			let difference = l:toCol - l:fromCol
 "			echom 'difference: ' . l:difference
-			if l:difference > 0
-				return repeat(l:inject . 'l', l:difference)
-			else
-				return repeat(l:inject . 'h', abs(l:difference))
-			endif
+			for c in range(l:fromCol,l:toCol,1 - 2*(l:difference<0))
+				let rString	.= l:inject . c . '|'
+			endfor
+			return l:rString
 		else
 			return l:inject . l:toCol . '|'
 		endif
@@ -1040,10 +1043,10 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	inoremap <Up> <C-o>gk
 	inoremap <Down> <C-o>gj
 
-	" h-key goes up one line (mnemonic: Higher):
-	nnoremap h k
-	" l-key goes down one line (mnemonic: Lower):
-	nnoremap l j
+	" h-key goes up one line:
+	nnoremap h j
+	" l-key goes down one line:
+	nnoremap l k
 
 	" equals-key helps to navigate to lower lines (avoids shift):
 	nnoremap = +
@@ -1102,10 +1105,10 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	nmap <S-Home> v<Home>
 	nmap <S-End> v<End>
 
-	" shiftW from normal mode selects current word cursor:
-	nnoremap W viw
-	" shiftW from visual mode deletes selection and spaces:
-	vnoremap W w<Left>"_x
+	" altW from normal mode selects current word cursor:
+	nnoremap <A-w> viw
+	" altW from visual mode deletes selection and spaces:
+	vnoremap <A-w> w<Left>"_x
 
 	" shiftRight starts selection to the right:
 	nmap <S-Right> v<Right>

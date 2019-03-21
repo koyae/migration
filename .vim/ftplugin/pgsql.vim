@@ -25,6 +25,9 @@ nmap <buffer> gS ?^\(DECLARE\\|BEGIN\\|END;\)<Return>
 nmap <buffer> <A-f> W:<C-u>let @p=PgFlip(GetSelectionText())<Return>gvx"pP
 vmap <buffer> <A-f> :<C-u>let @p=PgFlip(GetSelectionText())<Return>gvx"pP
 
+noremap <buffer> gk /\(^\s*\)\@<=\(INSERT\\|SELECT\\|DELETE\\|PERFORM\\|WITH\)<Return>
+noremap <buffer> gK ?\(^\s*\)\@<=\(INSERT\\|SELECT\\|DELETE\\|PERFORM\\|WITH\)<Return>
+
 " replace '00' with '--', since it's a common typo for me:
 ia <buffer> 00 --
 
@@ -32,12 +35,25 @@ ia <buffer> 00 --
 " string
 function! PgFlip(str)
 	let dic = {
+		\ 'delete': 'create',
+		\ 'create': 'delete',
 		\ 'ENABLE': 'DISABLE',
 		\ 'DISABLE': 'ENABLE',
 		\ 'SELECT': 'PERFORM',
 		\ 'PERFORM': 'SELECT',
+		\ 'update': 'insert',
+		\ 'insert': 'update',
+		\ 'UPDATE': 'INSERT',
+		\ 'INSERT': 'UPDATE',
 		\ 'MIN': 'MAX',
-		\ 'MAX': 'MIN'
+		\ 'MAX': 'MIN',
+		\ 'new': 'old',
+		\ 'NEW': 'OLD',
+		\ '=' : '=ANY(',
+		\ '=ANY' : 'IN',
+		\ '=ANY(' : 'IN (',
+		\ 'IN (' : '=',
+		\ 'IN' : '='
 	\ }
 	return get(dic, a:str, a:str)
 endfunction
@@ -45,9 +61,13 @@ endfunction
 " Highlight the COMMENT, DO, or CREATE statement in which the cursor currently
 " resides, and then press F5 to pipe the text to the outside (see .vimrc for
 " details on what that binding does from visual mode):
-command! Re normal mwgZ:echo (search('\%'.line('.').'l^[CD]','b'))? 0 : search('^[CD]','b') <Return>^mugzgzV`u<F5>`w
+command! Re normal :set nopaste<Return>mwgZ:echo (search('\%'.line('.').'l^[CD]','b'))? 0 : search('^[CD]','b') <Return>^mugzgzV`u<F5>`w
 " ^ This covers CREATE statements, COMMENT statements, and DO statements
 Alias re Re
+" Unfreeze pane 0 in the screen session to which we are currently attached,
+" then have vim redraw since running commands under `silent exec` screw up
+" vim's display:
+nnoremap <leader>u :silent exec '!screen -dr $(screen -wipe \| grep "Attached" \| cut -f 2) -p 0 -X stuff "^["; fg'<Return>:redraw!<Return>
 
 " Copy the filename of the current buffer to register p, expressing the path
 " as relative, under the assumption that the current working directory is in a
