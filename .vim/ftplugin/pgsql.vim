@@ -1,3 +1,10 @@
+set textwidth=80
+" 2: Don't automatically wrap SQL but do wrap comments and add the
+" comment-leader to the new line if necessary to extend the comment:
+set formatoptions-=t
+set formatoptions+=c
+" Allow Python-style parameter-docs to wrap as expected:
+set formatoptions+=2
 
 " Jump to start or end of function-definitions:
 vnoremap <buffer> gz :<C-u>call search('\%>'.line("'>").'l\V$$')<Return>V`<o
