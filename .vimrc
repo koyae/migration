@@ -12,6 +12,8 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 
 " Conventions:
 
+" Conventions: marks and registers
+"
 " Sophisticated macros may naturally require storage of clipboard or
 " cursor-location info, but perfect data-hiding is impractical, as it would
 " require making a function-call in every macro. So instead, I'll lay out some
@@ -27,6 +29,47 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 " mark '`' is used to temporarily store the last cursor position in macros
 " mark 'w' is an alternate for the same purpose
 " mark 'u' is a secondary alternate for the same purpose
+
+" Conventions: character-representations
+"
+" I won't explain the full spec here but here are some expamples of how
+" plain-english macro explanations should look (the ones chosen are nonsense so
+" they don't turn up when I'm searching for my real boys):
+"
+" 	" one-key deletes everything in the buffer:
+" 	nnoremap 1 GVggx
+"
+" 	" F1-key starts help-search:
+" 	nnoremap <F1> :h
+" 	imap <F1> <C-o><F1>
+"
+" 	" one-then-two deletes everything in the buffer, saves, and quits:
+" 	nnoremap 21 GVggx:wq<Return>
+"
+" 	" ctrlW-then-shiftW is the same as undo:
+" 	nnoremap <C-w>W u
+"
+" The following characters might have ambiguous names so here's what I'll use
+" when describing macros:
+"
+" 	{ openbrace
+" 	} closebrace
+" 	( openparen
+" 	) closeparen
+" 	" quote
+" 	' apostrophe
+" 	< lessThan
+" 	> greaterThan
+" 	1 one
+" 	2 two
+" 	3 three
+" 	4 four
+" 	5 five
+" 	6 six
+" 	7 seven
+" 	8 eight
+" 	9 nine
+" 	0 zero
 
 
 "--------------------Compatibility settings----------------:
@@ -47,7 +90,6 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:set <A-r>=r
 	:set <A-s>=s
 	:set <A-=>==
-	:set <A-w>=w
 	:set <A-x>=x
 	:set <A-z>=z
 	:set <A-(>=9
@@ -639,11 +681,21 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 		return Relimit(getreg(a:regSymbol),a:limitChar,a:stripClass)
 	endfunction
 
-	function! Relimit(string,limitChar,stripClass)
+	function! Relimit(string,limitChars,stripClass)
+		let endMap = {
+			\ '(': ')',
+			\ '{': '}',
+			\ '[': ']',
+			\ '<': '>'
+		\ }
+		let startCharsReversed = split(a:limitChars, '\zs')
+		call reverse(startCharsReversed)
+		let startCharsReversed =
+			\ map(startCharsReversed,'get(endMap,v:val,v:val)')
 		let selText = a:string
 		let selText = substitute(selText, '^' . a:stripClass, '', '')
 		let selText = substitute(selText, a:stripClass . '$', '', '')
-		let selText = a:limitChar . selText . a:limitChar
+		let selText = a:limitChars . selText . join(startCharsReversed,'')
 		return selText
 	endfunction
 
@@ -913,27 +965,35 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	imap <silent> <A-1> <C-o><A-1><Right>
 	" altP clears trailing whitespace if present then pastes at EOL, then
 	" jumps to start of paste:
-	nnoremap <silent> <A-p> :call InsertAtEOL('',1)<Return>:s/,$/, /e\|noh<Return>$p`[
-	" shift9/openparen surrounds current selection in parentheses from visual mode:
+	nnoremap <silent> <A-p> :call InsertAtEOL('',1)<Return>$a <Esc>p`[
+	" openparen surrounds current selection in parentheses from visual mode:
 	vnoremap <silent> ( <Esc>`<i(<Esc>`>a<Right>)<Esc>
-	" shift0/closeparen does the same as above:
+	" closeparen does the same as above:
 	vnoremap <silent> ) <Esc>`<i(<Esc>`>a<Right>)<Esc>
-	" doubleQuote-shiftOpenbracket/openbrace wraps selection in braces:
+	" quote-then-openbrace wraps selection in braces:
 	vnoremap "{ <Esc>`<i{<Esc>`>a<Right>}<Esc>
-	" doubleQuote-shiftClosebracket/closebrace wraps selection in braces:
+	" quote-then-closebrace wraps selection in braces:
 	vnoremap "} <Esc>`<i{<Esc>`>a<Right>}<Esc>
-	" doubleQuote-openbracket wraps selection in brackets:
+	" quote-openbracket wraps selection in brackets:
 	vnoremap "[ <Esc>`<i[<Esc>`>a<Right>]<Esc>
-	" doubleQuote-closebracket wraps selection in brackets:
+	" quote-closebracket wraps selection in brackets:
 	vnoremap "] <Esc>`<i[<Esc>`>a<Right>]<Esc>
 	" [quote-quote]
 	" "example text" "xxx" "non-target text"
-	" doubleQuote-doubleQuote mode surrounds selection in quotes:
+	" quote-then-quote mode surrounds selection in quotes:
 	vnoremap "" "pygv"=RelimitRegister('p','"',"'")<Return>P
-	" doubleQuote-singleQuote from Visual mode "encloses" selection in quotes:
+	" quote-then-singleQuote from Visual mode "encloses" selection in quotes:
 	vnoremap "' "pygv"=RelimitRegister('p',"'",'"')<Return>P
-	" doubleQuote-backtick from Visual mode surrounds selection in backticks:
-	vnoremap <silent> "` <Esc>`<i`<Esc>`>a<Right>`<Esc>
+	" quote-then-backtick from Visual mode surrounds selection in backticks:
+	vnoremap "` "pygv"=RelimitRegister('p',"`",'')<Return>P
+	vnoremap "`<Return> "pygv"=RelimitRegister('p',"`",'')<Return>P
+	vnoremap "`" "pygv"=RelimitRegister('p','`"','')<Return>P
+
+	" quote-then-star surrounds selection in asterisks:
+	vnoremap "* "pygv"=RelimitRegister('p','*','')<Return>P
+	vnoremap "*<Return> "pygv"=RelimitRegister('p','*','')<Return>P
+	" quote-
+	vnoremap "** "pygv"=RelimitRegister('p','**','')<Return>P
 
 	" shiftTab reduces indent
 	nnoremap <S-Tab> <<Left>
@@ -990,12 +1050,12 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 
 	" 2: f-key finds the next single character (accepted afterwards
 	" interactively) on multiple lines, rather than just the current one:
-	nnoremap <silent> f :call FindChar('')<Return>
-	vnoremap <silent> <expr> f FindChar('v')
+	nnoremap <silent> f m`:call FindChar('')<Return>
+	vnoremap <silent> <expr> f 'm`' . FindChar('v')
 	" 2: shiftF finds previous single character (accepted afterwards
 	" interactively):
-	nnoremap <silent> F :call FindChar('b')<Return>
-	vnoremap <silent> <expr> F FindChar('vb')
+	nnoremap <silent> F m`:call FindChar('b')<Return>
+	vnoremap <silent> <expr> F 'm`' . FindChar('vb')
 	" 2: semicolon-key repeats previous FindChar search:
 	nnoremap <silent> ; :call JumpToChar('','')<Return>
 	vnoremap <silent> <expr> ; JumpToChar('','v')
@@ -1082,8 +1142,8 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	nnoremap <Insert> i<Insert>
 
 	" F5-key pipes selected text to a file:
-	vnoremap <F5> :<BS><BS><BS><BS><BS>call AppendToFile()<Return>
-	vnoremap <F1> :<BS><BS><BS><BS><BS>call AppendToFile()<Return>
+	vnoremap <F5> :<C-u>call AppendToFile()<Return>
+	vnoremap <F1> :<C-u>call AppendToFile()<Return>
 	nmap <F5> ggVG<F5><C-o><C-o>
 	" F5-key just sends current line from insert-mode:
 	imap <F5> <F1>
@@ -1105,10 +1165,11 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	nmap <S-Home> v<Home>
 	nmap <S-End> v<End>
 
-	" altW from normal mode selects current word cursor:
-	nnoremap <A-w> viw
-	" altW from visual mode deletes selection and spaces:
-	vnoremap <A-w> w<Left>"_x
+	" shiftW from normal mode selects current word cursor:
+	nnoremap W viw
+	" shiftW from visual mode deletes selection and spaces:
+	vnoremap W w<Left>"_x
+	nnoremap <C-w><C-w> db
 
 	" shiftRight starts selection to the right:
 	nmap <S-Right> v<Right>
@@ -1130,6 +1191,8 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" ctrlLeft jumps by word like in most text editors:
 	vnoremap <C-Left> b
 	":4 sadly the previous two aliases do not quite work in PuTTY
+	inoremap <C-Right> <C-o>e
+	inoremap <C-Left> <C-o>b
 
 	" 2: j-key jumps to the next/previous character which matches the one under
 	" the cursor:
@@ -1171,7 +1234,6 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	nmap <BS> i<BS><Esc><Right>
 	" delete-key acts like x unless at end of line
 	nnoremap <silent> <expr> <Del> SmartDelete()
-	imap <silent> <Del> <C-o>m`<Esc>``<Del>i
 	nnoremap <silent> <expr> x SmartX()
 	" ctrlDelete deletes rest of line
 	nmap <C-kDel> v<S-$><Left>x
