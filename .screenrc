@@ -2,10 +2,6 @@ mousetrack off
 vbell off
 defscrollback 10000
 caption 'always'
-# If you are using a special TERM or require other specifics on this computer,
-# set variables and do other work in this file, otherwise, it can be empty or
-# absent:
-source .screenrc1
 
 layout new
 screen
@@ -39,3 +35,7 @@ markkeys "\^=\201"
 # End-key just goes to the end of the line in end mode:
 markkeys "$=\205"
 
+# If you are using a special TERM or require other specifics on this computer,
+# set variables and do other work in this file, otherwise, it can be empty or
+# absent:
+source .screenrc1
