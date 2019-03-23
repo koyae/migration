@@ -51,4 +51,3 @@ hi Statement  cterm=bold ctermfg=Blue	     gui=bold guifg=blue
 hi String     cterm=NONE ctermfg=DarkYellow   gui=NONE guifg=SkyBlue
 hi Type	      cterm=NONE ctermfg=Blue	     gui=bold guifg=blue
 
-e vim: sw=2
