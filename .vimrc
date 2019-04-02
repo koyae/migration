@@ -3,7 +3,7 @@ autocmd BufWritePre * :%s/\s\+$//e
 " Custom handling by filetype:
 autocmd BufNewFile,BufRead, pom.xml,web.xml set tabstop=2 expandtab shiftwidth=2
 autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
-autocmd BufNewFile,BufRead, .screenrc* setf screen
+autocmd BufNewFile,BufRead, *.screen,.screenrc* setf screen
 " allow various comments to rewrap correctly:
 autocmd BufNewFile,BufRead, *.vim,.vimrc set comments+=:\\\\|
 " ^ allow line-extension character
@@ -1039,7 +1039,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" :credit http://stackoverflow.com/questions/676600/
 	" shiftR in visual mode starts a replace-command on the selected text
 	" (set up to only affect text until the end of the line):
-	vnoremap R :call SelectionAsRegexToRegister('h')<Return>:<BS><BS><BS><BS><BS>s/\%><C-r>=col('.')<Return>c<C-r>h//<Left>
+	vnoremap R :call SelectionAsRegexToRegister('h')<Return>:<BS><BS><BS><BS><BS>s/\%><C-r>=col('.')-1<Return>c<C-r>h//<Left>
 	" shiftR in normal mode replaces from current cursor position until EOL:
 	nnoremap R :s/\%><C-r>=col('.')<Return>c//<Left><Left>
 	" :credit https://www.reddit.com/r/vim/comments/5zbyfw/tn/dewvpfw/
