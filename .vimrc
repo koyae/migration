@@ -1,7 +1,8 @@
 " Strip trailing whitespace on save:
 autocmd BufWritePre * :%s/\s\+$//e
 " Custom handling by filetype:
-autocmd BufNewFile,BufRead, pom.xml,web.xml set tabstop=2 expandtab shiftwidth=2
+autocmd BufNewFile,BufRead, pom.xml,web.xml,*.yaml,*.ansible* set tabstop=2 expandtab shiftwidth=2
+autocmd BufNewFile,BufRead, *.ansible* setf yaml.ansible
 autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 autocmd BufNewFile,BufRead, *.screen,.screenrc* setf screen
 " allow various comments to rewrap correctly:
@@ -70,7 +71,6 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 " 	8 eight
 " 	9 nine
 " 	0 zero
-
 
 "--------------------Compatibility settings----------------:
 	:set nocompatible
