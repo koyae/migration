@@ -15,24 +15,35 @@ bind ^c eval screen "title ''" title
 # <screenprefix> then shiftA clears the old title when renaming a task:
 bind A eval "title ''" title
 
-# <screenprefix> then Enter-key initiates copy-mode
+# <screenprefix> then Enter-key initiates copy-mode:
 bind "" copy
-# <screenprefix> then question-mark-key starts a reverse search
+# <screenprefix> then question-mark-key starts a reverse search:
 bind "?" eval copy "stuff ?"
 
-#CtrlA then Up-key enters copy-mode and moves the cursor up
+# ctrlA then shiftTab focuses previous pane:
+bindkey "^A^[[Z" focus prev
+# ^ it may be possible to get this to work with regular `bind` (it seems to
+# work by default on Cygwin with no explicit binding at all, actually) but
+# Ubuntu appears to have problems with it. There may be an .inputrc fix to this
+# but the above works for now.
+
+# ctrlA then Up-key enters copy-mode and moves the cursor up:
 bindkey "^A^[OA" eval copy "stuff k"
-# ctrlA then Left-key enters copy-mode and moves the cursor left
+# ctrlA then Left-key enters copy-mode and moves the cursor left:
 bindkey "^A^[OC" eval copy "stuff h"
-# ctrlA then Right-key enters copy-mode and moves the cursor right
+# ctrlA then Right-key enters copy-mode and moves the cursor right:
 bindkey "^A^[OD" eval copy "stuff l"
+
+# afford a full second's worth of time for the above bindings before they're
+# sent as normal input:
+maptimeout 1000
 
 # ctrlL enters command-mode:
 bindkey "^L" colon
 
-# Home-key just goes to the begining of the line in copy mode:
+# Home-key just goes to the begining of the line in copy mode (mark mode):
 markkeys "\^=\201"
-# End-key just goes to the end of the line in copy mode:
+# End-key just goes to the end of the line in copy mode (mark mode):
 markkeys "$=\205"
 
 # If you are using a special TERM or require other specifics on this computer,
