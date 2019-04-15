@@ -11,8 +11,15 @@ Pause:: ; printscreen-key
 	return
 
 +Pause:: ; shiftPausebreak pastes
-	Send, {ShiftDown}{Insert}{ShiftUp}
+	SendInput %clipboard%
 	return
+; ^ While I'd prefer to just directly send shiftInsert to avoid any
+; consequences of doing the above, this doesn't work in Windows'
+; Linux-subsystem shells because there's actually no hotkey to bind to paste
+; whatsoever.
+;
+; Theoretically there's one coming, per stackoverflow.com/questions/38832230 but
+; it's not present in the production release yet.
 
 !-:: ; altMinus / alt-
 	Winset, AlwaysOnTop, , A
