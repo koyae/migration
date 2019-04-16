@@ -19,6 +19,14 @@ bind A eval "title ''" title
 bind "" copy
 # <screenprefix> then question-mark-key starts a reverse search:
 bind "?" eval copy "stuff ?"
+# <screenprefix> then l focuses right:
+bind "l" focus right
+# <screenprefix> then h focuses left:
+bind "h" focus left
+# <screenprefix> then j focuses down:
+bind "j" focus down
+# <screenprefix> then k focuses up:
+bind "k" focus up
 
 # ctrlA then shiftTab focuses previous pane:
 bindkey "^A^[[Z" focus prev
