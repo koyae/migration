@@ -101,7 +101,15 @@ function up {
 		ladder+=("$path")
 		path=`dirname "$path"`
 	done
-	cd "${ladder[$rungnum]}"
+	dest="${ladder[$rungnum]}"
+	if [[ ${#ladder[@]} -gt $rungnum ]]; then
+	# if a valid rung per the array-size was specified:
+		cd "$dest"
+	else
+	# if caller wanted a level higher than the highest level, just put them at
+	# system root:
+		cd "/"
+	fi
 }
 
 # recursive grep / grep recursive
