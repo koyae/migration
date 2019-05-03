@@ -921,8 +921,9 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" altX deletes the last character on the current line:
 	nmap <A-x> m`$x``
 	imap <A-x> <C-o>m`<C-o>$<Backspace><C-o>``
+
 	" ctrlX deletes the current line (without overwriting clipboard register)
-	nmap <C-x> V<Del>
+	nnoremap <C-x> V"_x
 	imap <C-x> <C-o><C-x>
 	vmap <C-x> x
 	" ctrlAltX deletes all lines:
@@ -1014,7 +1015,143 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" D-key-then-plus increments the nearest integer at/after the cursor:
 	nnoremap d+ <C-a>
 
-"-- Find and replace stuff
+"-------------------Keybinding overrides-------------------:
+
+"-- Emmet bindings:
+	" altZ expands tags instead of Emmet's default ctrlY-then-comma:
+	imap <A-z> <C-Y>,
+
+"-- Navigation bindings:
+
+	" 6: home-key goes to the beginning of the virtual line, and toggles
+	" between soft home and hard home after that:
+	nnoremap <expr> <Home> SmartHome('n')
+	nnoremap <expr> <kHome> SmartHome('n')
+	imap <expr> <Home> "\<C-o>" . SmartHome('i')
+	imap <expr> <kHome> "\<C-o>" . SmartHome('i')
+	vnoremap <expr> <Home> SmartHome(visualmode())
+	vnoremap <expr> <kHome> SmartHome(visualmode())
+
+	" 6: end-key goes to the end of the virtual line or the actual end if
+	" already there:
+	nnoremap <silent> <expr> <End> SmartEnd('n')
+	nnoremap <silent> <expr> <kEnd> SmartEnd('n')
+	inoremap <silent> <expr> <End> "\<C-o>" . SmartEnd('i')
+	inoremap <silent> <expr> <kEnd> "\<C-o>" . SmartEnd('i')
+	vnoremap <silent> <expr> <End> SmartEnd(visualmode())
+	vnoremap <silent> <expr> <kEnd> SmartEnd(visualmode())
+
+	"2: o-key and shiftO insert a line below or above the current one (without staying in insert mode)
+	" the x below deletes the autoindent whitespace 2:
+	nmap <silent> <expr> o InsertLineBelow() . "\<Esc>"
+	nmap <silent> <expr> O InsertLineAbove() . "\<Esc><C-Del>"
+
+	" backslash-key inserts a backslash:
+	nmap <silent> <expr> \ ToInsertBeforeCurrentChar('\')
+	" space inserts a space in front of current character:
+	noremap <silent> <expr> <Space> ToInsertBeforeCurrentChar(" ")
+
+	" h-key goes up one line:
+	nnoremap h j
+	" l-key goes down one line:
+	nnoremap l k
+
+	" equals-key helps to navigate to lower lines (avoids shift):
+	nnoremap = +
+	vnoremap = +
+
+	" shiftEquals gets swapped with standard plus-key functionality:
+	nnoremap + =
+	vnoremap + =
+
+	" 6: up-key goes up by virutal line
+	" down-key goes down by virutal line
+	nnoremap <Up> gk
+	nnoremap <Down> gj
+	vnoremap <Up> gk
+	vnoremap <Down> gj
+	inoremap <Up> <C-o>gk
+	inoremap <Down> <C-o>gj
+
+	" g-then-i goes to the next matching indent:
+	nnoremap gi :call search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%>' . line('.') . 'l\S', 'e')<Return>
+	" g-then-shiftI goes to the previous matching indent:
+	nnoremap gI :call search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%<' . line('.') . 'l\S', 'be')<Return>
+
+	" allow shiftLeft to stay held while selecting without jumping by word
+	vmap <S-Left> <Left>
+	" allow shiftRight to stay held while selecting without jumping by word
+	vmap <S-Right> <Right>
+	" ctrlRight keeps the cursor on the right side of words when jumping:
+	nnoremap <C-Right> e
+	nnoremap <C-Left> b
+	" ctrlRight jumps by word like in most text editors:
+	vnoremap <C-Right> e
+	" ctrlLeft jumps by word like in most text editors:
+	vnoremap <C-Left> b
+	":4 sadly the previous two aliases do not quite work in PuTTY
+	inoremap <C-Right> <C-o>e
+	inoremap <C-Left> <C-o>b
+
+	" 2: j-key jumps to the next/previous character which matches the one under
+	" the cursor:
+	nnoremap <silent> j :call JumpToNextMatchingChar('')<Return>
+	vnoremap <silent> J :<C-u>let @p=escape(GetCharFromCursor(),'/$\') \| set nohlsearch<Return>gv?\V<C-r>p<Return>
+	" 2: shiftJ does the same only backwards:
+	nnoremap <silent> J :call JumpToNextMatchingChar('b')<Return>
+	vnoremap <silent> j :<C-u>let @p=escape(GetCharFromCursor(),'/$\') \| set nohlsearch<Return>gv/\V<C-r>p<Return>
+
+"-- Editing bindings:
+
+	" enter-key acts like enter:
+	nmap <silent> <expr> <Return> SmartReturn()
+	"inoremap <silent> <expr> <Return> SmartReturn()
+	" shiftI begins insert above:
+	" TODO: clone indent from line above or current line depending on which
+	" one(s) are blank
+	nmap <expr> <S-i> line('.')==1 ? "Oi" : "\<Up>k"
+	" k-key begins insert below:
+	nmap <silent> <expr> k InsertLineBelow()
+	"<A-i> i\<End>\<End>\<CR>
+	" backspace-key deletes one character back
+	nmap <BS> i<BS><Esc><Right>
+	" delete-key acts like x unless at end of line
+	noremap <silent> <expr> <Del> SmartDelete()
+	nnoremap <silent> <expr> x SmartX()
+	" ctrlDelete deletes rest of line
+	nmap <C-kDel> v<S-$><Left>x
+
+	" ctrlBackspace deletes previous word:
+	nmap  i<C-w><Esc>x
+
+	" altD eats next word / deletes next word:
+	nnoremap <silent> <A-d> :call EatNextWord() <Return>
+	inoremap <silent> <A-d> <Right><Esc>:call EatNextWord() <Return>i
+
+	" s-key does not yank, just deletes then enters insert-mode:
+	vnoremap <expr> s SmartS()
+	nnoremap <expr> s SmartS()
+	" x-key does not yank, just deletes:
+	vnoremap <expr> x SmartX()
+	" shiftX does not yank, just deletes:
+	nmap X <Left>x
+	" p-key and shiftP do not yank, just paste:
+	vnoremap <expr> p SmartX() . 'P'
+	vnoremap <expr> P SmartX() . 'P'
+
+	" shiftU redoes:
+	noremap U <C-r>
+	" insert-key enters replace-mode
+	nnoremap <Insert> i<Insert>
+
+	" shiftU capitalizes SQL keywords:
+	nnoremap <silent> <C-u> :exec 'silent! normal! ' . To('$','$','.',1,'',":call PgCap() \<Enter>")
+	" U-key capitalizes any alphas in selection:
+	vnoremap <silent> U gU
+	" u-key lowercases any alphas in selection:
+	vnoremap <silent> u gu
+
+"--- Find and replace stuff
 
 	" ctrlF opens search-mode:
 	nnoremap <C-f> /
@@ -1063,83 +1200,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	nnoremap <silent> , :call JumpToChar('','b')<Return>
 	vnoremap <silent> <expr> , JumpToChar('','vb')
 
-"-------------------Keybinding overrides-------------------:
-
-"-- Emmet bindings:
-	" altZ expands tags instead of Emmet's default ctrlY-then-comma:
-	imap <A-z> <C-Y>,
-
-"-- Navigation bindings:
-
-	" 6: home-key goes to the beginning of the virtual line, and toggles
-	" between soft home and hard home after that:
-	nnoremap <expr> <Home> SmartHome('n')
-	nnoremap <expr> <kHome> SmartHome('n')
-	imap <expr> <Home> "\<C-o>" . SmartHome('i')
-	imap <expr> <kHome> "\<C-o>" . SmartHome('i')
-	vnoremap <expr> <Home> SmartHome(visualmode())
-	vnoremap <expr> <kHome> SmartHome(visualmode())
-
-	" 6: end-key goes to the end of the virtual line or the actual end if
-	" already there:
-	nnoremap <silent> <expr> <End> SmartEnd('n')
-	nnoremap <silent> <expr> <kEnd> SmartEnd('n')
-	inoremap <silent> <expr> <End> "\<C-o>" . SmartEnd('i')
-	inoremap <silent> <expr> <kEnd> "\<C-o>" . SmartEnd('i')
-	vnoremap <silent> <expr> <End> SmartEnd(visualmode())
-	vnoremap <silent> <expr> <kEnd> SmartEnd(visualmode())
-
-	"2: o-key and shiftO insert a line below or above the current one (without staying in insert mode)
-	" the x below deletes the autoindent whitespace 2:
-	nmap <silent> <expr> o InsertLineBelow() . "\<Esc>"
-	nmap <silent> <expr> O InsertLineAbove() . "\<Esc><C-Del>"
-
-	" 6: up-key goes up by virutal line
-	" down-key goes down by virutal line
-	nnoremap <Up> gk
-	nnoremap <Down> gj
-	vnoremap <Up> gk
-	vnoremap <Down> gj
-	inoremap <Up> <C-o>gk
-	inoremap <Down> <C-o>gj
-
-	" h-key goes up one line:
-	nnoremap h j
-	" l-key goes down one line:
-	nnoremap l k
-
-	" equals-key helps to navigate to lower lines (avoids shift):
-	nnoremap = +
-	vnoremap = +
-
-	" shiftEquals gets swapped with standard plus-key functionality:
-	nnoremap + =
-	vnoremap + =
-
-	" 2: altG opens command-bar:
-	nnoremap <A-g> :
-	vmap <A-g> :<BS><BS><BS><BS><BS>
-
-	" s-key does not yank, just deletes then enters insert-mode:
-	vnoremap <expr> s SmartS()
-	nnoremap <expr> s SmartS()
-	" x-key does not yank, just deletes:
-	vnoremap <expr> x SmartX()
-	" shiftX does not yank, just deletes:
-	nmap X <Left>x
-	" p-key and shiftP do not yank, just paste:
-	vnoremap <expr> p SmartX() . 'P'
-	vnoremap <expr> P SmartX() . 'P'
-
-	" g-then-i goes to the next matching indent:
-	nnoremap gi :call search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%>' . line('.') . 'l\S', 'e')<Return>
-	" g-then-shiftI goes to the previous matching indent:
-	nnoremap gI :call search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%<' . line('.') . 'l\S', 'be')<Return>
-
-	" shiftU redoes:
-	noremap U <C-r>
-	" insert-key enters replace-mode
-	nnoremap <Insert> i<Insert>
+"-- Universal IDE-oid stuff:
 
 	" F5-key pipes selected text to a file:
 	vnoremap <F5> :<C-u>call AppendToFile()<Return>
@@ -1151,12 +1212,9 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	nmap <F1> V<F5>
 	imap <F1> <C-o>mp<C-o><F1><C-o>`p
 
-	" shiftU capitalizes SQL keywords:
-	nnoremap <silent> <C-u> :exec 'silent! normal! ' . To('$','$','.',1,'',":call PgCap() \<Enter>")
-	" U-key capitalizes any alphas in selection:
-	vnoremap <silent> U gU
-	" u-key lowercases any alphas in selection:
-	vnoremap <silent> u gu
+	" 2: altG opens command-bar:
+	nnoremap <A-g> :
+	vmap <A-g> :<BS><BS><BS><BS><BS>
 
 "-- Selection stuff
 
@@ -1179,35 +1237,6 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	nmap <C-S-Right> v<C-Right>
 	" ctrlShiftLeft starts visual selection by word to the left:
 	nmap <C-S-Left> v<C-Left>
-	" allow shiftLeft to stay held while selecting without jumping by word
-	vmap <S-Left> <Left>
-	" allow shiftRight to stay held while selecting without jumping by word
-	vmap <S-Right> <Right>
-	" ctrlRight keeps the cursor on the right side of words when jumping:
-	nnoremap <C-Right> e
-	nnoremap <C-Left> b
-	" ctrlRight jumps by word like in most text editors:
-	vnoremap <C-Right> e
-	" ctrlLeft jumps by word like in most text editors:
-	vnoremap <C-Left> b
-	":4 sadly the previous two aliases do not quite work in PuTTY
-	inoremap <C-Right> <C-o>e
-	inoremap <C-Left> <C-o>b
-
-	" 2: j-key jumps to the next/previous character which matches the one under
-	" the cursor:
-	nnoremap <silent> j :call JumpToNextMatchingChar('')<Return>
-	vnoremap <silent> J :<C-u>let @p=escape(GetCharFromCursor(),'/$\') \| set nohlsearch<Return>gv?\V<C-r>p<Return>
-	" 2: shiftJ does the same only backwards:
-	nnoremap <silent> J :call JumpToNextMatchingChar('b')<Return>
-	vnoremap <silent> j :<C-u>let @p=escape(GetCharFromCursor(),'/$\') \| set nohlsearch<Return>gv/\V<C-r>p<Return>
-
-	" ctrlBackspace deletes previous word:
-	nmap  i<C-w><Esc>x
-
-	" altD eats next word / deletes next word:
-	nnoremap <silent> <A-d> :call EatNextWord() <Return>
-	inoremap <silent> <A-d> <Right><Esc>:call EatNextWord() <Return>i
 
 	" ctrlA does select all:
 	nnoremap <C-a> gg<S-v>G
@@ -1215,25 +1244,3 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	" shiftV enters line-select mode and moves the cursor to the end:
 	nnoremap V V$
 
-"-- Normal-mode passthroughs for select characters:
-
-	nmap <silent> <expr> \ ToInsertBeforeCurrentChar('\')
-	" space inserts a space in front of current character:
-	noremap <silent> <expr> <Space> ToInsertBeforeCurrentChar(" ")
-	" enter-key acts like enter:
-	nmap <silent> <expr> <Return> SmartReturn()
-	"inoremap <silent> <expr> <Return> SmartReturn()
-	" shiftI begins insert above:
-	" TODO: clone indent from line above or current line depending on which
-	" one(s) are blank
-	nmap <expr> <S-i> line('.')==1 ? "Oi" : "\<Up>k"
-	" k-key begins insert below:
-	nmap <silent> <expr> k InsertLineBelow()
-	"<A-i> i\<End>\<End>\<CR>
-	" backspace-key deletes one character back
-	nmap <BS> i<BS><Esc><Right>
-	" delete-key acts like x unless at end of line
-	nnoremap <silent> <expr> <Del> SmartDelete()
-	nnoremap <silent> <expr> x SmartX()
-	" ctrlDelete deletes rest of line
-	nmap <C-kDel> v<S-$><Left>x
