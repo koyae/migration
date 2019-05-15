@@ -57,9 +57,17 @@ endsnippet
 
 
 snippet enabletrigger "Enable one or a class of triggers" b
-ALTER TABLE ${1:tableName} ENABLE TRIGGER ${2:USER};
+ALTER TABLE ${1:tableName} ENABLE TRIGGER ${2:USER};$0
 endsnippet
 
 snippet sell "Select with limit - grab a single row from a table"
-SELECT ${2:*} FROM ${1:tableName} LIMIT 1;
+SELECT ${2:*} FROM ${1:tableName} LIMIT 1;$0
+endsnippet
+
+snippet renamecol "Rename a table-column." b
+ALTER TABLE ${1:tableName} RENAME COLUMN ${2:columnName} TO ${3:newColumnName};$0
+endsnippet
+
+snippet update "Update rows in a table the safe way" b
+UPDATE ${1:tableName} SET ${3:columnName}=${4:expression} WHERE ${2:condition};$0
 endsnippet
