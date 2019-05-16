@@ -64,10 +64,26 @@ snippet sell "Select with limit - grab a single row from a table"
 SELECT ${2:*} FROM ${1:tableName} LIMIT 1;$0
 endsnippet
 
+snippet sel "Select"
+SELECT ${1:*} FROM ${2:tableName};$0
+endsnippet
+
+snippet sel "Select distinct"
+SELECT DISTINCT ${1:*} FROM ${2:tableName};$0
+endsnippet
+
 snippet renamecol "Rename a table-column." b
 ALTER TABLE ${1:tableName} RENAME COLUMN ${2:columnName} TO ${3:newColumnName};$0
 endsnippet
 
+snippet renametab "Rename a table." b
+ALTER TABLE ${1:tableName} RENAME TO ${2:newTableName};$0
+endsnippet
+
+snippet dropcol "Drop a column from an existing table" b
+ALTER TABLE ${1:tableName} DROP COLUMN ${2:columnName};$0
+endsnippet
+
 snippet update "Update rows in a table the safe way" b
-UPDATE ${1:tableName} SET ${3:columnName}=${4:expression} WHERE ${2:condition};$0
+UPDATE ${1:tableName} SET ${2:columnName}=${3:expression} WHERE ${4:condition};$0
 endsnippet

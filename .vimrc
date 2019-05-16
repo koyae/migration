@@ -85,6 +85,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:set <A-f>=f
 	:set <A-e>=e
 	:set <A-g>=g
+	:set <A-o>=o
 	:set <A-p>=p
 	:set <A-q>=q
 	:set <A-r>=r
@@ -286,13 +287,14 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	endfunction
 
 	function! InsertLineBelow()
-		return "i\<C-o>$\<CR>"
+		return "m`i\<C-o>$\<CR>"
 	endfunction
 
 	function! InsertLineAbove()
 		" if matchstr(getline('.'),'\(\_^\s\+\)\@<=\S')
 		" let indentAmount = GetCurrentIndentLevel()
-		return "i\<End>\<Home>\<CR>\<Up>"
+		let colpos=virtcol('.')
+		return "i\<End>\<Home>\<CR>\<C-o>" . (l:colpos + 1) . '|'
 	endfunction
 
 	" SetEncloseWithFunctionCallFunctionName([returnThis])
@@ -1043,8 +1045,9 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 
 	"2: o-key and shiftO insert a line below or above the current one (without staying in insert mode)
 	" the x below deletes the autoindent whitespace 2:
+	nmap <silent> <expr> <A-o> InsertLineBelow() . "\<Esc>``"
 	nmap <silent> <expr> o InsertLineBelow() . "\<Esc>"
-	nmap <silent> <expr> O InsertLineAbove() . "\<Esc><C-Del>"
+	nmap <silent> <expr> O InsertLineAbove() . "\<Esc>"
 
 	" backslash-key inserts a backslash:
 	nmap <silent> <expr> \ ToInsertBeforeCurrentChar('\')
