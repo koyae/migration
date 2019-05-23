@@ -60,16 +60,16 @@ snippet enabletrigger "Enable one or a class of triggers" b
 ALTER TABLE ${1:tableName} ENABLE TRIGGER ${2:USER};$0
 endsnippet
 
-snippet sell "Select with limit - grab a single row from a table"
+snippet sel1 "Select with limit - grab a single row from a table"
 SELECT ${2:*} FROM ${1:tableName} LIMIT 1;$0
 endsnippet
 
 snippet sel "Select"
-SELECT ${1:*} FROM ${2:tableName};$0
+SELECT ${1:*} FROM ${2:tableName} WHERE ${3:true};$0
 endsnippet
 
-snippet sel "Select distinct"
-SELECT DISTINCT ${1:*} FROM ${2:tableName};$0
+snippet seld "Select distinct"
+SELECT DISTINCT ${1:*} FROM ${2:tableName} WHERE ${3:true};$0
 endsnippet
 
 snippet renamecol "Rename a table-column." b
