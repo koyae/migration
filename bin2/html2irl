@@ -4,11 +4,11 @@ import sys
 import codecs
 
 try:
-	# Python 2.6-2.7
-	from HTMLParser import HTMLParser
+    # Python 2.6-2.7
+    from HTMLParser import HTMLParser
 except ImportError:
-	# Python 3.x
-	from html.parser import HTMLParser
+    # Python 3.x
+    from html.parser import HTMLParser
 
 
 target = sys.argv[1]
@@ -20,11 +20,11 @@ print(
 )
 
 with codecs.open(target,'r+', 'utf-8') as fh:
-	s = fh.read()
-	fh.seek(0)
-        hp = HTMLParser()
-	fh.write( hp.unescape(s) )
-	fh.truncate()
+    s = fh.read()
+    fh.seek(0)
+    hp = HTMLParser()
+    fh.write( hp.unescape(s) )
+    fh.truncate()
 
 # Code adapted from:
 # https://stackoverflow.com/a/2087433/3159183
