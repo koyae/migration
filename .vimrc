@@ -991,6 +991,12 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	vnoremap "` "pygv"=RelimitRegister('p',"`",'')<Return>P
 	vnoremap "`<Return> "pygv"=RelimitRegister('p',"`",'')<Return>P
 	vnoremap "`" "pygv"=RelimitRegister('p','`"','')<Return>P
+	" quote-then-lessThan from Visual mode surrounds selection in
+	" angle-brackets:
+	vnoremap "< "pygv"=RelimitRegister('p','<','')<Return>P
+	" quote-then-greaterThan from Visual mode surrounds selection in
+	" angle-brackets:
+	vnoremap "> "pygv"=RelimitRegister('p','<','')<Return>P
 
 	" quote-then-star surrounds selection in asterisks:
 	vnoremap "* "pygv"=RelimitRegister('p','*','')<Return>P
@@ -1106,6 +1112,8 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 
 "-- Editing bindings:
 
+	vnoremap : :s/
+
 	" enter-key acts like enter:
 	nmap <silent> <expr> <Return> SmartReturn()
 	"inoremap <silent> <expr> <Return> SmartReturn()
@@ -1217,7 +1225,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 
 	" 2: altG opens command-bar:
 	nnoremap <A-g> :
-	vmap <A-g> :<BS><BS><BS><BS><BS>
+	vnoremap <A-g> :<C-u>
 
 "-- Selection stuff
 
