@@ -28,12 +28,12 @@ $$;
 endsnippet
 
 
-snippet dropfunction "Drop a function" b
-DROP FUNCTION IF EXISTS ${1:functionName} ${2:CASCADE}; -- X
+snippet dropfunc "Drop a function" b
+DROP FUNCTION IF EXISTS ${1:functionName}($2) ${3:CASCADE}; -- X
 endsnippet
 
 
-snippet commentfunction "Comment on a function" b
+snippet commentfunc "Comment on a function" b
 COMMENT ON FUNCTION ${1:functionName} IS $$
 $0
 $$;
@@ -76,12 +76,51 @@ snippet renamecol "Rename a table-column." b
 ALTER TABLE ${1:tableName} RENAME COLUMN ${2:columnName} TO ${3:newColumnName};$0
 endsnippet
 
+snippet ife "Add 'IF EXISTS'"
+IF EXISTS
+endsnippet
+
+snippet if "Add an if-block." b
+	IF ${1:condition} THEN
+		$0
+	END IF;
+endsnippet
+
+snippet else "Add an if-else block." b
+	IF ${1:condition} THEN
+		$0
+	ELSE
+	END IF;
+endsnippet
+
+snippet elsif "Add an if-elseif block." b
+	IF ${1:condition} THEN
+		$2
+	ELSIF ${3:condition}
+	ELSE
+	END;
+endsnippet
+
+snippet idf "Add 'IS DISTINCT FROM'"
+IS DISTINCT FROM
+endsnippet
+
+snippet droptrig "Drop a trigger." b
+DROP TRIGGER IF EXISTS ${2:triggerName} ON ${1:tableName};$0
+endsnippet
+
 snippet renametab "Rename a table." b
 ALTER TABLE ${1:tableName} RENAME TO ${2:newTableName};$0
 endsnippet
 
 snippet dropcol "Drop a column from an existing table" b
-ALTER TABLE ${1:tableName} DROP COLUMN ${2:columnName};$0
+ALTER TABLE ${1:tableName} DROP COLUMN IF EXISTS ${2:columnName};$0
+endsnippet
+
+snippet commentcol "Comment on one of a table's columns" b
+COMMENT ON COLUMN ${1:tableName}.${2:columnName} IS
+$$ $3
+$$;$0
 endsnippet
 
 snippet update "Update rows in a table the safe way" b

@@ -25,8 +25,8 @@ nmap <buffer> gS ?^\(DECLARE\\|BEGIN\\|END;\)<Return>
 nmap <buffer> <A-f> W:<C-u>let @p=PgFlip(GetSelectionText())<Return>gvx"pP
 vmap <buffer> <A-f> :<C-u>let @p=PgFlip(GetSelectionText())<Return>gvx"pP
 
-noremap <buffer> gk /\(^\s*\)\@<=\(INSERT\\|SELECT\\|DELETE\\|PERFORM\\|WITH\)<Return>
-noremap <buffer> gK ?\(^\s*\)\@<=\(INSERT\\|SELECT\\|DELETE\\|PERFORM\\|WITH\)<Return>
+noremap <buffer> gk /\(^\s*\)\@<=\(INSERT\\|SELECT [^1]\\|DELETE\\|PERFORM\\|WITH\)<Return>
+noremap <buffer> gK ?\(^\s*\)\@<=\(INSERT\\|SELECT [^1]\\|DELETE\\|PERFORM\\|WITH\)<Return>
 
 " replace '00' with '--', since it's a common typo for me:
 ia <buffer> 00 --
@@ -53,7 +53,9 @@ function! PgFlip(str)
 		\ '=ANY' : 'IN',
 		\ '=ANY(' : 'IN (',
 		\ 'IN (' : '=',
-		\ 'IN' : '='
+		\ 'IN' : '=',
+		\ 'true' : 'false',
+		\ 'false' : 'true'
 	\ }
 	return get(dic, a:str, a:str)
 endfunction
