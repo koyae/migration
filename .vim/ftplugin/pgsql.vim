@@ -55,7 +55,9 @@ function! PgFlip(str)
 		\ 'IN (' : '=',
 		\ 'IN' : '=',
 		\ 'true' : 'false',
-		\ 'false' : 'true'
+		\ 'false' : 'true',
+		\ 'plpgsql' : 'sql',
+		\ 'sql' : 'plpgsql'
 	\ }
 	return get(dic, a:str, a:str)
 endfunction

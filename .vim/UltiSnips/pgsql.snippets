@@ -28,6 +28,14 @@ $$;
 endsnippet
 
 
+snippet except "Raise an exception" b
+RAISE EXCEPTION '${1:exceptionText}'${2: argsToEmbed};
+endsnippet
+
+snippet exceptfull "Raise an exception with the extra options included." b
+RAISE EXCEPTION '${1:exceptionText}' ${2:argsToEmbed} ${3:USING} ${4:DETAIL=,} ${5:HINT=};
+endsnippet
+
 snippet dropfunc "Drop a function" b
 DROP FUNCTION IF EXISTS ${1:functionName}($2) ${3:CASCADE}; -- X
 endsnippet
@@ -60,6 +68,10 @@ snippet enabletrigger "Enable one or a class of triggers" b
 ALTER TABLE ${1:tableName} ENABLE TRIGGER ${2:USER};$0
 endsnippet
 
+snippet insert "Insert data into a table" b
+INSERT INTO ${1:tableName} (${2:columnList}) $0
+endsnippet
+
 snippet sel1 "Select with limit - grab a single row from a table"
 SELECT ${2:*} FROM ${1:tableName} LIMIT 1;$0
 endsnippet
@@ -76,21 +88,29 @@ snippet renamecol "Rename a table-column." b
 ALTER TABLE ${1:tableName} RENAME COLUMN ${2:columnName} TO ${3:newColumnName};$0
 endsnippet
 
+snippet nnullcol "Set a column to reject null values" b
+ALTER TABLE ${1:tableName} ALTER COLUMN ${2:columnName} SET NOT NULL;
+endsnippet
+
+snippet defaultcol "Set a column's default value" b
+ALTER TABLE ${1:tableName} ALTER COLUMN ${2:columnName} SET DEFAULT ${3:defaultValue};
+endsnippet
+
 snippet ife "Add 'IF EXISTS'"
 IF EXISTS
 endsnippet
 
 snippet if "Add an if-block." b
-	IF ${1:condition} THEN
-		$0
-	END IF;
+IF ${1:condition} THEN
+	$0
+END IF;
 endsnippet
 
 snippet else "Add an if-else block." b
-	IF ${1:condition} THEN
-		$0
-	ELSE
-	END IF;
+IF ${1:condition} THEN
+	$0
+ELSE
+END IF;
 endsnippet
 
 snippet elsif "Add an if-elseif block." b
@@ -107,6 +127,10 @@ endsnippet
 
 snippet droptrig "Drop a trigger." b
 DROP TRIGGER IF EXISTS ${2:triggerName} ON ${1:tableName};$0
+endsnippet
+
+snippet dropview "Drop a view." b
+DROP VIEW IF EXISTS ${1:viewName};$0
 endsnippet
 
 snippet renametab "Rename a table." b
