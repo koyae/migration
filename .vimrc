@@ -162,7 +162,7 @@ autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
 	:set tabstop=4 " make tab-characters display as 4 spaces instead of default 8
 	:set shiftwidth=0 " make '>' (angle bracket) always just match `tabstop`
 	:set ignorecase smartcase "searching is non-case-sensitive unless there's a cap
-	:set shellcmdflag=-ic
+	:set shellcmdflag=-c
 	" :set ttimeout
 
 "-- Formatting behavior:
