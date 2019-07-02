@@ -1,15 +1,41 @@
 " Strip trailing whitespace on save:
-autocmd BufWritePre * :%s/\s\+$//e
+augroup striptrailing
+	autocmd!
+	autocmd BufWritePre * :%s/\s\+$//e
+augroup END
+
 " Custom handling by filetype:
-autocmd BufNewFile,BufRead, pom.xml,web.xml,*.yaml,*.ansible* set tabstop=2 expandtab shiftwidth=2
-autocmd BufNewFile,BufRead, *.ansible* setf yaml.ansible
-autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
-autocmd BufNewFile,BufRead, *.screen,.screenrc* setf screen
+augroup oddboyz
+	autocmd!
+	autocmd BufNewFile,BufRead, pom.xml,web.xml,*.yaml,*.ansible* set tabstop=2 expandtab shiftwidth=2
+augroup END
+
+augroup ansible
+	autocmd BufNewFile,BufRead, *.ansible* setf yaml.ansible
+augroup END
+
+augroup gitconfigs
+	autocmd!
+	autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
+augroup END
+
+augroup screenstuff
+	autocmd!
+	autocmd BufNewFile,BufRead, *.screen,.screenrc* setf screen
+augroup END
+
 " allow various comments to rewrap correctly:
-autocmd BufNewFile,BufRead, *.vim,.vimrc set comments+=:\\\\|
-" ^ allow line-extension character
-autocmd BufNewFile,BufRead, *.postgre.sql setf pgsql
-	\| set comments=:--
+augroup vimstuff
+	autocmd!
+	autocmd BufNewFile,BufRead, *.vim,.vimrc set comments+=:\\\\|
+	" ^ allow line-extension character
+augroup END
+
+augroup pgstuff
+	autocmd!
+	autocmd BufNewFile,BufRead, *.postgre.sql,scp://*.postgre.sql setf pgsql
+		\| set comments=:--
+augroup END
 
 " Conventions:
 
