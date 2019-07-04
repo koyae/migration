@@ -200,9 +200,10 @@ augroup END
 	:Alias WQ wq
 	:Alias qw wq
 	:Alias Q q
-	:Alias W w
+	:Alias w W
 
 "-- Custom commands:
+	:command! -nargs=? W call RobustSave(<f-args>)
 	:command! Reup source ~/.vimrc
 	:Alias reup Reup
 	" Create a new tab with the desired help-page inside of it:
@@ -224,6 +225,31 @@ augroup END
 " In turn "below" means the opposite.
 
 " Note `function!` forces overwrite if necessary on creation of a funciton
+
+
+	" RobustSave([targetPath])
+	" A (somewhat) robust wrapper for :W and :sav that avoids
+	" https://github.com/vim/vim/issues/1268 if SCP-paths contain spaces
+	function! RobustSave(...)
+		let path = expand('%')
+		if a:0 == 1
+			let path = a:1
+		endif
+		if (
+			\ match(path, "scp://") == 0
+			\ && (
+			\ 	match(path, '[^\\] ') != -1
+			\ 	|| match(path, '^ ') != -1
+			\ )
+		\ )
+		" if the remote filename might cause problems with how netrw tries to
+		" invoke scp, correct before saving:
+			execute "sav " . escape(escape(path, ' '),' ')
+		else
+		" otherwise, just write as normal:
+			execute "sav " . path
+		endif
+	endfunction
 
 	function! Resize(first,...)
 		" echom type(a:first)
