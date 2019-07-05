@@ -173,9 +173,15 @@ augroup END
 	endif " :4
 	let g:is_posix=1 " this will be right on 99% of systems
 	if exists('+breakindent')
-		:set breakindent " paragraphs moved all the way over if there's an indent in front (long line soft wrap)
+		:set breakindent
+		" ^ paragraphs moved all the way over if there's an indent in front
+		" (long line soft wrap)
 	endif
 	:set linebreak " whole-word wrapping instead of mid-word
+	let g:netrw_banner=0
+	" make netrw splits happen to the right (doesn't work with preview-splits,
+	" even if they're set vertical :C):
+	let g:netrw_altv=1
 
 "-- I/O
 	:set bs=2
