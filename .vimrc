@@ -245,10 +245,12 @@ augroup END
 			\ match(path, "scp://") == 0
 			\ && (
 			\ 	match(path, '[^\\] ') != -1
+			\ 	|| match(path, '[^\\]\\ ') != -1
 			\ 	|| match(path, '^ ') != -1
+			\ 	|| match(path, '^\ ') != -1
 			\ )
 		\ )
-		" if the remote filename might cause problems with how netrw tries to
+		" ^ if the remote filename might cause problems with how netrw tries to
 		" invoke scp, correct before saving:
 			execute "sav " . escape(escape(path, ' '),' ')
 		else
@@ -989,9 +991,9 @@ augroup END
 	" ctrlAltX deletes all lines:
 	noremap <silent> <C-A-x> :call SelectAllThenDo("normal x")<Return>
 	" 2: ctrlS saves current file:
-	vnoremap <C-s> <Esc>:w<Return>
-	inoremap <C-S> <Esc>:w<Return>i<Right>
-	nnoremap <C-s> :w <Return>
+	vnoremap <C-s> <Esc>:call RobustSave()<Return>
+	inoremap <C-s> <C-o>:call RobustSave()<Return>
+	nnoremap <C-s> :call RobustSave()<Return>
 	" ^ Note that many shell-clients bind ctrlS to send the freeze-output
 	" signal (XOFF). This command won't work if that's not done. In most cases
 	" it can be disabled from .bashrc
