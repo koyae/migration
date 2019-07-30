@@ -185,7 +185,8 @@ augroup END
 
 "-- I/O
 	:set bs=2
-	:set mouse=niv
+	:set mouse=n
+	:set scrolloff=0
 	:set ttymouse=sgr
 	:set gdefault " find-and-replace defaults to global rather than just current line
 	:set autoindent " keep the current indentation on new <CR>. Negate with :setlocal noautoindent
@@ -252,10 +253,10 @@ augroup END
 		\ )
 		" ^ if the remote filename might cause problems with how netrw tries to
 		" invoke scp, correct before saving:
-			execute "sav " . escape(escape(path, ' '),' ')
+			execute "sav " . escape( escape(path, ' ') ,' ')
 		else
 		" otherwise, just write as normal:
-			execute "sav " . path
+			execute "sav " . escape(path, ' ')
 		endif
 	endfunction
 
