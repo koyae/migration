@@ -159,6 +159,12 @@ augroup END
 	let g:UltiSnipsJumpBackwardTrigger="[Z"
 	let g:UltiSnipsEditSplit="vertical"
 
+" -- Netrw config:
+	let g:netrw_banner=0
+	" make netrw splits happen to the right (doesn't work with preview-splits,
+	" even if they're set vertical :C):
+	" let g:netrw_altv=1
+
 "---------------------User settings------------------------:
 
 "-- Display
@@ -178,15 +184,12 @@ augroup END
 		" (long line soft wrap)
 	endif
 	:set linebreak " whole-word wrapping instead of mid-word
-	let g:netrw_banner=0
-	" make netrw splits happen to the right (doesn't work with preview-splits,
-	" even if they're set vertical :C):
-	let g:netrw_altv=1
 
 "-- I/O
 	:set bs=2
 	:set mouse=n
 	:set scrolloff=0
+	:set noincsearch " no incremental search; makes me think i hit enter already
 	:set ttymouse=sgr
 	:set gdefault " find-and-replace defaults to global rather than just current line
 	:set autoindent " keep the current indentation on new <CR>. Negate with :setlocal noautoindent
@@ -242,18 +245,23 @@ augroup END
 		if a:0 == 1
 			let path = a:1
 		endif
-		if (
-			\ match(path, "scp://") == 0
-			\ && (
-			\ 	match(path, '[^\\] ') != -1
-			\ 	|| match(path, '[^\\]\\ ') != -1
-			\ 	|| match(path, '^ ') != -1
-			\ 	|| match(path, '^\ ') != -1
-			\ )
-		\ )
+		if ( match(path, "scp://") == 0 )
 		" ^ if the remote filename might cause problems with how netrw tries to
 		" invoke scp, correct before saving:
-			execute "sav " . escape( escape(path, ' ') ,' ')
+			let tmpfile = exists('b:netrw_tmpfile') ?
+				\ escape(b:netrw_tmpfile,' ')
+				\ : escape(tempname(),' ')
+			execute "write! " . tmpfile
+			set nomod
+			let l:doMe='AsyncRun'
+				\ . ' -post=call\ delete(''' . tmpfile . ''')'
+				\ . '\ |\ echo\ "delayed\ write"\ g:asyncrun_status\ strftime(''\%X'') '
+				\ . "scp " . tmpfile
+				\ . " " . escape(expand('%'),' ')
+			" ^ inspired by:
+			" github.com/skywind3000/asyncrun.vim/wiki/Get-netrw-using-asyncrun-to-save-remote-files
+			" echom l:doMe
+			execute doMe
 		else
 		" otherwise, just write as normal:
 			execute "sav " . escape(path, ' ')
@@ -1048,6 +1056,10 @@ augroup END
 	vnoremap "" "pygv"=RelimitRegister('p','"',"'")<Return>P
 	" quote-then-singleQuote from Visual mode "encloses" selection in quotes:
 	vnoremap "' "pygv"=RelimitRegister('p',"'",'"')<Return>P
+	" [dollar-dollar] [dolla-dolla]
+	" quote-then-dollarsign-then-dollarsign from Visual mode encloses selection
+	" in '$$':
+	vnoremap "$$ "pygv"=RelimitRegister('p',"$$","'")<Return>P
 	" quote-then-backtick from Visual mode surrounds selection in backticks:
 	vnoremap "` "pygv"=RelimitRegister('p',"`",'')<Return>P
 	vnoremap "`<Return> "pygv"=RelimitRegister('p',"`",'')<Return>P
