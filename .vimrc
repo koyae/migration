@@ -1164,6 +1164,10 @@ augroup END
 	vmap <S-Left> <Left>
 	" allow shiftRight to stay held while selecting without jumping by word
 	vmap <S-Right> <Right>
+	" allow shiftDown to stay held while selecting without jumping by screen
+	vmap <S-Down> <Down>
+	" allow shiftUp to stay held while selecting without jumping by screen
+	vmap <S-Up> <Up>
 	" ctrlRight keeps the cursor on the right side of words when jumping:
 	nnoremap <C-Right> e
 	nnoremap <C-Left> b
@@ -1313,10 +1317,12 @@ augroup END
 	vnoremap W w<Left>"_x
 	nnoremap <C-w><C-w> db
 
-	" shiftRight starts selection to the right:
+	" 4: shiftRight/shiftLeft/shiftDown/shiftUp start visual selection in the
+	" specified direction:
 	nmap <S-Right> v<Right>
-	" shiftLeft starts visual selection to the left:
 	nmap <S-Left> v<Left>
+	nmap <S-Down> v<Down>
+	nmap <S-Up> v<Up>
 	" ctrlShiftRight starts visual selection by word to the left:
 	nmap <C-S-Right> v<C-Right>
 	" ctrlShiftLeft starts visual selection by word to the left:
