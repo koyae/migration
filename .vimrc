@@ -34,7 +34,7 @@ augroup END
 augroup pgstuff
 	autocmd!
 	autocmd BufNewFile,BufRead, *.postgre.sql,scp://*.postgre.sql setf pgsql
-		\| set comments=:--
+		\| setlocal comments=:--
 augroup END
 
 " Conventions:
@@ -204,6 +204,7 @@ augroup END
 "-- Formatting behavior:
 	:set formatoptions+=j " allow vim's re-wrapping functionality to join as well as split
 	:set formatoptions-=r " don't repeat the single-line comment symbol when pressing enter
+	:set formatlistpat=^[a-z][a-z_0-9]\\+[^-]\*--\ \ " wrap python-style arg-docs
 
 "-- cmdalias.vim aliases:
 	:Alias Wq wq
@@ -217,15 +218,27 @@ augroup END
 	:command! Reup source ~/.vimrc
 	:Alias reup Reup
 	" Create a new tab with the desired help-page inside of it:
-	:command! -nargs=1 Tabh :tabnew | :h <args> | normal! <C-w><Up>:q<Return>
+	:command! -nargs=1 Tabh :tab h <args>
 	:Alias tabh Tabh
 	:command! -nargs=+ Resize :call Resize(<f-args>)
 	:command! Hoh set hlsearch
 	:Alias hoh Hoh
 	" Count the number of commas on the current line:
 	:command! Comman keeppattern s/,//n
+	" Run vim's grep in a new tab if necessary:
+	:command! -nargs=+ Grep execute (&modified)? "tabe" : "" | grep <args>
+	Alias grep Grep
+	:command! Grepr Grep -r <args> .
+	Alias grepr Grepr
 
 	:command! -range=% Imply <line1>,<line2>s/^./>\0/ | noh
+	" Soft-yank a line (or line-range) and then immediately paste it at the
+	" cursor's current position:
+	:command! -range Yp <line1>,<line2>y p | normal! "pP
+	Alias yp Yp
+	" ^ This won't correct to 'Yp' on <Return> or <Space> but it will correct on
+	" <Tab> so to yank-then-paste the line above it would be :-1yp<Tab>
+
 
 "-------------------Functions------------------------------:
 
@@ -271,20 +284,25 @@ augroup END
 	function! Resize(first,...)
 		" echom type(a:first)
 		if a:0 == 0
-			" echom 'a'
-			execute "resize " . string(a:first)
+		" if no extra arguments given:
+			echom "resize " . a:first
+			resize a:first
 		elseif a:first == "-v"
-			echom 'b'
-			" resize a:1
+		" if direction (vertical) was given first:
+			echom "resize " . a:1
+			execute "resize " . a:1
 		elseif a:1 == "-v"
-			echom 'c'
-			" resize a:first
+		" if direction (vertical) was given second:
+			echom "resize " . a:first
+			execute "resize " . a:first
 		elseif a:first == "-h"
-			echom 'd'
-			" vertical resize a:1
+		" if direciton (horizontal) was given first:
+			echom 'vertical resize ' . a:1
+			execute "vertical resize " . a:1
 		elseif a:1 == "-h"
-			echom 'e'
-			" vertical resize a:first
+		" if direction (horizontal) was given second:
+			echom "vertical resize " . a:first
+			execute "vertical resize " . a:first
 		else
 			echom "Resize(): Huh?"
 		endif
@@ -638,9 +656,11 @@ augroup END
 			let virtual_end = virtual_end - virtual_end%winwidth('%')
 		endif
 		if orig_pos == virtual_end
+			" echom "a"
 			return '$'
 		else
-			return 'g$'
+			" echom "b"
+			return (a:mode=='v')? "g$\<Left>" : 'g$'
 		endif
 		if exists('+belloff')
 			call RestoreSetting('belloff')
@@ -954,6 +974,11 @@ augroup END
 		call PipeToSocket('SELECT 1;',socketPath)
 	endfunction
 
+"---------------------  Minesweeping  ---------------------:
+
+	" shiftK doesn't to try look up any man-pages for the word under the cursor:
+	nnoremap K <Nop>
+
 "---------------------Novel keybindings--------------------:
 
 	" @-key during visual selection repeats the specified macro for each
@@ -1091,9 +1116,9 @@ augroup END
 	vmap <A-=> :sm/^\(>\+\)\([^ >]\)/\1 \2/ <Return>:noh <Return>
 	nmap <A-=> :%sm/^\(>\+\)\([^ >]\)/\1 \2/ <Return>:noh <Return>
 
-	" D-key-then-minus decrements the nearest integer at/after the cursor:
+	" d-key-then-minus decrements the nearest integer at/after the cursor:
 	nnoremap d- <C-x>
-	" D-key-then-plus increments the nearest integer at/after the cursor:
+	" d-key-then-plus increments the nearest integer at/after the cursor:
 	nnoremap d+ <C-a>
 
 "-------------------Keybinding overrides-------------------:
@@ -1168,27 +1193,29 @@ augroup END
 	vmap <S-Down> <Down>
 	" allow shiftUp to stay held while selecting without jumping by screen
 	vmap <S-Up> <Up>
-	" ctrlRight keeps the cursor on the right side of words when jumping:
-	nnoremap <C-Right> e
-	nnoremap <C-Left> b
+	" ctrlRight jumps only to words that I consider words:
+	nnoremap <silent> <C-Right> :set nohlsearch \| let @s=@/<Return>/\<[a-zA-Z0-9_]<Return>:let @/=@s<Return>
+	" ctrlLeft jumps only to words that I consider words:
+	nnoremap <silent> <C-Left> :set nohlsearch \| let @s=@/<Return>?\<[a-zA-Z0-9_]<Return>:let @/=@s<Return>
 	" ctrlRight jumps by word like in most text editors:
-	vnoremap <C-Right> e
+	vnoremap <C-Right> /[a-zA-Z0-9_]\><Return>
 	" ctrlLeft jumps by word like in most text editors:
-	vnoremap <C-Left> b
+	vnoremap <C-Left> ?\<[a-zA-Z0-9_]<Return>
 	":4 sadly the previous two aliases do not quite work in PuTTY
-	inoremap <C-Right> <C-o>e
-	inoremap <C-Left> <C-o>b
+	imap <silent> <C-Right> <C-o>:set nohlsearch \| let @s=@/<Return><C-o>/<[a-zA-Z0-9_]<Return><C-o>:let @/=@s<Return>
+	imap <silent> <C-Left> <C-o>:set nohlsearch \| let @s=@/<Return><C-o>?\<[a-zA-Z0-9_]<Return><C-o>:let @/=@s<Return>
 
 	" 2: j-key jumps to the next/previous character which matches the one under
 	" the cursor:
 	nnoremap <silent> j :call JumpToNextMatchingChar('')<Return>
-	vnoremap <silent> J :<C-u>let @p=escape(GetCharFromCursor(),'/$\') \| set nohlsearch<Return>gv?\V<C-r>p<Return>
+	vnoremap <silent> J :<C-u>let @p=escape(GetCharFromCursor(),'/\') \| set nohlsearch<Return>gv?\V<C-r>p<Return>
 	" 2: shiftJ does the same only backwards:
 	nnoremap <silent> J :call JumpToNextMatchingChar('b')<Return>
-	vnoremap <silent> j :<C-u>let @p=escape(GetCharFromCursor(),'/$\') \| set nohlsearch<Return>gv/\V<C-r>p<Return>
+	vnoremap <silent> j :<C-u>let @p=escape(GetCharFromCursor(),'/\') \| set nohlsearch<Return>gv/\V<C-r>p<Return>
 
 "-- Editing bindings:
 
+	" colon-key from visual mode assumes replacement:
 	vnoremap : :s/
 
 	" enter-key acts like enter:
@@ -1223,9 +1250,9 @@ augroup END
 	vnoremap <expr> x SmartX()
 	" shiftX does not yank, just deletes:
 	nmap X <Left>x
-	" p-key and shiftP do not yank, just paste:
-	vnoremap <expr> p SmartX() . 'P'
-	vnoremap <expr> P SmartX() . 'P'
+	" p-key and shiftP do not yank, just:
+	vnoremap p "_xp
+	vnoremap P "_xp
 
 	" shiftU redoes:
 	noremap U <C-r>

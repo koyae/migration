@@ -1,22 +1,22 @@
 
 
-snippet dependencies "Dependencies/include/import section" b
+snippet depends "Dependencies/include/import section" b
 ---- dependencies:
 
 -- -- for $1:
--- \i '$2'
+-- \i $2
 
 ---- :dependencies
 endsnippet
 
 
-snippet dependency "Dependency import/include for top section" b
--- -- for $1
+snippet depend "Dependency import/include for top section" b
+-- -- for $1:
 -- \i $2
 
 endsnippet
 
-snippet disabletrigger "Disable one or a class of triggers" b
+snippet disabletrig "Disable one or a class of triggers" b
 ALTER TABLE ${1:tableName} DISABLE TRIGGER ${2:USER};
 endsnippet
 
@@ -27,21 +27,24 @@ DO LANGUAGE plpgsql $$
 $$;
 endsnippet
 
+snippet raisenot "Raise a notice" b
+RAISE NOTICE '${1:exceptionText}'${2:, };
+endsnippet
 
 snippet except "Raise an exception" b
-RAISE EXCEPTION '${1:exceptionText}'${2: argsToEmbed};
+RAISE EXCEPTION '${1:exceptionText}'${2:, };
 endsnippet
 
 snippet exceptfull "Raise an exception with the extra options included." b
-RAISE EXCEPTION '${1:exceptionText}' ${2:argsToEmbed} ${3:USING} ${4:DETAIL=,} ${5:HINT=};
+RAISE EXCEPTION '${1:exceptionText}', ${2:argsToEmbed} ${3:USING} ${4:DETAIL=,} ${5:HINT=};
 endsnippet
 
-snippet dropfunc "Drop a function" b
+snippet dropfun "Drop a function" b
 DROP FUNCTION IF EXISTS ${1:functionName}($2) ${3:CASCADE}; -- X
 endsnippet
 
 
-snippet commentfunc "Comment on a function" b
+snippet commentfun "Comment on a function" b
 COMMENT ON FUNCTION ${1:functionName} IS $$
 $0
 $$;
@@ -49,7 +52,7 @@ endsnippet
 
 
 snippet createplpg "Definition for plpgsql function" b
-CREATE OR REPLACE FUNCTION ${1:functionName}() RETURNS ${2:returnType} AS
+CREATE OR REPLACE FUNCTION ${1:functionName}($2) RETURNS ${3:returnType} AS
 $$
 `!v PlpgBody()`
 $$ LANGUAGE plpgsql $0;
@@ -57,15 +60,33 @@ endsnippet
 
 
 snippet createsql "Defininition for sql function" b
-CREATE OR REPLACE FUNCTION ${1:functionName}() RETURNS ${2:returnType} AS
+CREATE OR REPLACE FUNCTION ${1:functionName}($2) RETURNS ${3:returnType} AS
 $$
-	$3
+	$4
 $$ LANGUAGE sql $0;
 endsnippet
 
 
-snippet enabletrigger "Enable one or a class of triggers" b
+snippet createtab "Create a new table" b
+CREATE TABLE IF NOT EXISTS ${1:tableName} (
+	${2:columnName} ${3:columnType} $0
+);
+endsnippet
+
+
+snippet commenttab "Comment on a table" b
+COMMENT ON TABLE ${1:tableName} IS $$
+$0
+$$;
+endsnippet
+
+
+snippet enabletrig "Enable one or a class of triggers" b
 ALTER TABLE ${1:tableName} ENABLE TRIGGER ${2:USER};$0
+endsnippet
+
+snippet del "Delete data from a table" b
+DELETE FROM ${1:tableName} WHERE ${2:conditon};
 endsnippet
 
 snippet insert "Insert data into a table" b
@@ -73,7 +94,7 @@ INSERT INTO ${1:tableName} (${2:columnList}) $0
 endsnippet
 
 snippet sel1 "Select with limit - grab a single row from a table"
-SELECT ${2:*} FROM ${1:tableName} LIMIT 1;$0
+SELECT * FROM ${1:tableName} LIMIT 1;$0
 endsnippet
 
 snippet sel "Select"
@@ -94,6 +115,14 @@ endsnippet
 
 snippet defaultcol "Set a column's default value" b
 ALTER TABLE ${1:tableName} ALTER COLUMN ${2:columnName} SET DEFAULT ${3:defaultValue};
+endsnippet
+
+snippet in "Add IS NULL"
+IS NULL
+endsnippet
+
+snippet in "Add IS NOT NULL"
+IS NOT NULL
 endsnippet
 
 snippet ife "Add 'IF EXISTS'"
