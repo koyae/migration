@@ -755,6 +755,12 @@ augroup END
 		return join(lines, "\n")
 	endfunction
 
+	" Return the character currently found under the cursor
+	function! GetCurrentChar()
+		return matchstr(getline('.'), '\%' . col('.') . 'c.')
+		" Expression courtesy https://stackoverflow.com/a/23323958/5739296
+	endfunction
+
 	function! GetRegexFromSelection()
 		let txt = escape(GetSelectionText(),'/\')
 		let txt = substitute(txt,"\n",'\\n','g')
@@ -1032,8 +1038,13 @@ augroup END
 	" signal (XOFF). This command won't work if that's not done. In most cases
 	" it can be disabled from .bashrc
 
-	" 2: altR removes the function-call currently under the cursor
-	nmap <A-r> :normal viwxm`%x``x<Return>
+	" 4: altR removes the function-call currently under the cursor.
+	" Note that the cursor can be on the function-name, the opening
+	" parenthesis, or the closing parenthesis. 4:
+	nmap <A-r> :if match(GetCurrentChar(),'[()]')!=-1
+		\ \| execute 'normal ' . (GetCurrentChar()==')'? '%' : '') . 'i_'
+		\ \| endif
+		\ \| :normal viwxm`%x``x<Return>
 	imap <A-r> <C-o><A-r>
 	" 2: ctrlE sets enclosure function and encloses the current word or
 	" selection with a function-call:
@@ -1154,7 +1165,7 @@ augroup END
 	nmap <silent> <expr> O InsertLineAbove() . "\<Esc>"
 
 	" backslash-key inserts a backslash:
-	nmap <silent> <expr> \ ToInsertBeforeCurrentChar('\')
+	nmap <silent> <expr> \\ ToInsertBeforeCurrentChar('\') . "\<Right>"
 	" space inserts a space in front of current character:
 	noremap <silent> <expr> <Space> ToInsertBeforeCurrentChar(" ")
 
@@ -1202,7 +1213,7 @@ augroup END
 	" ctrlLeft jumps by word like in most text editors:
 	vnoremap <C-Left> ?\<[a-zA-Z0-9_]<Return>
 	":4 sadly the previous two aliases do not quite work in PuTTY
-	imap <silent> <C-Right> <C-o>:set nohlsearch \| let @s=@/<Return><C-o>/<[a-zA-Z0-9_]<Return><C-o>:let @/=@s<Return>
+	imap <silent> <C-Right> <C-o>:set nohlsearch \| let @s=@/<Return><C-o>/\<[a-zA-Z0-9_]<Return><C-o>:let @/=@s<Return>
 	imap <silent> <C-Left> <C-o>:set nohlsearch \| let @s=@/<Return><C-o>?\<[a-zA-Z0-9_]<Return><C-o>:let @/=@s<Return>
 
 	" 2: j-key jumps to the next/previous character which matches the one under
@@ -1245,6 +1256,7 @@ augroup END
 
 	" s-key does not yank, just deletes then enters insert-mode:
 	vnoremap <expr> s SmartS()
+	vmap a s<Right>
 	nnoremap <expr> s SmartS()
 	" x-key does not yank, just deletes:
 	vnoremap <expr> x SmartX()
