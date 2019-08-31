@@ -28,6 +28,14 @@ vmap <buffer> <A-f> :<C-u>let @p=PgFlip(GetSelectionText())<Return>gvx"pP
 noremap <buffer> gk /\(^\s*\)\@<=\(INSERT\\|SELECT [^1]\\|DELETE\\|PERFORM\\|WITH\)<Return>
 noremap <buffer> gK ?\(^\s*\)\@<=\(INSERT\\|SELECT [^1]\\|DELETE\\|PERFORM\\|WITH\)<Return>
 
+" backslash-then-d-then-f documents function under cursor:
+vmap <buffer> <leader>df :<C-u>call AppendToFile('\df ' . GetSelectionText())<Return>
+nmap <buffer> <leader>df viw\df
+
+" backslash-then-d-then-r documents relation under cursor:
+vmap <buffer> <leader>dr :<C-u>call AppendToFile('\d ' . GetSelectionText())<Return>
+nmap <buffer> <leader>dr viw\dr
+
 " replace '00' with '--', since it's a common typo for me:
 ia <buffer> 00 --
 
@@ -87,5 +95,80 @@ Alias scratch Scratch
 
 function! PlpgBody()
 	return "DECLARE\nBEGIN\nEND;"
+endfunction
+
+function! SliceRagged(areaOfInterest,prevLoc,curLoc)
+	let rval = a:areaOfInterest[a:prevLoc[0]:a:curLoc[0]]
+	echom string(a:prevLoc) . ".." . string(a:curLoc)
+	if a:prevLoc[0] != a:curLoc[0]
+	" if the params are on different lines, wipe everything on the last line
+	" that comes after the current position
+		echom "Diff"
+		let rval[-1] = strpart(rval[-1], 0, a:curLoc[1])
+	else
+	" if the params are on the same line, we only want the stuff that comes AFTER
+	" the previous position UP UNTIL the current position:
+		echom "Same"
+		let rval[0] = strpart(rval[0], a:prevLoc[1]-1, a:curLoc[1]-a:prevLoc[1])
+	endif
+
+	" if the params are on the same line
+	return rval
+endfunction
+
+function! GetPreviousFuncSig(...)
+	let fromLine = (a:0==0)? '.' : a:1
+	" Find the start of the previous function-definition:
+	let defStart = searchpos(
+		\ '\(^\s*CREATE OR REPLACE FUNCTION [a-z_0-9]\+\)\@<=\((\)',
+		\ 'bn'
+	\ )
+	" Find the part right before the code-body of that function:
+	let defPreBody = searchpos(
+		\ ')\_sRETURNS',
+		\ 'bn'
+	\ )
+	" " Collect the text found between the two locations:
+	" let areaOfInterest = getline(defStart[0], defPreBody[0])
+	" let areaOfInterest[0] = strpart(areaOfInterest[0],defStart[1])
+	" let areaOfInterest[-1] = strpart(areaOfInterest[-1],0,defPreBody[1])
+	" let @a = join(areaOfInterest,"\n")
+	" Find all of the commas that actually divide the func's parameters:
+	let params = ['']
+	let curParam = 0
+	let curLoc = defStart
+	let curLoc[1] += 1
+	while curLoc[0] <= defPreBody[0]
+		let line = getline(curLoc[0])
+		while curLoc[1] < strlen(line)
+			if curLoc[0] == defPreBody[0] && curLoc[1] >= defPreBody[1]
+				break
+			endif
+			let char = strpart(line,curLoc[1]-1,1)
+			let params[curParam] .= char
+			if char == ','
+				" If a real comma is found:
+				echom "Comma found at " .
+					\ string(curLoc)
+				if synIDattr( synID(curLoc[0], curLoc[1], 1), "name" ) == ''
+					let curLoc[1] += 1
+					" Remove trailing comma:
+					let params[curParam] = strpart(params[curParam],0,strlen(params[curParam])-1)
+					call add(params,'')
+					let curParam +=1
+				endif
+			endif
+			let curLoc[1] += 1
+		endwhile
+		let curLoc[0] += 1
+		let curLoc[1] = 0
+	endwhile
+	echom string(params)
+	let curParam = 0
+	while curParam < len(params)
+		let	params[curParam] = matchstr(params[curParam],'\(\u \)*\u\+$')
+		let curParam +=1
+	endwhile
+	echom string(params)
 endfunction
 
