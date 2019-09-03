@@ -36,6 +36,17 @@ nmap <buffer> <leader>df viw\df
 vmap <buffer> <leader>dr :<C-u>call AppendToFile('\d ' . GetSelectionText())<Return>
 nmap <buffer> <leader>dr viw\dr
 
+" backslash-then-F1 adds 'SELECT' onto current selection and then sends to
+" fifo:
+vmap <buffer> <leader><F1> :<C-u>call AppendToFile('SELECT ' . GetSelectionText())<Return>
+nmap <buffer> <leader><F1> viw\<F1>
+
+" backslash-then-F8 adds 'SELECT * FROM ' onto current selection and then sends
+" to fifo:
+vmap <buffer> <leader><F8> :<C-u>call AppendToFile('SELECT * FROM ' . GetSelectionText())<Return>
+nmap <buffer> <leader><F8> viw\<F8>
+
+
 " replace '00' with '--', since it's a common typo for me:
 ia <buffer> 00 --
 
