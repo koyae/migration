@@ -97,30 +97,12 @@ function! PlpgBody()
 	return "DECLARE\nBEGIN\nEND;"
 endfunction
 
-function! SliceRagged(areaOfInterest,prevLoc,curLoc)
-	let rval = a:areaOfInterest[a:prevLoc[0]:a:curLoc[0]]
-	echom string(a:prevLoc) . ".." . string(a:curLoc)
-	if a:prevLoc[0] != a:curLoc[0]
-	" if the params are on different lines, wipe everything on the last line
-	" that comes after the current position
-		echom "Diff"
-		let rval[-1] = strpart(rval[-1], 0, a:curLoc[1])
-	else
-	" if the params are on the same line, we only want the stuff that comes AFTER
-	" the previous position UP UNTIL the current position:
-		echom "Same"
-		let rval[0] = strpart(rval[0], a:prevLoc[1]-1, a:curLoc[1]-a:prevLoc[1])
-	endif
-
-	" if the params are on the same line
-	return rval
-endfunction
 
 function! GetPreviousFuncSig(...)
 	let fromLine = (a:0==0)? '.' : a:1
 	" Find the start of the previous function-definition:
 	let defStart = searchpos(
-		\ '\(^\s*CREATE OR REPLACE FUNCTION [a-z_0-9]\+\)\@<=\((\)',
+		\ '\(^\s*CREATE OR REPLACE FUNCTION [a-z][a-z_0-9]*\.\?[a-z][a-z_0-9]*\)\@<=\((\)',
 		\ 'bn'
 	\ )
 	" Find the part right before the code-body of that function:
@@ -129,10 +111,10 @@ function! GetPreviousFuncSig(...)
 		\ 'bn'
 	\ )
 	" " Collect the text found between the two locations:
-	" let areaOfInterest = getline(defStart[0], defPreBody[0])
-	" let areaOfInterest[0] = strpart(areaOfInterest[0],defStart[1])
-	" let areaOfInterest[-1] = strpart(areaOfInterest[-1],0,defPreBody[1])
-	" let @a = join(areaOfInterest,"\n")
+	let funcName = matchstr(
+		\ getline(defStart[0]),
+		\ '\(^\s*CREATE OR REPLACE FUNCTION \)\@<=[a-z][a-z_0-9]*\.\?[a-z][a-z_0-9]*'
+	\ )
 	" Find all of the commas that actually divide the func's parameters:
 	let params = ['']
 	let curParam = 0
@@ -140,17 +122,17 @@ function! GetPreviousFuncSig(...)
 	let curLoc[1] += 1
 	while curLoc[0] <= defPreBody[0]
 		let line = getline(curLoc[0])
-		while curLoc[1] < strlen(line)
+		while curLoc[1] <= strlen(line) " using '<=' because curLoc starts at 1
 			if curLoc[0] == defPreBody[0] && curLoc[1] >= defPreBody[1]
+			" If we're on the last line of interest and we've gone past the
+			" terminal column:
 				break
 			endif
 			let char = strpart(line,curLoc[1]-1,1)
 			let params[curParam] .= char
 			if char == ','
-				" If a real comma is found:
-				echom "Comma found at " .
-					\ string(curLoc)
 				if synIDattr( synID(curLoc[0], curLoc[1], 1), "name" ) == ''
+				" If a real separating comma (outside a string) is found:
 					let curLoc[1] += 1
 					" Remove trailing comma:
 					let params[curParam] = strpart(params[curParam],0,strlen(params[curParam])-1)
@@ -163,12 +145,15 @@ function! GetPreviousFuncSig(...)
 		let curLoc[0] += 1
 		let curLoc[1] = 0
 	endwhile
-	echom string(params)
 	let curParam = 0
 	while curParam < len(params)
-		let	params[curParam] = matchstr(params[curParam],'\(\u \)*\u\+$')
+		" Just capture data-type:
+		let params[curParam] = matchstr(params[curParam],'\u* \?\u\+$')
+		" Strip any leading and trailing spaces:
+		let params[curParam] = substitute(params[curParam],'^\s\+','','')
+		let params[curParam] = substitute(params[curParam],'\s\+$','','')
 		let curParam +=1
 	endwhile
-	echom string(params)
+	return funcName . '(' . join(params,', ') . ')'
 endfunction
 

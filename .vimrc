@@ -239,6 +239,14 @@ augroup END
 	" ^ This won't correct to 'Yp' on <Return> or <Space> but it will correct on
 	" <Tab> so to yank-then-paste the line above it would be :-1yp<Tab>
 
+	Alias ulti UltiSnipsEdit
+
+	" Grab either the lefthand side or righthand side of a nearby line and paste
+	" it to the current line:
+	:command! -range Lhs :normal! mw<line1>gg^"pyf=`w"pp<Return>
+	Alias lhs Lhs
+	:command! -range Rhs :normal! mw<line1>gg^f=l"py$`w"pp<Return>
+	Alias rhs Rhs
 
 "-------------------Functions------------------------------:
 
