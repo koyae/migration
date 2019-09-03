@@ -887,13 +887,20 @@ augroup END
 		" we can close the appropriate tab:
 		let currentTab = tabpagenr()
 		let tabCount = tabpagenr("$")
+		if &modified
+			 echom 'Discard modifications?'
+			 let @r = nr2char( getchar() )
+			 if @r == 'n'
+				 return
+			 endif
+		 endif
 		if tabCount > 1
 			if currentTab > 1 && currentTab < tabCount
 			" if current tab is neither the first tab nor the last:
-				exec currentTab . "tabclose"
+				q!
 				tabprev
 			else
-				exec currentTab . "tabclose"
+				q!
 			endif
 		else
 			qall

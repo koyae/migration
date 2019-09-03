@@ -253,7 +253,12 @@ function unlock {
 	else
 		for arg in "$@"; do
 		# ^ loop through arguments as needed
-			rm ."$arg".swp
+			if [[ "$arg" = .* ]] then
+			# if argument starts with a dot, vim doesn't add another:
+				rm "$arg".swp
+			else
+				rm ."$arg".swp
+			fi
 		done
 	fi
 }
