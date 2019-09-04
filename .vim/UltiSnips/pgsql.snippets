@@ -44,7 +44,7 @@ DROP FUNCTION IF EXISTS ${1:functionName}($2) ${3:CASCADE}; -- X
 endsnippet
 
 
-snippet commentfun "Comment on a function" b
+snippet commfun "Comment on a function" b
 COMMENT ON FUNCTION `!v GetPreviousFuncSig()` IS $$
 $0
 $$;
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS ${1:tableName} (
 endsnippet
 
 
-snippet commenttab "Comment on a table" b
+snippet commtab "Comment on a table" b
 COMMENT ON TABLE ${1:tableName} IS $$
 $0
 $$;
@@ -98,8 +98,11 @@ SELECT * FROM ${1:tableName} LIMIT 1;$0
 endsnippet
 
 snippet sel "Select"
-SELECT ${1:*} FROM ${2:tableName} WHERE ${3:true};$0
+SELECT ${1:*} FROM ${2:source} ${3:WHERE ${4:true}};$0
 endsnippet
+# ^ Above, we nest $4 inside $3 because adding `WHERE true` to function-calls
+# causes weird behavior. Allowing both to be easily cleared will make it easier
+# to call funcs.
 
 snippet seld "Select distinct"
 SELECT DISTINCT ${1:*} FROM ${2:tableName} WHERE ${3:true};$0
@@ -158,6 +161,13 @@ snippet idf "Add 'IS DISTINCT FROM'"
 IS DISTINCT FROM
 endsnippet
 
+snippet did "Add 'DEFERRABLE INITIALLY DEFERRED'" i
+DEFERRABLE INITIALLY DEFERRED
+endsnippet
+# Allow inner expansions here because most of the time this will be as
+# "'DEFERRABLE...'" (with surrounding quotes) which means it doesn't have a
+# preceding whitespace
+
 snippet droptrig "Drop a trigger." b
 DROP TRIGGER IF EXISTS ${2:triggerName} ON ${1:tableName};$0
 endsnippet
@@ -174,7 +184,7 @@ snippet dropcol "Drop a column from an existing table" b
 ALTER TABLE ${1:tableName} DROP COLUMN IF EXISTS ${2:columnName};$0
 endsnippet
 
-snippet commentcol "Comment on one of a table's columns" b
+snippet commcol "Comment on one of a table's columns" b
 COMMENT ON COLUMN ${1:tableName}.${2:columnName} IS
 $$ $3
 $$;$0

@@ -37,6 +37,11 @@ augroup pgstuff
 		\| setlocal comments=:--
 augroup END
 
+augroup ultistuff
+	autocmd!
+	autocmd BufNewFile,BufRead, *.snippets setlocal comments=:#
+augroup END
+
 " Conventions:
 
 " Conventions: marks and registers
@@ -1128,11 +1133,15 @@ augroup END
 	" quote-
 	vnoremap "** "pygv"=RelimitRegister('p','**','')<Return>P
 
-	" shiftTab reduces indent
+	" tab-key increases indent:
+	nnoremap <Tab> ><Right>
+	vnoremap <Tab> >gv
+	imap <expr> <Tab> (match(getline('.'),'^\s')==-1)? "\<C-r>=\"\\t\"\<Return>" : "\<C-o>m`\<C-o>\<Tab>\<C-o>``\<Right>"
+
+	" shiftTab reduces indent:
 	nnoremap <S-Tab> <<Left>
 	vnoremap <S-Tab> <gv
-	imap <S-Tab> <C-o><S-Tab>
-	nnoremap <Tab> ><Right>
+	imap <S-Tab> <C-o>m`<C-o><S-Tab><C-o>``<Left>
 
 	" altB groups a selected set of arguments spread across multiple lines onto
 	" one line:

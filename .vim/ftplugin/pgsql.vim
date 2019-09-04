@@ -32,6 +32,11 @@ noremap <buffer> gK ?\(^\s*\)\@<=\(INSERT\\|SELECT [^1]\\|DELETE\\|PERFORM\\|WIT
 vmap <buffer> <leader>df :<C-u>call AppendToFile('\df ' . GetSelectionText())<Return>
 nmap <buffer> <leader>df viw\df
 
+" backslash-then-plus-then-d-then-f documents function under cursor with extra
+" details:
+vmap <buffer> <leader>+df :<C-u>call AppendToFile('\df+ ' . GetSelectionText())<Return>
+nmap <buffer> <leader>+df viw\df+
+
 " backslash-then-d-then-r documents relation under cursor:
 vmap <buffer> <leader>dr :<C-u>call AppendToFile('\d ' . GetSelectionText())<Return>
 nmap <buffer> <leader>dr viw\dr
@@ -87,7 +92,11 @@ endfunction
 command! Re normal :set nopaste<Return>mwgZ:echo (search('\%'.line('.').'l^[CD]','b'))? 0 : search('^[CD]','b') <Return>^mugzgzV`u<F5>`w
 " ^ This covers CREATE statements, COMMENT statements, and DO statements
 Alias re Re
-" Unfreeze pane 0 in the screen session to which we are currently attached,
+
+command! Nneo execute "normal! y" . (mode()=='n'? 'iw' : '') . "iOLD.\<C-o>e\<Right> <> NEW.\<C-r>\""
+Alias nneo Nneo
+
+" Unfreeze pane 0 in the screen session to which we are OLD.eurrently <> attached,
 " then have vim redraw since running commands under `silent exec` screw up
 " vim's display:
 nnoremap <leader>u :silent exec '!screen -dr $(screen -wipe \| grep "Attached" \| cut -f 2) -p 0 -X stuff "^["; fg'<Return>:redraw!<Return>
