@@ -1136,7 +1136,16 @@ augroup END
 	" tab-key increases indent:
 	nnoremap <Tab> ><Right>
 	vnoremap <Tab> >gv
-	imap <expr> <Tab> (match(getline('.'),'^\s')==-1)? "\<C-r>=\"\\t\"\<Return>" : "\<C-o>m`\<C-o>\<Tab>\<C-o>``\<Right>"
+	imap <expr> <Tab> (match(getline('.'),'^\s*$')!=-1)?
+		\ "\<C-r>=\"\\t\"\<Return>"
+		\ : "\<C-o>m`\<C-o>\<Tab>\<C-o>``\<Right>"
+			\ . repeat("\<Right>", col('.')==col('$'))
+	" ^ Under certain conditions (like immediately following a <Return>) <C-o>
+	" seems to be wipe out all initial tabs when there are no following
+	" characters, so we use the '=' register to produce a tab-character instead.
+	" When we have characters other than just tabs, we want to restore the
+	" position of the cursor. Since <C-o> puts the cursor back TWO spaces if
+	" it's at the end of the line, we go back over two if that's where it was
 
 	" shiftTab reduces indent:
 	nnoremap <S-Tab> <<Left>
