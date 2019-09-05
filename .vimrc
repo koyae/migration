@@ -1095,9 +1095,9 @@ augroup END
 	" jumps to start of paste:
 	nnoremap <silent> <A-p> :call InsertAtEOL('',1)<Return>$a <Esc>p`[
 	" openparen surrounds current selection in parentheses from visual mode:
-	vnoremap <silent> ( <Esc>`<i(<Esc>`>a<Right>)<Esc>
+	vnoremap <silent> ( <Esc>`<i(<C-o>`><Right>)<Esc>
 	" closeparen does the same as above:
-	vnoremap <silent> ) <Esc>`<i(<Esc>`>a<Right>)<Esc>
+	vmap <silent> ) (
 	" quote-then-openbrace wraps selection in braces:
 	vnoremap "{ <Esc>`<i{<Esc>`>a<Right>}<Esc>
 	" quote-then-closebrace wraps selection in braces:
