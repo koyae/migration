@@ -262,6 +262,16 @@ augroup END
 
 " Note `function!` forces overwrite if necessary on creation of a funciton
 
+	" Prepare a given vim-style SCP-path for use with real SCP. Cygwin doesn't
+	" seem to need this but Ubuntu does.
+	function! SCPify(targetPath)
+		let rval = a:targetPath
+		if match(rval,'^scp://[a-z_0-9]\+//.*')!=-1
+			let rval = substitute(rval,'^scp://','','')
+			let rval = substitute(rval,'//',':/','')
+		endif
+		return rval
+	endfunction
 
 	" RobustSave([targetPath])
 	" A (somewhat) robust wrapper for :W and :sav that avoids
@@ -283,7 +293,7 @@ augroup END
 				\ . ' -post=call\ delete(''' . tmpfile . ''')'
 				\ . '\ |\ echo\ "delayed\ write"\ g:asyncrun_status\ strftime(''\%X'') '
 				\ . "scp " . tmpfile
-				\ . " " . escape(expand('%'),' ')
+				\ . " " . escape(SCPify(expand('%')),' ')
 			" ^ inspired by:
 			" github.com/skywind3000/asyncrun.vim/wiki/Get-netrw-using-asyncrun-to-save-remote-files
 			" echom l:doMe
