@@ -812,7 +812,7 @@ augroup END
 		let txt = escape(GetSelectionText(),'/\')
 		let txt = substitute(txt,"\n",'\\n','g')
 		let txt = substitute(txt,"\t",'\\t','g')
-		return '\V' . txt
+		return '\V\(' . txt . '\)'
 	endfunction
 
 	function! SelectionAsRegexToRegister(register)
@@ -1366,7 +1366,7 @@ augroup END
 	" visual ctrlH starts replacement within selection:
 	vnoremap <C-h>  :s/
 	" ctrlR starts a replace-command containing the selected text:
-	vnoremap <C-r> :call SelectionAsRegexToRegister('h')<Return>:<BS><BS><BS><BS><BS>%s/<C-r>h//<Left>
+	vnoremap <C-r> :call SelectionAsRegexToRegister('h')<Return>:<C-u>%s/<C-r>h//<Left>
 	" :credit http://stackoverflow.com/questions/676600/
 	" shiftR in visual mode starts a replace-command on the selected text
 	" (set up to only affect text until the end of the line):
