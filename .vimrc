@@ -223,9 +223,9 @@ augroup END
 	:command! Reup source ~/.vimrc
 	:Alias reup Reup
 	" Create a new tab with the desired help-page inside of it:
-	:command! -nargs=1 Tabh :tab h <args>
+	:command! -nargs=1 Tabh tab h <args>
 	:Alias tabh Tabh
-	:command! -nargs=+ Resize :call Resize(<f-args>)
+	:command! -nargs=+ Resize call Resize(<f-args>)
 	:command! Hoh set hlsearch
 	:Alias hoh Hoh
 	" Count the number of commas on the current line:
@@ -243,6 +243,9 @@ augroup END
 	Alias yp Yp
 	" ^ This won't correct to 'Yp' on <Return> or <Space> but it will correct on
 	" <Tab> so to yank-then-paste the line above it would be :-1yp<Tab>
+
+	:command! -range=% -nargs=+ Beg silent <line1>,<line2>call InsertAtBeginning(<f-args>)
+	Alias beg Beg
 
 	Alias ulti UltiSnipsEdit
 
@@ -301,6 +304,24 @@ augroup END
 		else
 		" otherwise, just write as normal:
 			execute "sav " . escape(path, ' ')
+		endif
+	endfunction
+
+	" InsertAtBeginning(['-q'|'-Q',] whatToInsert)
+	function! InsertAtBeginning(first,...) range
+		let doQuotes = 0
+		let args = a:000
+		if a:first == '-q'
+			let doQuotes = 1
+			let args += ['"']
+		else
+			let args = [a:first]
+			let args += a:000
+		endif
+		let whatToInsert = join(args,' ')
+		execute a:firstline . ',' . a:lastline . 's/^/' . whatToInsert
+		if doQuotes
+			execute a:firstline . ',' . a:lastline . 's/$/"'
 		endif
 	endfunction
 
@@ -460,33 +481,36 @@ augroup END
 		endif
 	endfunction
 
-	" PgCap([keywordType])
-	" 	return keystrokes if given keywordType or keyword under cursor should
-	" 	be capitalized. If keywordType is omitted, use the keyword type of
-	" 	whatever character is under the cursor.
+	" :[<startline>,<stopline>]call PgCap()
+	"	capitalize all Postgres keywords on the given lines or -- if range is
+	"	omitted -- on the current line
 	"
-	" 	PgCap(lineNumber, columnNumber) -> return keystrokes to capitalize
-	" 	the character under the cursor if it is a Postgres keyword.
-	" 	(Currently only works from normal mode.)
+	" PgCap(lineNumber, columnNumber)
+	" 	capitalize	the character at the designated location if it is
+	" 	a Postgres keyword.
 	"
-	" The easiest way to use this function for the moment is with the
-	" following invocation, starting with the cursor on the first line on
-	" which capitalization should start. The first argument should be the last
-	" line on which capitalization should be performed.
-	"
-	" :exec 'silent! normal! ' . To('$','$','.',1,'',":call PgCap()\<Enter>")
-	function! PgCap(...)
-		let kwType = synIDattr(  synID( line('.'), col('.'), 1 ), "name"  )
-		if a:0
-			set syntax=pgsql
-		elseif a:0==2
-			set syntax=pgsql
+	function! PgCap(...) range
+		let capThese = ['pgsqlKeyword','pgsqlOperator','pgsqlType','pgsqlVariable']
+		if a:0==2
 			let kwType = synIDattr(  synID( a:1, a:2, 1 ), "name"  )
-		elseif a:0==1
-			let kwType = a:1
-		endif
-		if index(['pgsqlKeyword','pgsqlOperator','pgsqlType','pgsqlVariable'],l:kwType) >= 0
-			normal! vgU
+			if index(capThese,l:kwType) >= 0
+				normal! vgU
+			endif
+		else
+			set syntax=pgsql
+			let curLine = a:firstline
+			while curLine<=a:lastline
+				let curPos=1
+				while curPos<=len(getline(curLine))
+					let kwType = synIDattr(  synID( curLine, curPos, 1 ), "name"  )
+					if index(capThese,l:kwType) >= 0
+						let doString = curLine . ',' . curLine . 's/\(\%' . curPos . 'c.\)/\U\1'
+						execute doString
+					endif
+					let curPos += 1
+				endwhile
+				let curLine += 1
+			endwhile
 		endif
 	endfunction
 
@@ -1105,7 +1129,7 @@ augroup END
 	" jumps to start of paste:
 	nnoremap <silent> <A-p> :call InsertAtEOL('',1)<Return>$a <Esc>p`[
 	" openparen surrounds current selection in parentheses from visual mode:
-	vnoremap <silent> ( <Esc>`<i(<C-o>`><Right>)<Esc>
+	vnoremap <silent> ( "sdi(<C-o>:set paste<Return><C-r>s)<Esc>:set nopaste<Return>
 	" closeparen does the same as above:
 	vmap <silent> ) (
 	" quote-then-openbrace wraps selection in braces:
@@ -1384,7 +1408,7 @@ augroup END
 
 	" 2: altG opens command-bar:
 	nnoremap <A-g> :
-	vnoremap <A-g> :<C-u>
+	vnoremap <A-g> :
 
 "-- Selection stuff
 

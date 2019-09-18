@@ -41,6 +41,10 @@ nmap <buffer> <leader>+df viw\df+
 vmap <buffer> <leader>dr :<C-u>call AppendToFile('\d ' . GetSelectionText())<Return>
 nmap <buffer> <leader>dr viw\dr
 
+" backslash-then-d documents relation under cursor:
+vmap <buffer> <leader>d :<C-u>call AppendToFile('\d ' . GetSelectionText())<Return>
+nmap <buffer> <leader>d viw\dr
+
 " backslash-then-F1 adds 'SELECT' onto current selection and then sends to
 " fifo:
 vmap <buffer> <leader><F1> :<C-u>call AppendToFile('SELECT ' . GetSelectionText())<Return>
@@ -117,18 +121,20 @@ function! PlpgBody()
 	return "DECLARE\nBEGIN\nEND;"
 endfunction
 
-
-function! GetPreviousFuncSig(...)
-	let fromLine = (a:0==0)? '.' : a:1
+function! GetNearestFuncSig(direction)
+	let directionFlag = ''
+	if a:direction == 'backward'
+		let directionFlag = 'b'
+	endif
 	" Find the start of the previous function-definition:
 	let defStart = searchpos(
 		\ '\(^\s*CREATE OR REPLACE FUNCTION [a-z][a-z_0-9]*\.\?[a-z][a-z_0-9]*\)\@<=\((\)',
-		\ 'bn'
+		\ 'n' . directionFlag
 	\ )
 	" Find the part right before the code-body of that function:
 	let defPreBody = searchpos(
 		\ ')\_sRETURNS',
-		\ 'bn'
+		\ 'n' . directionFlag
 	\ )
 	" " Collect the text found between the two locations:
 	let funcName = matchstr(
@@ -175,5 +181,6 @@ function! GetPreviousFuncSig(...)
 		let curParam +=1
 	endwhile
 	return funcName . '(' . join(params,', ') . ')'
+
 endfunction
 

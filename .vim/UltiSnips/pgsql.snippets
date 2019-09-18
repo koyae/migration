@@ -27,29 +27,33 @@ DO LANGUAGE plpgsql $$
 $$;
 endsnippet
 
-snippet raisenot "Raise a notice" b
+snippet notice "Raise a notice" b
 RAISE NOTICE '${1:exceptionText}'${2:, };
 endsnippet
 
 snippet except "Raise an exception" b
-RAISE EXCEPTION '${1:exceptionText}'${2:, };
-endsnippet
-
-snippet exceptfull "Raise an exception with the extra options included." b
-RAISE EXCEPTION '${1:exceptionText}', ${2:argsToEmbed} ${3:USING} ${4:DETAIL=,} ${5:HINT=};
+RAISE EXCEPTION '${1:exceptionText}'${2:, ${3:argsToEmbed}} ${4:USING ${5:DETAIL=,} ${6:HINT=}};
 endsnippet
 
 snippet dropfun "Drop a function" b
-DROP FUNCTION IF EXISTS ${1:functionName}($2) ${3:CASCADE}; -- X
+DROP FUNCTION IF EXISTS ${1:`!v GetNearestFuncSig('forward')`} ${2:CASCADE}; -- X
 endsnippet
 
+snippet coun "Paste 'COUNT(*)'"
+COUNT(*)
+endsnippet
 
 snippet commfun "Comment on a function" b
-COMMENT ON FUNCTION `!v GetPreviousFuncSig()` IS $$
+COMMENT ON FUNCTION `!v GetNearestFuncSig('backward')` IS $$
 $0
 $$;
 endsnippet
 
+snippet do "Define an imperative plpgsql block" b
+DO LANGUAGE plpgsql $$
+$0`!v PlpgBody()`
+$$;
+endsnippet
 
 snippet createplpg "Definition for plpgsql function" b
 CREATE OR REPLACE FUNCTION ${1:functionName}($2) RETURNS ${3:returnType} AS
@@ -190,6 +194,6 @@ $$ $3
 $$;$0
 endsnippet
 
-snippet update "Update rows in a table the safe way" b
+snippet upd "Update rows in a table the safe way" b
 UPDATE ${1:tableName} SET ${2:columnName}=${3:expression} WHERE ${4:condition};$0
 endsnippet

@@ -20,11 +20,11 @@ endif
 " Always ignore case
 syn case ignore
 
-" Section: Syntax 
+" Section: Syntax
 
-" Section: Miscellaneous 
+" Section: Miscellaneous
 
-" General keywords which don't fall into other categories 
+" General keywords which don't fall into other categories
 "
 " Use match instead of keyword to lower priority and allow data types bits
 " and other constructs to match too
@@ -85,7 +85,7 @@ syn match pgsqlKeyword      "\<current\_s\+of\>"
 syn match pgsqlKeyword      "\<delete\_s\+from\>"
 syn match pgsqlKeyword      "\<discard\_s\+\(all\|plans\|sequences\|temp\|temporary\)\>"
 
-syn match pgsqlKeyword      "\<\(alter\|add\|drop\|comment\_s\+on\|create\)\_s\+\(aggregate\|attribute\|cast\|collation\|conversion\|database\|default\_s\+privileges\|domain\|\(event\_s\+\)\?trigger\|extension\|foreign\_s\+\(data\_s\+wrapper\|table\)\|function\|group\|index\(\_s\+concurrently\)\?\|\(procedural\_s\+\)\?language\|materialized\_s\+view\|operator\(\_s\+class\|\_s\+family\)\?\|owned\_s\+by\|role\|rule\|schema\|sequence\|server\|table\|tablespace\|text\_s\+search\_s\+\(configuration\|dictionary\|parser\|template\)\|type\|user\(\_s\+mapping\)\?\|view\)\>"
+syn match pgsqlKeyword      "\<\(alter\|add\|drop\|comment\_s\+on\|create\)\_s\+\(aggregate\|attribute\|cast\|collation\|conversion\|database\|default\_s\+privileges\|domain\|\(event\_s\+\)\?trigger\|extension\|foreign\_s\+\(data\_s\+wrapper\|table\)\|function\|group\|index\(\_s\+concurrently\)\?\|\(procedural\_s\+\)\?language\|materialized\_s\+view\|operator\(\_s\+class\|\_s\+family\)\?\|owned\_s\+by\|role\|rule\|schema\|sequence\|server\|column\|table\|tablespace\|text\_s\+search\_s\+\(configuration\|dictionary\|parser\|template\)\|type\|user\(\_s\+mapping\)\?\|view\)\>"
 
 syn match pgsqlKeyword      "\<create\_s\+default\_s\+conversion\>"
 syn match pgsqlKeyword      "\<create\_s\+\(or\_s\+replace\_s\+\)\?\(function\|\(trusted\_s\+\)\?\(procedural\_s\+\)\?language\|rule\)\>"
@@ -219,14 +219,14 @@ syn keyword pgsqlKeyword	 unique unlisten
 syn keyword pgsqlKeyword	 version volatile
 syn keyword pgsqlKeyword	 window
 
-" Section: Constants 
+" Section: Constants
 " Constant values
 syn keyword pgsqlConstant	 false true
 " weakened to allow matching 'not null'
 syn match   pgsqlConstant	 "\<null\>"
-" 
+"
 
-" Section: Strings 
+" Section: Strings
 " Strings (single- and double-quote)
 syn region pgsqlIdentifier	 start=+"+  skip=+\\\\+  end=+"+
 syn region pgsqlIdentifier	 start=+U&"+  skip=+\\\\\|\\"+  end=+"+
@@ -235,26 +235,26 @@ syn region pgsqlString		 start=+'+  skip=+\\\\+  end=+'+
 syn region pgsqlString		 start=+U&'+  skip=+\\\\\|\\'+  end=+'+
 
 syn match pgsqlString		 "\$\w*\$"
-" 
+"
 
-" Section: Numbers 
+" Section: Numbers
 " Numbers and hexidecimal values
 syn match pgsqlNumber		 "-\=\<[0-9]*\>"
 syn match pgsqlNumber		 "-\=\<[0-9]*\.[0-9]*\>"
 syn match pgsqlNumber		 "-\=\<[0-9]*e[+-]\=[0-9]*\>"
 syn match pgsqlNumber		 "-\=\<[0-9]*\.[0-9]*e[+-]\=[0-9]*\>"
 syn match pgsqlNumber		 "\<0x[abcdefABCDEF0-9]*\>"
-" 
+"
 
-" Section: Comments 
+" Section: Comments
 " Comments (c-style, sql-style)
 syn region  pgsqlComment    start="/\*"  end="\*/" contains=pgsqlTodo,pgsqlComment
 syn match   pgsqlComment    "--.*" contains=pgsqlTodo
 syn sync    ccomment        pgsqlComment
 syn keyword pgsqlTodo       todo note xxx warn warning contained
-" 
+"
 
-" Section: Variables 
+" Section: Variables
 "
 " Special variables
 
@@ -270,7 +270,7 @@ syn match pgsqlLabel		 "<<[^>]\+>>"
 " Is this a class of things or just a sort of an alien?
 syn match pgsqlExtschema		 "@extschema@"
 
-" Section: Column types 
+" Section: Column types
 syn keyword pgsqlType        anyarray anyelement abstime anyenum
 syn keyword pgsqlType        anynonarray aclitem
 " Would like to have this as type, but even if it's a match it fails
@@ -306,7 +306,7 @@ syn match pgsqlType          "%\(row\)\?type\>"
 " this should actually be the end of a region
 syn match pgsqlType          "\<with\(out\)\?\_s\+time\_s\+zone\>"
 
-" Section: Variable types 
+" Section: Variable types
 syn match  pgsqlType		 "\<name\>"
 syn match  pgsqlType		 "\<float\>"
 syn region pgsqlType		 start="\<float\_s*(" end=")" contains=pgsqlNumber,pgsqlVariable
@@ -340,9 +340,9 @@ syn match  pgsqlType		 "\<varbit\>"
 syn region pgsqlType		 start="\<varbit\_s*(" end=")" contains=pgsqlNumber,pgsqlVariable
 syn match  pgsqlType		 "\<bit\_s\+varying\>"
 syn region pgsqlType		 start="\<bit\_s\+varying\_s*(" end=")" contains=pgsqlNumber,pgsqlVariable
-" 
+"
 
-" Section: Operators 
+" Section: Operators
 " Logical, string and  numeric operators
 " TODO: terms contained within the function are not keywords! --Ryan Delaney 2014-02-06T14:11-0800 OpenGPG: 0D98863B4E1D07B6
 " note: the 'in' operator is defined above, before lockmodes
@@ -361,22 +361,22 @@ syn region pgsqlOperator	 start="array\_s*\[" end="\]" contains=ALL
 
 " Let's consider this an operator, not operator + constant
 syn match   pgsqlKeyword	 "\<not\_s\+null\>"
-" 
+"
 
-" Section: psql special stuff 
+" Section: psql special stuff
 syn region pgsqlCopy    start="\<copy\([^;]\|\n\)\+from\_s\+stdin\([^;]\|\n\)*;" end="\\\."
 " TODO: the content would be nice "Normal", not "Special"
 syn region pgsqlBackslash	 start="^\\" end="$"
-" 
+"
 
-" Section: Functions 
-" Control flow functions 
+" Section: Functions
+" Control flow functions
 syn keyword pgsqlFlow		 case when then else end
 syn region pgsqlFlow		 start="ifnull("   end=")"  contains=ALL
 syn region pgsqlFlow		 start="nullif("   end=")"  contains=ALL
-" 
+"
 
-" General Functions 
+" General Functions
 syn region pgsqlFunction	start="abbrev'(" end=")" contains=ALL
 syn region pgsqlFunction	start="abs'(" end=")" contains=ALL
 syn region pgsqlFunction	start="abstime'(" end=")" contains=ALL
@@ -2245,9 +2245,9 @@ syn region pgsqlFunction	start="xml_recv'(" end=")" contains=ALL
 syn region pgsqlFunction	start="xml_send'(" end=")" contains=ALL
 syn region pgsqlFunction	start="xmlvalidate'(" end=")" contains=ALL
 syn region pgsqlFunction	start="xpath'(" end=")" contains=ALL
-" 
+"
 
-" Section: Definition 
+" Section: Definition
 " Define the default highlighting.
 " For version 5.7 and earlier: only when not done already
 " For version 5.8 and later: only when an item doesn't have highlighting yet
@@ -2277,9 +2277,9 @@ if version >= 508 || !exists("did_pgsql_syn_inits")
   HiLink pgsqlBackslash		Special
   delcommand HiLink
 endif
-" 
+"
 
 let b:current_syntax = "pgsql"
 
-" Section: Modelines 
+" Section: Modelines
 " vim600: set foldmethod=marker foldlevel=0 :
