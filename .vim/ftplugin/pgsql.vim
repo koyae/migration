@@ -28,16 +28,22 @@ vmap <buffer> <A-f> :<C-u>let @p=PgFlip(GetSelectionText())<Return>gvx"pP
 noremap <buffer> gk /\(^\s*\)\@<=\(INSERT\\|SELECT [^1]\\|DELETE\\|PERFORM\\|WITH\)<Return>
 noremap <buffer> gK ?\(^\s*\)\@<=\(INSERT\\|SELECT [^1]\\|DELETE\\|PERFORM\\|WITH\)<Return>
 
-" backslash-then-d-then-f documents function under cursor:
+" backslash-then-d-then-f,
+" backslash-then-d-then-f-then-f documents function under cursor:
 vmap <buffer> <leader>df :<C-u>call AppendToFile('\df ' . GetSelectionText())<Return>
-nmap <buffer> <leader>df viw\df
+nmap <buffer> <leader>df viw\dff
+vmap <buffer> <leader>dff :<C-u>call AppendToFile('\df ' . GetSelectionText())<Return>
+nmap <buffer> <leader>dff viw\dff
 
 " backslash-then-plus-then-d-then-f documents function under cursor with extra
 " details:
-vmap <buffer> <leader>+df :<C-u>call AppendToFile('\df+ ' . GetSelectionText())<Return>
-nmap <buffer> <leader>+df viw\df+
+vmap <buffer> <leader>df+ :<C-u>call AppendToFile('\df+ ' . GetSelectionText())<Return>
+nmap <buffer> <leader>df+ viw\df+
 
+" backslash-then-d,
 " backslash-then-d-then-r documents relation under cursor:
+vmap <buffer> <leader>d :<C-u>call AppendToFile('\d ' . GetSelectionText())<Return>
+nmap <buffer> <leader>d viw\dr
 vmap <buffer> <leader>dr :<C-u>call AppendToFile('\d ' . GetSelectionText())<Return>
 nmap <buffer> <leader>dr viw\dr
 
