@@ -47,9 +47,9 @@ nmap <buffer> <leader>d viw\dr
 vmap <buffer> <leader>dr :<C-u>call AppendToFile('\d ' . GetSelectionText())<Return>
 nmap <buffer> <leader>dr viw\dr
 
-" backslash-then-d documents relation under cursor:
-vmap <buffer> <leader>d :<C-u>call AppendToFile('\d ' . GetSelectionText())<Return>
-nmap <buffer> <leader>d viw\dr
+" backslash-then-d-then-plus documents relation under cursor:
+vmap <buffer> <leader>d+ :<C-u>call AppendToFile('\d+ ' . GetSelectionText())<Return>
+nmap <buffer> <leader>d+ viw\d+
 
 " backslash-then-F1 adds 'SELECT' onto current selection and then sends to
 " fifo:
