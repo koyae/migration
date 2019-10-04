@@ -31,6 +31,7 @@ alias ssh='ssh -a' # use local ssh-agent if available, but do not allow challeng
 alias ssh-add='ssh-add -c' # require confirmation if agent-forwarding is about to occur (see README about requirements)
 alias zip='zip -r' # zip recursively by default
 alias grepc='grep --color=always'
+alias :q=exit
 shopt -s extglob # enable shell-extensions such as negation-based matching
 # prevent spaces from automatically appearing by default after pressing tab-key
 # for completion, since this is obnoxious when typing long paths:
