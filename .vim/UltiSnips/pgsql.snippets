@@ -184,6 +184,10 @@ snippet renametab "Rename a table." b
 ALTER TABLE ${1:tableName} RENAME TO ${2:newTableName};$0
 endsnippet
 
+snippet dropcon "Drop a constraint from an existing table" b
+ALTER TABLE ${1:tableName} DROP CONSTRAINT IF EXISTS ${2:constraintName};$0
+endsnippet
+
 snippet dropcol "Drop a column from an existing table" b
 ALTER TABLE ${1:tableName} DROP COLUMN IF EXISTS ${2:columnName};$0
 endsnippet
@@ -196,4 +200,8 @@ endsnippet
 
 snippet upd "Update rows in a table the safe way" b
 UPDATE ${1:tableName} SET ${2:columnName}=${3:expression} WHERE ${4:condition};$0
+endsnippet
+
+snippet stat "Check pg_stat_activity" b
+SELECT * FROM pg_stat_activity WHERE state = 'active';
 endsnippet

@@ -235,6 +235,8 @@ augroup END
 	Alias grep Grep
 	:command! Grepr Grep -r <args> .
 	Alias grepr Grepr
+	:command! -nargs=+ Greprt tabe | grep -r <args> .
+	Alias greprt Greprt
 
 	:command! -range=% Imply <line1>,<line2>s/^./>\0/ | noh
 	" Soft-yank a line (or line-range) and then immediately paste it at the
