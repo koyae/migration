@@ -260,7 +260,7 @@ augroup END
 
 "-------------------Functions------------------------------:
 
-" I use the convention "before" in function names to connote one character before
+" I use the convention "before" in function names to connote one CHARACTER before
 " In turn "after" means the opposite.
 " To connote the LINE before the cursor's current position, I use "above".
 " In turn "below" means the opposite.
@@ -359,6 +359,46 @@ augroup END
 		close
 		tabedit
 		execute "buffer " . buffer_number
+	endfunction
+
+	" Get the ID of the current screen session (assuming we're inside one
+	" presently) e.g. '4105.T'
+	function! GetScreenSession()
+		let results = system('screen -wipe | grep "Attached" | cut -f	2')
+		return substitute(results, "\n", '', '')
+	endfunction
+
+	" ScreenDo(minusXArgs[,redraw[,windowId[,sessionId]]])
+	"
+	" Pass a command to GNU Screen to have it executed
+	"
+	" minusXargs  --  the arguments to give to Screen's `-X` flag
+	"
+	" redraw      --  integer representing whether to redraw vim's UI, since
+	"                 screen can mess it up in console.
+	"                 Defaults to: 1 (true/on)
+	"
+	" windowID    --  the task (window) which the screen-command should affect
+	"                 Defaults to: window 0 (if omitted or empty string given)
+	"
+	" sessionID   --  the screen session-identifier. Defaults to: current
+	"                 session (if omitted or empty string given)
+	"
+	function! ScreenDo(minusXArgs,...)
+		let redraw = 1
+		let sessionId = GetScreenSession()
+		let windowId = '0'
+		if a:0 > 1
+			let redraw = a:1
+		endif
+		if a:0 > 2
+			let windowId = a:2
+		endif
+		if a:0 > 3 && string(a:3)!=''
+			let sessionId = a:3
+		endif
+		silent exec '!screen -dr ' . sessionId . ' -p ' . windowId . ' -X ' . a:minusXArgs
+		redraw!
 	endfunction
 
 	function! EatNextWord()

@@ -108,10 +108,11 @@ Alias re Re
 command! Nneo execute "normal! y" . (mode()=='n'? 'iw' : '') . "iOLD.\<C-o>e\<Right> <> NEW.\<C-r>\""
 Alias nneo Nneo
 
-" Unfreeze pane 0 in the screen session to which we are OLD.eurrently <> attached,
-" then have vim redraw since running commands under `silent exec` screw up
-" vim's display:
-nnoremap <leader>u :silent exec '!screen -dr $(screen -wipe \| grep "Attached" \| cut -f 2) -p 0 -X stuff "^["; fg'<Return>:redraw!<Return>
+" backslash-then-u unfreezes pane 0 in the screen session to which we are
+" currently attached:
+nnoremap <leader>u :call ScreenDo('stuff "^["')<Return>
+" backslash-then-e
+nmap <leader>e :call ScreenDo('copy') \| call ScreenDo('stuff "?ERR^M"')<Return>
 
 " Copy the filename of the current buffer to register p, expressing the path
 " as relative, under the assumption that the current working directory is in a
