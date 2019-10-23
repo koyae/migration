@@ -249,6 +249,10 @@ augroup END
 	:command! -range=% -nargs=+ Beg silent <line1>,<line2>call InsertAtBeginning(<f-args>)
 	Alias beg Beg
 
+	" Copy path to current file into default register #current path
+	:command! Cpath let @"=escape(expand('%:p'),' \')
+	Alias cpath Cpath
+
 	Alias ulti UltiSnipsEdit
 
 	" Grab either the lefthand side or righthand side of a nearby line and paste
@@ -399,6 +403,75 @@ augroup END
 		endif
 		silent exec '!screen -dr ' . sessionId . ' -p ' . windowId . ' -X ' . a:minusXArgs
 		redraw!
+	endfunction
+
+	" ToJumpToIdent([backwards[,indentToMatch[,ignoreWhite]]])
+	" move the cursor from the current line to either the end of the current
+	" block (by indentation) or the next line that has the same indent-level but
+	" is not part of the block
+	function! ToJumpToIndent(...)
+		let backwards = 0
+		if a:0 > 0
+			let backwards = a:1
+		endif
+		let indentToMatch = matchstr(getline('.'),'^\s*')
+		if a:0 > 1
+			let indentToMatch = a:2
+		endif
+		let ignoreWhite = 1
+		if a:0 > 2
+			let ignoreWhite = a:3
+		endif
+		let startnr = line('.')
+		let increment = (backwards)? -1 : 1
+		let linenr = startnr " current line-number as candidate to jump to
+		let lastMatchNr = startnr " where the last match we found was
+		let run = 1
+		"^ tracks whether we've had continuous matches between the start and the
+		" iteration previous to the current one
+		while (backwards)? linenr>=line('^') : linenr<=line('$')
+			let linenr += increment " move to next line
+			let line = getline(linenr)
+			let isWhite = (match(line,'\S')==-1)
+			let matched = 1 " whether we had a match this time
+			let leadingWhitespace = matchstr(getline(linenr),'^\s*\([^ \t]\)\@=')
+			if leadingWhitespace!=indentToMatch
+				if !ignoreWhite || (ignoreWhite && !isWhite)
+					let matched = 0
+				endif
+				if !isWhite && strlen(leadingWhitespace) < indentToMatch
+				" Generally, we won't want to jump to a matching indent-level if
+				" there's an intervening indent that's LESS than what we started
+				" with, so if we encounter that, we jump out if there's already
+				" a jump-target:
+					if lastMatchNr != startnr
+						return lastMatchNr . 'gg'
+					else
+						return ""
+					endif
+				endif
+			else
+			" if we matched, record the last line on which that occurred:
+				let lastMatchNr = linenr
+			endif
+			if lastMatchNr!=startnr && ((!run && matched) || (run && !matched))
+			" if we've identified a jump-point other than the start-line, AND:
+			" A) we've just hit the end of the current block (`run && !matched`)
+			" or
+			" B) we've found the next block of the same indent size after
+			" crossing a patch of differently-indented code (`!run && matched`)
+				break
+			endif
+			if !matched
+				let run = 0
+			endif
+		endwhile
+		if startnr == lastMatchNr
+		" if the while-loop failed to find any matches:
+			return ""
+		else
+			return lastMatchNr . "gg"
+		endif
 	endfunction
 
 	function! EatNextWord()
@@ -1301,9 +1374,11 @@ augroup END
 	inoremap <Down> <C-o>gj
 
 	" g-then-i goes to the next matching indent:
-	nnoremap gi :call search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%>' . line('.') . 'l\S', 'e')<Return>
+	nnoremap <expr> gi ToJumpToIndent()
+	vnoremap <expr> gi ToJumpToIndent()
 	" g-then-shiftI goes to the previous matching indent:
-	nnoremap gI :call search('^'. matchstr(getline('.'), '\(^\s*\)') .'\%<' . line('.') . 'l\S', 'be')<Return>
+	nnoremap <expr> gI ToJumpToIndent(1)
+	vnoremap <expr> gI ToJumpToIndent(1)
 
 	" allow shiftLeft to stay held while selecting without jumping by word
 	vmap <S-Left> <Left>
