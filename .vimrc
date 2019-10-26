@@ -170,6 +170,11 @@ augroup END
 	" even if they're set vertical :C):
 	" let g:netrw_altv=1
 
+" -- Taboo config:
+	" This isn't technically a Taboo setting, but doing this per the repo's
+	" README allows tab names to be retained when using `:mksession`
+	set sessionoptions+=tabpages,globals
+
 "---------------------User settings------------------------:
 
 "-- Display
