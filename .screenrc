@@ -54,6 +54,12 @@ markkeys "\^=\201"
 # End-key just goes to the end of the line in copy mode (mark mode):
 markkeys "$=\205"
 
+# to get SQL work layout after executing the above:
+# remove # remove right pane
+# split # create horizontal split
+# focus bottom
+# select 1 # call up task 1 again
+
 # If you are using a special TERM or require other specifics on this computer,
 # set variables and do other work in this file, otherwise, it can be empty or
 # absent:
