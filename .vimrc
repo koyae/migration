@@ -213,8 +213,12 @@ augroup END
 
 "-- Formatting behavior:
 	:set formatoptions+=j " allow vim's re-wrapping functionality to join as well as split
-	:set formatoptions-=r " don't repeat the single-line comment symbol when pressing enter
-	:set formatlistpat=^[a-z][a-z_0-9]\\+[^-]\*--\ \ " wrap python-style arg-docs
+	" 3: wrap python-style arg-docs
+	:set formatoptions+=n
+	:set formatoptions-=2 " having the 2 flag set prevents n from working
+	:set formatlistpat=^\\s\*[a-z][a-z_0-9]\\+[^-]\*\ \ --\ \  " :3 *
+	" ^ * btw we need an end-of-line comment on the above line or else the
+	" whitespace will be stripped from the end since it would be trailing
 
 "-- cmdalias.vim aliases:
 	:Alias Wq wq
