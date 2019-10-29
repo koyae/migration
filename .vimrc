@@ -1226,7 +1226,6 @@ augroup END
 	imap <A-r> <C-o><A-r>
 	" 2: ctrlE sets enclosure function and encloses the current word or
 	" selection with a function-call:
-
 	nnoremap <C-e> :call SetEncloseWithFunctionCallFunctionName()<Return>
 	imap <C-e> <C-o><C-e>
 	" 4: altE encloses the current word or selection with a function-call:
@@ -1234,7 +1233,7 @@ augroup END
 		\ \| normal viw(%"pP`[<Return>
 	imap <A-e> <C-o><A-e>
 	vmap <expr> <C-e> SetEncloseWithFunctionCallFunctionName("\<A-e>")
-	vmap <A-e> <A-g>let @p=g:EncloseWithFunctionCallFunctionName<Return>gv(%"pP
+	vmap <A-e> :<C-u>let @p=g:EncloseWithFunctionCallFunctionName<Return>gv(%"pP
 	" ^ set register, restore selection, jump to matching parenthesis, paste
 
 	" altS clears trailing whitespace if present then places a colon at EOL:
@@ -1253,7 +1252,11 @@ augroup END
 	" jumps to start of paste:
 	nnoremap <silent> <A-p> :call InsertAtEOL('',1)<Return>$a <Esc>p`[
 	" openparen surrounds current selection in parentheses from visual mode:
-	vnoremap <silent> ( "sdi(<C-o>:set paste<Return><C-r>s)<Esc>:set nopaste<Return>
+	vnoremap <silent> ( <Esc>:let @s=@"\|set paste<Return>gv<C-g>(<C-r>")<Esc>:let @"=@s\|set nopaste<Return>
+	" ^ Save default register in register 's', regain selection, enter SELECT
+	" mode and overtype selection with a '(' then paste whatever we just
+	" replaced again then write a ')'. Return to normal mode and reset paste
+	" state and restore default register.
 	" closeparen does the same as above:
 	vmap <silent> ) (
 	" quote-then-openbrace wraps selection in braces:
