@@ -122,6 +122,7 @@ augroup END
 	:set <A-r>=r
 	:set <A-s>=s
 	:set <A-=>==
+	:set <A-w>=w
 	:set <A-x>=x
 	:set <A-z>=z
 	:set <A-(>=9
@@ -1228,15 +1229,15 @@ augroup END
 	" selection with a function-call:
 	nnoremap <C-e> :call SetEncloseWithFunctionCallFunctionName()<Return>
 	imap <C-e> <C-o><C-e>
-	" 4: altE encloses the current word or selection with a function-call:
-	nmap <A-e> :let @p=g:EncloseWithFunctionCallFunctionName
+	" 4: altW encloses the current word or selection with a function-call:
+	nmap <A-w> :let @p=g:EncloseWithFunctionCallFunctionName
 		\ \| normal viw(%"pP`[<Return>
-	imap <A-e> <C-o><A-e>
-	vmap <expr> <C-e> SetEncloseWithFunctionCallFunctionName("\<A-e>")
-	vmap <A-e> :<C-u>let @p=g:EncloseWithFunctionCallFunctionName<Return>gv(%"pP
+	imap <A-w> <C-o><A-w>
+	vmap <expr> <C-e> SetEncloseWithFunctionCallFunctionName("\<A-w>")
+	vmap <A-w> :<C-u>let @p=g:EncloseWithFunctionCallFunctionName<Return>gv(%"pP
 	" ^ set register, restore selection, jump to matching parenthesis, paste
 
-	" altS clears trailing whitespace if present then places a colon at EOL:
+	" altC clears trailing whitespace if present then places a colon at EOL:
 	nnoremap <silent> <A-c> :call InsertAtEOL(':',1)<Return>
 	inoremap <silent> <A-c> <C-o>:call InsertAtEOL(':',1)<Return>
 	" altS clears trailing whitespace if present then places a semicolon at EOL:
@@ -1411,6 +1412,9 @@ augroup END
 	":4 sadly the previous two aliases do not quite work in PuTTY
 	imap <silent> <C-Right> <C-o>:set nohlsearch \| let @s=@/<Return><C-o>/\<[a-zA-Z0-9_]<Return><C-o>:let @/=@s<Return>
 	imap <silent> <C-Left> <C-o>:set nohlsearch \| let @s=@/<Return><C-o>?\<[a-zA-Z0-9_]<Return><C-o>:let @/=@s<Return>
+	" altE goes to (after) end of word:
+	imap <A-e> <C-o>e<Right>
+	nmap <A-e> e
 
 	" 2: j-key jumps to the next/previous character which matches the one under
 	" the cursor:
