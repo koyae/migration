@@ -127,9 +127,10 @@ augroup END
 	:set <A-z>=z
 	:set <A-(>=9
 	:set <A-)>=0
-	:set <C-A-x>=
-	:set <C-A-t>=
+	:set <C-A-p>=
 	:set <C-A-q>=
+	:set <C-A-t>=
+	:set <C-A-x>=
 	:set <A-1>=1
 	:set <A-i>=i
 	:set <C-S-g>=
@@ -217,7 +218,7 @@ augroup END
 	" 3: wrap python-style arg-docs
 	:set formatoptions+=n
 	:set formatoptions-=2 " having the 2 flag set prevents n from working
-	:set formatlistpat=^\\s\*[a-z][a-z_0-9]\\+[^-]\*\ \ --\ \  " :3 *
+	:set formatlistpat=^\\s\*[a-z][a-z_0-9]\\+[^-]\*\ \ --\ \ " :3 *
 	" ^ * btw we need an end-of-line comment on the above line or else the
 	" whitespace will be stripped from the end since it would be trailing
 
@@ -235,7 +236,7 @@ augroup END
 	" Create a new tab with the desired help-page inside of it:
 	:command! -nargs=1 Tabh tab h <args>
 	:Alias tabh Tabh
-	:command! -nargs=+ Resize call Resize(<f-args>)
+	:command! -nargs=+ Resize call Resize(<f-args>) " TODO: handle percents. https://www.reddit.com/r/vim/comments/3m85zo/resizing_splits_as_a_percentage_in_macvim/
 	:command! Hoh set hlsearch
 	:Alias hoh Hoh
 	" Count the number of commas on the current line:
@@ -256,6 +257,8 @@ augroup END
 	" ^ This won't correct to 'Yp' on <Return> or <Space> but it will correct on
 	" <Tab> so to yank-then-paste the line above it would be :-1yp<Tab>
 
+	" This command prefixes/prepends the given text to the beginning of the
+	" selected lines, or all lines, if it's invoked with no selection:
 	:command! -range=% -nargs=+ Beg silent <line1>,<line2>call InsertAtBeginning(<f-args>)
 	Alias beg Beg
 
@@ -1252,6 +1255,9 @@ augroup END
 	" altP clears trailing whitespace if present then pastes at EOL, then
 	" jumps to start of paste:
 	nnoremap <silent> <A-p> :call InsertAtEOL('',1)<Return>$a <Esc>p`[
+	" ctrlAltP pastes above current line:
+	nmap <C-A-p> O-p
+	imap <C-A-p> <C-o>:normal <C-A-p><Return>
 	" openparen surrounds current selection in parentheses from visual mode:
 	vnoremap <silent> ( <Esc>:let @s=@"\|set paste<Return>gv<C-g>(<C-r>")<Esc>:let @"=@s\|set nopaste<Return>
 	" ^ Save default register in register 's', regain selection, enter SELECT
