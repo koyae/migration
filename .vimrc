@@ -1328,9 +1328,9 @@ augroup END
 	vmap <A-=> :sm/^\(>\+\)\([^ >]\)/\1 \2/ <Return>:noh <Return>
 	nmap <A-=> :%sm/^\(>\+\)\([^ >]\)/\1 \2/ <Return>:noh <Return>
 
-	" d-key-then-minus decrements the nearest integer at/after the cursor:
+	" d-then-minus decrements the nearest integer at/after the cursor:
 	nnoremap d- <C-x>
-	" d-key-then-plus increments the nearest integer at/after the cursor:
+	" d-then-plus increments the nearest integer at/after the cursor:
 	nnoremap d+ <C-a>
 
 "-------------------Keybinding overrides-------------------:
