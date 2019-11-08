@@ -1097,13 +1097,13 @@ augroup END
 		endwhile
 	endfunction
 
-	" AppendToFile(text[,fifoPath])
+	" AppendToFile([text[,fifoPath]])
 	" Append the current selection or given text to a specified file.
 	"
-	" The primary intent of this file is to allow writing to fifo-files which
-	" are being read within a continuous loop by one or more outside
-	" utilities, to allow code-snippets to be executed from vim without
-	" changing windows/panes.
+	" The primary intent for this file is to allow writing to (fifo)-files which
+	" are being monitored within a continuous loop by one or more outside
+	" utilities, to allow code-snippets to be executed from vim without changing
+	" windows/panes.
 	"
 	" #PipeToFile
 	"
@@ -1117,9 +1117,10 @@ augroup END
 		let suffdict = {
 			\ 'pgsql': "\n;SELECT '(vim) All done (vim)';"
 		\ }
+		" duplicate the pgsql key for sql:
 		let suffdict.sql = suffdict.pgsql
-		let text = a:0 >= 1 ? a:1 : GetSelectionText()
-		let fifoPath = a:0 >= 2 ? a:2 : '/tmp/fif'
+		let text = (a:0 >= 1)? a:1 : GetSelectionText()
+		let fifoPath = (a:0 >= 2)? a:2 : '/tmp/fif'
 		" Below, first backslash prevents vim from expandeding '%' to current
 		" filename and the second backslash allows the '\n' to actually reach
 		" `printf`:
@@ -1544,6 +1545,15 @@ augroup END
 	" F1-key just sends current line to file:
 	nmap <F1> V<F5>
 	imap <F1> <C-o>mp<C-o><F1><C-o>`p
+
+	vnoremap <F10> :<C-u>call AppendToFile(GetSelectionText(),'/tmp/lifo')<Return>
+	vnoremap <F6> :<C-u>call AppendToFile(GetSelectionText(),'/tmp/lifo')<Return>
+	nmap <F10> ggVG<F6><C-o><C-o>
+	" F5-key just sends current line from insert-mode:
+	imap <F10> <F6>
+	" F1-key just sends current line to file:
+	nmap <F6> V<F10>
+	imap <F6> <C-o>mp<C-o><F6><C-o>`p
 
 	" 2: altG opens command-bar:
 	nnoremap <A-g> :
