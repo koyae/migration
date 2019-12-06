@@ -188,8 +188,15 @@ function! GetNearestFuncSig(direction)
 	endwhile
 	let curParam = 0
 	while curParam < len(params)
-		" Just capture data-type:
-		let params[curParam] = matchstr(params[curParam],'\u* \?\u\+$')
+		" Capture the datatype (expected to be uppercase and can end in '[]').
+		" Usually, it will appear right before the end of the parameter:
+		let terminator = '$'
+		if match(params[curParam],'=') != -1
+		" if a default was given, the datatype will precede the
+		" equals sign instead of the end of the string:
+			let terminator = '\( \?=\)\@='
+		endif
+		let params[curParam] = matchstr(params[curParam],'\u* \?\u\+\(\[\]\)\?' . terminator)
 		" Strip any leading and trailing spaces:
 		let params[curParam] = substitute(params[curParam],'^\s\+','','')
 		let params[curParam] = substitute(params[curParam],'\s\+$','','')
