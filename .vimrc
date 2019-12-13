@@ -1470,8 +1470,8 @@ augroup END
 	" shiftX does not yank, just deletes:
 	nmap X <Left>x
 	" p-key and shiftP do not yank, just:
-	vnoremap p "_xp
-	vnoremap P "_xp
+	vnoremap p "_xP
+	vnoremap P "_xP
 
 	" shiftU redoes:
 	noremap U <C-r>

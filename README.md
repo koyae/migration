@@ -99,6 +99,7 @@ A few of the functions and scripts in this repo rely on additional packages. Oth
 * df
 * rsync
 * tr
+* tidy (to clean up messy HTML)
 
 ### Check configuration
 
