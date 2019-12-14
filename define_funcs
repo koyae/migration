@@ -278,9 +278,28 @@ function wcd {
 	cd $(echo "$1" | sed 's/\\\\/\//g')
 }
 
+sis() {
+	part=-1
+	path="`pwd`"
+	OLDIFS="$IFS"
+	sub="$1"
+	IFS='/'
+	IFS=/ read -ra patharr <<< "`pwd`"
+	if [ $# -gt 1 ]; then
+		if printf '%s' "$1" | grep -q '^[-+]\?[0-9]'; then
+			part="$1"
+			sub="$2"
+		fi
+	fi
+	slot=$((${#patharr[@]}+$part))
+	patharr[$slot]="$sub"
+	printf '%s' "${patharr[*]}"
+	IFS="$OLDIFS"
+}
+
 # Change current working directory to a parallel directory
-function sis {
-    cd ../"$1"
+cis() {
+	cd "$(\sis "$@")"
 }
 
 # [ Complex alias for builtin `du` command ]

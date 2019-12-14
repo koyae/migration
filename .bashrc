@@ -50,6 +50,7 @@ bind Space:magic-space # allow backrefs like `!<command>` and `!!` to expand on 
 # weird stuff:
 alias l='ls'
 alias down='cd'
+alias sis='cis'
 alias cdP='cd "`pwd -P`"'
 alias cdgr='cd "`git rev-parse --show-toplevel`"'
 alias lastat='cd "$(cat "$HOME/lastat")"'
@@ -66,7 +67,11 @@ alias gitrwt="$gitrwt"
 unset gitrwt
 
 alias readreq='openssl req -noout -text -in'
+alias reqread='openssl req -noout -text -in'
+
 alias readcert='openssl x509 -noout -text -in'
+alias certread='openssl x509 -noout -text -in'
+
 alias pyaml="python -c 'import sys, yaml, json; json.dump(yaml.load(sys.stdin), sys.stdout, indent=4)'"
 # ^ Prettify YAML by converting it into JSON. Use by piping in a file with '<' operator.
 
