@@ -43,6 +43,7 @@ PATH="$HOME/bin2:$PATH"
 bind '"[1;5D":"b"' 2>/dev/null # ctrlLeft moves cursor one word back
 bind '"[1;5C":"f"' 2>/dev/null # ctrlRight moves cursor one word forward
 bind '"":""' 2>/dev/null # ctrlBackspace deletes previous word
+bind Space:magic-space # allow backrefs like `!<command>` and `!!` to expand on hitting space
 
 # [ additional control-signal stuff located in .bash_profile ]
 
