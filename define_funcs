@@ -278,6 +278,18 @@ function wcd {
 	cd $(echo "$1" | sed 's/\\\\/\//g')
 }
 
+# usage: sis [<index>] <replacement> [<path>]
+# index        --  the index of the path-component to replace, where 1
+#                  represents the first component of the path.
+#                  Negative numbers can be used to count from the deepest part
+#                  of the path. -1 is the name of the current directory
+#                  Defaults to: -1
+#
+# replacement  --  the value of the path-component (directory) found at <index>
+#                  which should replace whatever is currently there
+#
+# path         --  the path to work on
+#                  Defaults to: current directory
 sis() {
 	part=-1
 	path="`pwd`"
@@ -291,7 +303,14 @@ sis() {
 			sub="$2"
 		fi
 	fi
-	slot=$((${#patharr[@]}+$part))
+	if [ $part -eq 0 ]; then
+		1>&2 echo "0 is not a valid index. 1 is the first, -1 is the last."
+		return 1
+	fi
+	slot=$part
+	if [ $part -lt 0 ]; then
+		slot=$((${#patharr[@]}+$part))
+	fi
 	patharr[$slot]="$sub"
 	printf '%s' "${patharr[*]}"
 	IFS="$OLDIFS"
