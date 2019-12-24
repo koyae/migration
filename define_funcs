@@ -178,6 +178,18 @@ function ps {
 	fi
 }
 
+# [ Complex alias for vim invocation ]
+function vim {
+	if (( $# == 1 )) && [[ "$1" = *:* ]]; then
+	# if given a grep-style path followed by a colon giving a
+	# line-number, automatically separate the two and jump to that line:
+		command vim "${1%:*}" -c "${1#*:}"
+		return $?
+	fi
+	command vim "$@"
+	return $?
+}
+
 # [ Complex alias for git to add options depending on the specifc subcommand ]
 function git {
 	if (( $# > 0 )); then
