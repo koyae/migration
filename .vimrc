@@ -1315,7 +1315,8 @@ augroup END
 	vnoremap "" "pygv"=RelimitRegister('p','"',"'")<Return>P
 	" quote-then-singleQuote from Visual mode "encloses" selection in quotes:
 	vnoremap "' "pygv"=RelimitRegister('p',"'",'"')<Return>P
-	" [dollar-dollar] [dolla-dolla]
+	vnoremap "/ "pygv"=RelimitRegister('p',"/",'')<Return>P
+	" [quote-dollar-dollar] [quote-dolla-dolla]
 	" quote-then-dollarsign-then-dollarsign from Visual mode encloses selection
 	" in '$$':
 	vnoremap "$$ "pygv"=RelimitRegister('p',"$$","'")<Return>P
