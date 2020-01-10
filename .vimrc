@@ -4,7 +4,7 @@ augroup striptrailing
 	autocmd BufWritePre * :%s/\s\+$//e
 augroup END
 
-" Custom handling by filetype:
+" Custom handling by filetype 1{{{
 augroup oddboyz
 	autocmd!
 	autocmd BufNewFile,BufRead, pom.xml,web.xml,*.yaml,*.ansible* set tabstop=2 expandtab shiftwidth=2
@@ -27,8 +27,9 @@ augroup END
 " allow various comments to rewrap correctly:
 augroup vimstuff
 	autocmd!
-	autocmd BufNewFile,BufRead, *.vim,.vimrc set comments+=:\\\\|
+	autocmd BufNewFile,BufRead, *.vim,.vimrc setlocal comments+=:\\\\|
 	" ^ allow line-extension character
+	autocmd BufNewFile,BufRead, *.vim,.vimrc setlocal foldmethod=marker
 augroup END
 
 augroup pgstuff
@@ -42,7 +43,9 @@ augroup ultistuff
 	autocmd BufNewFile,BufRead, *.snippets setlocal comments=:#
 augroup END
 
-" Conventions:
+" }}}
+
+" Conventions 1{{{
 
 " Conventions: marks and registers
 "
@@ -103,7 +106,9 @@ augroup END
 " 	9 nine
 " 	0 zero
 
-"--------------------Compatibility settings----------------:
+" }}}
+
+" Compatibility settings 1{{{
 	:set nocompatible
 	:set <S-Left>=[D
 	:set <S-Right>=[C
@@ -150,9 +155,19 @@ augroup END
 		:set term=xterm
 	endif
 
-"--------------------Plugin Imports------------------------:
+" }}}
+
+" Plugin Imports and Settings 1{{{
 	filetype plugin on
 	source ~/.vim/plugin/cmdalias.vim
+
+	if has('signs') != 1
+		let g:pathogen_blacklist = []
+		call add(g:pathogen_blacklist, 'vim-bookmarks')
+		echom "vim-bookmarks is not supported on this system"
+	else
+		let g:bookmark_sign = '🔖'
+	endif
 	" grab everything from ~/.vim/bundle:
 	execute pathogen#infect()
 	runtime macros/matchit.vim " allow jumping to matching XML tags using '%'
@@ -177,7 +192,9 @@ augroup END
 	" README allows tab names to be retained when using `:mksession`
 	set sessionoptions+=tabpages,globals
 
-"---------------------User settings------------------------:
+" }}}
+
+" User settings 1{{{
 
 "-- Display
 	colorscheme koyae
@@ -196,6 +213,7 @@ augroup END
 		" (long line soft wrap)
 	endif
 	:set linebreak " whole-word wrapping instead of mid-word
+	:set foldmethod=marker
 
 "-- I/O
 	:set bs=2
@@ -279,7 +297,9 @@ augroup END
 	:command! -range Rhs :normal! mw<line1>gg^f=l"py$`w"pp<Return>
 	Alias rhs Rhs
 
-"-------------------Functions------------------------------:
+" }}}
+
+"Functions 1{{{
 
 " I use the convention "before" in function names to connote one CHARACTER before
 " In turn "after" means the opposite.
@@ -1167,12 +1187,16 @@ augroup END
 		call PipeToSocket('SELECT 1;',socketPath)
 	endfunction
 
-"---------------------  Minesweeping  ---------------------:
+" }}}
+
+" Minesweeping 1{{{
 
 	" shiftK doesn't to try look up any man-pages for the word under the cursor:
 	nnoremap K <Nop>
 
-"---------------------Novel keybindings--------------------:
+" }}}
+
+" Novel keybindings 1{{{
 
 	" Write the current file as root (for if you forget to sudoedit or later
 	" open another buffer that requires this): # late sudoedit
@@ -1344,7 +1368,9 @@ augroup END
 	" d-then-plus increments the nearest integer at/after the cursor:
 	nnoremap d+ <C-a>
 
-"-------------------Keybinding overrides-------------------:
+" }}}
+
+" Keybinding overrides 1{{{
 
 "-- Emmet bindings:
 	" altZ expands tags instead of Emmet's default ctrlY-then-comma:
@@ -1599,3 +1625,4 @@ augroup END
 	" shiftV enters line-select mode and moves the cursor to the end:
 	nnoremap V V$
 
+" }}}
