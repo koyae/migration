@@ -266,6 +266,10 @@ augroup END
 	:command! Cpath let @"=escape(expand('%:p'),' \')
 	Alias cpath Cpath
 
+	" Change the current working directory to that of the current file:
+	command! Nowat lcd %:p:h
+	Alias nowat Nowat
+
 	Alias ulti UltiSnipsEdit
 
 	" Grab either the lefthand side or righthand side of a nearby line and paste
@@ -1169,6 +1173,12 @@ augroup END
 	nnoremap K <Nop>
 
 "---------------------Novel keybindings--------------------:
+
+	" Write the current file as root (for if you forget to sudoedit or later
+	" open another buffer that requires this): # late sudoedit
+	cmap w!! write !sudo tee % >/dev/null
+	" Fun fact the above does not work in neovim/nvim:
+	" https://github.com/neovim/neovim/issues/1716
 
 	" @-key during visual selection repeats the specified macro for each
 	" selected line:
