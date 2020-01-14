@@ -1445,9 +1445,9 @@ augroup END
 	vmap <S-Down> <Down>
 	" allow shiftUp to stay held while selecting without jumping by screen
 	vmap <S-Up> <Up>
-	" ctrlRight jumps only to words that I consider words:
+	" ctrlRight jumps only to the beginning words that I consider words:
 	nnoremap <silent> <C-Right> :set nohlsearch \| let @s=@/<Return>/\<[a-zA-Z0-9_]<Return>:let @/=@s<Return>
-	" ctrlLeft jumps only to words that I consider words:
+	" ctrlLeft jumps only to the beginning of words that I consider words:
 	nnoremap <silent> <C-Left> :set nohlsearch \| let @s=@/<Return>?\<[a-zA-Z0-9_]<Return>:let @/=@s<Return>
 	" ctrlRight jumps by word like in most text editors:
 	vnoremap <C-Right> /[a-zA-Z0-9_]\><Return>
@@ -1469,9 +1469,6 @@ augroup END
 	vnoremap <silent> j :<C-u>let @p=escape(GetCharFromCursor(),'/\') \| set nohlsearch<Return>gv/\V<C-r>p<Return>
 
 "-- Editing bindings:
-
-	" colon-key from visual mode assumes replacement:
-	vnoremap : :s/
 
 	" enter-key acts like enter:
 	nmap <silent> <expr> <Return> SmartReturn()
@@ -1504,8 +1501,6 @@ augroup END
 	nnoremap <expr> s SmartS()
 	" x-key does not yank, just deletes:
 	vnoremap <expr> x SmartX()
-	" shiftX does not yank, just deletes:
-	nmap X <Left>x
 	" p-key and shiftP do not yank, just:
 	vnoremap p "_xP
 	vnoremap P "_xP
@@ -1586,9 +1581,9 @@ augroup END
 	vnoremap <F10> :<C-u>call AppendToFile(GetSelectionText(),'/tmp/lifo')<Return>
 	vnoremap <F6> :<C-u>call AppendToFile(GetSelectionText(),'/tmp/lifo')<Return>
 	nmap <F10> ggVG<F6><C-o><C-o>
-	" F5-key just sends current line from insert-mode:
+	" F10-key just sends current line from insert-mode:
 	imap <F10> <F6>
-	" F1-key just sends current line to file:
+	" F6-key just sends current line to file:
 	nmap <F6> V<F10>
 	imap <F6> <C-o>mp<C-o><F6><C-o>`p
 

@@ -25,3 +25,6 @@
 [submodule ".vim/bundle/vim-bookmarks"]
 	path = .vim/bundle/vim-bookmarks
 	url = https://github.com/MattesGroeger/vim-bookmarks
+[submodule ".vim/bundle/vim-cutlass"]
+	path = .vim/bundle/vim-cutlass
+	url = https://github.com/svermeulen/vim-cutlass
