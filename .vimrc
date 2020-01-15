@@ -161,6 +161,11 @@ augroup END
 	filetype plugin on
 	source ~/.vim/plugin/cmdalias.vim
 
+	" Cutlass overrides/settings 2{{{
+	" We have to apply this mapping before pathogen loads cutlass:
+	vnoremap d ""d
+	" }}}
+
 	if has('signs') != 1
 		let g:pathogen_blacklist = []
 		call add(g:pathogen_blacklist, 'vim-bookmarks')
@@ -172,7 +177,8 @@ augroup END
 	execute pathogen#infect()
 	runtime macros/matchit.vim " allow jumping to matching XML tags using '%'
 
-" -- Ultisnips config:
+
+" Ultisnips config: 2{{{
 	" altQ expands snippet:
 	let g:UltiSnipsExpandTrigger="<A-q>"
 	" tab-key moves to next tabstop while snippets are active:
@@ -180,19 +186,22 @@ augroup END
 	" shiftTab moves to previous tabstop while snippets are active:
 	let g:UltiSnipsJumpBackwardTrigger="[Z"
 	let g:UltiSnipsEditSplit="vertical"
+" }}}
 
-" -- Netrw config:
+" Netrw config: 2{{{
 	let g:netrw_banner=0
 	" make netrw splits happen to the right (doesn't work with preview-splits,
 	" even if they're set vertical :C):
 	" let g:netrw_altv=1
+" }}}
 
-" -- Taboo config:
+" Taboo config: 2{{{
 	" This isn't technically a Taboo setting, but doing this per the repo's
 	" README allows tab names to be retained when using `:mksession`
 	set sessionoptions+=tabpages,globals
-
 " }}}
+
+" }}}1
 
 " User settings 1{{{
 
@@ -229,7 +238,6 @@ augroup END
 	:set shiftwidth=0 " make '>' (angle bracket) always just match `tabstop`
 	:set ignorecase smartcase "searching is non-case-sensitive unless there's a cap
 	:set shellcmdflag=-c
-	" :set ttimeout
 
 "-- Formatting behavior:
 	:set formatoptions+=j " allow vim's re-wrapping functionality to join as well as split
@@ -1373,11 +1381,23 @@ augroup END
 
 " Keybinding overrides 1{{{
 
-"-- Emmet bindings:
+	" facade-g actually exits insert-mode and prepares to run a g-prefixed
+	" command. Without this binding, I'm constantly gotten because I'll leave
+	" insert-mode to go somewhere (e.g. next tab, top of document, bottom of
+	" current function via gz but then instead a ç is printed, because I didn't
+	" wait long enough for escape to bring me out, so it gets interpreted as a
+	" character):
+	imap ç <C-c>g
+
+" Emmet bindings: 2{{{
 	" altZ expands tags instead of Emmet's default ctrlY-then-comma:
 	imap <A-z> <C-Y>,
+" }}}
 
-"-- Navigation bindings:
+" }}}
+
+
+" Navigation bindings: 2{{{
 
 	" 6: home-key goes to the beginning of the virtual line, and toggles
 	" between soft home and hard home after that:
@@ -1467,6 +1487,8 @@ augroup END
 	" 2: shiftJ does the same only backwards:
 	nnoremap <silent> J :call JumpToNextMatchingChar('b')<Return>
 	vnoremap <silent> j :<C-u>let @p=escape(GetCharFromCursor(),'/\') \| set nohlsearch<Return>gv/\V<C-r>p<Return>
+
+" }}}
 
 "-- Editing bindings:
 
