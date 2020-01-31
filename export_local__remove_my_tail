@@ -12,7 +12,7 @@ function cdd {
 
 if [[ "$(uname -a)" = *Microsoft*GNU/Linux ]]; then
 # if in a WSL shell (typically SUSE or Ubuntu):
-	if ! [[ -e /d ]]; then
+	if ! [ "$(ls -A /d)" ]; then
 	# if /d is not mounted yet:
 		echo "About to mount D:\\ drive if available. ctrlC to cancel."
 		sudo mkdir -p /d
