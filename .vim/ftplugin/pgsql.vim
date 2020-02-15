@@ -60,7 +60,7 @@ nmap <buffer> <leader><F1> viw\<F1>
 " backslash-then-F8 adds 'SELECT * FROM ' onto current selection and then sends
 " to fifo:
 vmap <buffer> <leader><F8> :<C-u>call AppendToFile('SELECT * FROM ' . GetSelectionText())<Return>
-nmap <buffer> <leader><F8> viw\<F8>
+nmap <buffer> <leader><F8> V\<F8>
 
 
 " replace '00' with '--', since it's a common typo for me:
