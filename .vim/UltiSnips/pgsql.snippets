@@ -197,7 +197,7 @@ ALTER TABLE ${1:tableName} DROP CONSTRAINT IF EXISTS ${2:constraintName};$0
 endsnippet
 
 snippet dropcol "Drop a column from an existing table" b
-ALTER TABLE ${1:tableName} DROP COLUMN IF EXISTS ${2:columnName};$0
+ALTER TABLE ${1:tableName} DROP COLUMN IF EXISTS ${2:columnName}; -- X $0
 endsnippet
 
 snippet commcol "Comment on one of a table's columns" b
