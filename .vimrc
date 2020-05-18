@@ -248,6 +248,10 @@ augroup END
 	" ^ * btw we need an end-of-line comment on the above line or else the
 	" whitespace will be stripped from the end since it would be trailing
 
+	" Disable highlighting of non-capitalized words that follow periods; IMO
+	" this is so noisy that it hurts more than it helps:
+	:hi SpellCap none
+
 "-- cmdalias.vim aliases:
 	:Alias Wq wq
 	:Alias WQ wq
@@ -1479,6 +1483,8 @@ augroup END
 	" altE goes to (after) end of word:
 	imap <A-e> <C-o>e<Right>
 	nmap <A-e> e
+	" altB goes to beginning of word:
+	imap <A-b> <C-o>b
 
 	" 2: j-key jumps to the next/previous character which matches the one under
 	" the cursor:
@@ -1547,8 +1553,8 @@ augroup END
 	" hash-key and star-key (asterisk-key) search on current selection as a token:
 	" TODO: we'll need to actually escape the clipboard-contents instead of
 	" using \V, since \V disables use of \< and \>
-	vnoremap * "fy/\V\<<C-r>f\><Return>
-	vmap # "fy?\V\<<C-r>f\><Return>
+	vnoremap * "fygv/\V\<<C-r>f\><Return>
+	vmap # "fygv?\V\<<C-r>f\><Return>
 	" ctrlG searches on current selection (if present, otherwise repeats last)
 	nnoremap <C-g> n
 	vmap <C-g> <C-f><Return>
