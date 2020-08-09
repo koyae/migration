@@ -1,13 +1,12 @@
 ; Below is just a set of mappings for the Kinesis Freestyle 2 keyboard.
 
-#UseHook
+#UseHook On
+
+; make WinActive will match text anywhere in a window title:
+SetTitleMatchMode, 2
 
 Pause:: ; printscreen-key
 	Send, {Insert}
-	return
-
-!Home:: ; altHome (sent when the Web key is pressed)
-	Send, {PrintScreen}
 	return
 
 +Pause:: ; shiftPausebreak pastes
@@ -24,6 +23,49 @@ Pause:: ; printscreen-key
 !-:: ; altMinus / alt-
 	Winset, AlwaysOnTop, , A
 	return
+
+^l:: ; ctrlL opens library tab
+	; NOTE: The only issue with the below implementation is that the offset (75)
+	; given to ImageSearch (used because searching the entire screen takes too
+	; long) only appears to work if the window is maximized or docked on the
+	; LEFT side of the screen. If the window is shifted right, the target button
+	; is not found. It's not clear why this doesn't work, since the
+	; documentation indicates the coordinates are window-relative by default.
+	;
+	; Note that for different monitor-resolutions, you may have to replace or
+	; update the library-button images accordingly so the search can succeed.
+	; I've included two but you could potentially convert to loop if you have
+	; more monitors than that which have disperate resolutions.
+	;
+	if WinActive("OneNote") {
+		CoordMode, Pixel, Client
+		WinGetPos, winX, winY, winW, winH, OneNote
+		; Below, we allow 25 (of 255) degrees of wiggle-room since DllCall()
+		; results in the hover-color of the button sticking around, so we
+		; account for that in case the mouse hasn't been moved manulally
+		ImageSearch, libX, libY, 0, 0, 75, A_ScreenHeight, *25 onenote_library_symbol.jpg
+		if (ErrorLevel = 1) {
+			ImageSearch, libX, libY, 0, 0, 75, A_ScreenHeight, *25 onenote_library_symbol2.jpg
+		}
+		if (ErrorLevel = 2) {
+			MsgBox Search could not init
+		} else if (ErrorLevel != 1) {
+			CoordMode, Mouse, Screen
+			MouseGetPos, mouseReturnX, mouseReturnY
+			CoordMode Mouse, Client
+			clickHereX := libX + (47/2)
+			clickHereY := libY + 16
+			MouseMove, %clickHereX%, %clickHereY%, 1
+			Click
+			DllCall("SetCursorPos", "int", mouseReturnX, "int", mouseReturnY)
+			; ^ This works better for resetting the mouse to its old position if
+			; there are multiple monitors. Otherwise the mouse does not return
+			; to its previous position as expected
+		}
+	} else {
+		Send ^l
+	}
+
 
 ; META CONTROLS:
 
