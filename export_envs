@@ -45,8 +45,9 @@ export HISTSIZE=10000
 # ones **from the current session** up to that number on logout. Also, load this
 # same number of past commands from the history-file on login for reuse in new
 # sessions (but don't store the old ones on logout.)
-export LS_COLORS=$LS_COLORS:'di=0;34:ln=0;36:ex=0;32:'
-#^ blue directories, cyan symlinks, green executables
+export LS_COLORS="$LS_COLORS:fi=0;37:di=0;0:ln=1;36:ex=0;32:"
+#^ default/grey directories, light-grey regular files, cyan symlinks, green
+# executables
 # http://linux-sxs.org/housekeeping/lscolors.html
 # http://askubuntu.com/a/466203/432173
 
