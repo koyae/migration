@@ -34,6 +34,7 @@ alias ssh-add='ssh-add -c' # require confirmation if agent-forwarding is about t
 alias zip='zip -r' # zip recursively by default
 alias grepc='grep --color=always'
 alias :q=exit
+alias in='task add +in' # taskwarrior inbox
 shopt -s extglob # enable shell-extensions such as negation-based matching
 # prevent spaces from automatically appearing by default after pressing tab-key
 # for completion, since this is obnoxious when typing long paths:

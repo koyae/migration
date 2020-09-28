@@ -3,6 +3,8 @@ export_local
 .gitconfig
 .gitconfig2
 .screenrc1
+.task
+.taskrc
 lastat
 .bash_history
 .viminfo
