@@ -1,7 +1,7 @@
 " Strip trailing whitespace on save:
 augroup striptrailing
 	autocmd!
-	autocmd BufWritePre * :%s/\s\+$//e
+	autocmd BufWritePre * :exec (&syntax!="snippets")? "normal! :%s/\s\+$//e" : ""
 augroup END
 
 " Custom handling by filetype 1{{{
@@ -1062,11 +1062,11 @@ augroup END
 				endif
 			endif
 		else
+			echom 'char: ' . char
 			call search('\V' . char, 'w'. searchFlags)
 		endif
 		call RestoreSetting('ignorecase')
 		call RestoreSetting('smartcase')
-		" echom keys
 		return keys
 	endfunction
 
@@ -1477,6 +1477,11 @@ augroup END
 	vnoremap <C-Right> /[a-zA-Z0-9_]\><Return>
 	" ctrlLeft jumps by word like in most text editors:
 	vnoremap <C-Left> ?\<[a-zA-Z0-9_]<Return>
+
+	" 2: shiftLeft and shiftRight switch to selection-mode:
+	imap <S-Left> <C-o>mv<Esc>`vv<Left>
+	imap <S-Right> <C-o>mv<Esc>`vv<Right>
+
 	":4 sadly the previous two aliases do not quite work in PuTTY
 	imap <silent> <C-Right> <C-o>:set nohlsearch \| let @s=@/<Return><C-o>/\<[a-zA-Z0-9_]<Return><C-o>:let @/=@s<Return>
 	imap <silent> <C-Left> <C-o>:set nohlsearch \| let @s=@/<Return><C-o>?\<[a-zA-Z0-9_]<Return><C-o>:let @/=@s<Return>
@@ -1520,7 +1525,9 @@ augroup END
 	nmap  i<C-w><Esc>x
 
 	" altD eats next word / deletes next word:
+	nmap ä <A-d>
 	nnoremap <silent> <A-d> :call EatNextWord() <Return>
+	imap ä <A-d>
 	inoremap <silent> <A-d> <Right><Esc>:call EatNextWord() <Return>i
 
 	" s-key does not yank, just deletes then enters insert-mode:
@@ -1579,13 +1586,15 @@ augroup END
 	" qq dismisses search-highlighting:
 	nnoremap qq :noh<Return>
 
-	" 2: f-key finds the next single character (accepted afterwards
+	" 4: f-key finds the next single character (accepted afterwards
 	" interactively) on multiple lines, rather than just the current one:
-	nnoremap <silent> f m`:call FindChar('')<Return>
+	nnoremap <silent> <expr> f ((mode()=="i")? "m`" : "") . ":call FindChar('')\<Return>"
+	" ^ from normal mode, this also marks the current position for return, which
+	" functionally skips this step if done from insert-mode using ctrlO:
 	vnoremap <silent> <expr> f 'm`' . FindChar('v')
 	" 2: shiftF finds previous single character (accepted afterwards
 	" interactively):
-	nnoremap <silent> F m`:call FindChar('b')<Return>
+	nnoremap <silent> <expr> F ((mode()=="i")? "m`" : "") . ":call FindChar('b')\<Return>"
 	vnoremap <silent> <expr> F 'm`' . FindChar('vb')
 	" 2: semicolon-key repeats previous FindChar search:
 	nnoremap <silent> ; :call JumpToChar('','')<Return>
