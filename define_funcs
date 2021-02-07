@@ -23,19 +23,22 @@ function s3cmd {
 	fi
 }
 
+function koyae_find_home {
+	if [ -d "$HOME" ] || [ -L "$HOME" ]; then
+		printf '%s' "$HOME"
+	elif [ -d "~" ] || [ -L "~" ]; then
+		printf '%' "~"
+	fi
+}
+
 # set_aws_credentials [<aws_credentials_file_path>[.gpg]]
 # If path is omitted, function looks for ~/.aws_credentials_path for default
 # Otherwise it asks interactively
 function set_aws_credentials {
 	location="$1"
-	home=""
-	if [ -d "$HOME" ] || [ -L "$HOME" ]; then
-		home="$HOME"
-	elif [ -d "~" ] || [ -L "~" ]; then
-		home="~"
-	fi
+	home="$(koyae_find_home)"
 	default_storage_path="$home/.aws_credentials_path"
-	if [ "$location" = "" ] && [ "$HOME" != "" ]; then
+	if [ "$location" = "" ] && [ "$home" != "" ]; then
 		location="$(cat "$default_storage_path")"
 	fi
 	if [ "$location" = "" ]; then
@@ -69,6 +72,21 @@ function set_pg_credentials {
 	read -s
 	export PGPASSWORD="$REPLY"
 	1>&2 echo "Password set."
+}
+
+function set_graph_credentials {
+	location="$1"
+	if [ "$location" = "" ]; then
+		location="$(koyae_find_home)"
+		location="$location/.ms_graph_credentials.gpg"
+	fi
+	credentials="$(gpg2 -d -o- "$location")"
+	if [ $? -ne 0 ]; then
+		1>&2 echo "Failure!!"
+		return 1
+	fi
+	export MS_GRAPH_BEARER_TOKEN="$credentials"
+	1>&2 echo "Success."
 }
 
 # shortcut for making script-files
@@ -200,6 +218,8 @@ function git {
 			command git show | awk 'NR==2'
 		elif [[ "$1" == "clone" ]]; then
 			command git "$@" --recursive
+		elif [[ "$1" == "cd" ]]; then
+			cd "$(git rev-parse --show-toplevel)"
 		else
 			command git "$@"
 		fi
@@ -290,6 +310,11 @@ function wcd {
 	cd $(echo "$1" | sed 's/\\\\/\//g')
 }
 
+# Change current working directory to a parallel directory
+sis() {
+	cd "$(\cis "$@")"
+}
+
 # usage: sis [<index>] <replacement> [<path>]
 # index        --  the index of the path-component to replace, where 1
 #                  represents the first component of the path.
@@ -302,7 +327,7 @@ function wcd {
 #
 # path         --  the path to work on
 #                  Defaults to: current directory
-sis() {
+cis() {
 	part=-1
 	path="`pwd`"
 	OLDIFS="$IFS"
@@ -326,11 +351,6 @@ sis() {
 	patharr[$slot]="$sub"
 	printf '%s' "${patharr[*]}"
 	IFS="$OLDIFS"
-}
-
-# Change current working directory to a parallel directory
-cis() {
-	cd "$(\sis "$@")"
 }
 
 # [ Complex alias for builtin `du` command ]
@@ -376,13 +396,23 @@ function sviml {
 	# ^.. Then we call a custom function to fix the case and hit enter
 }
 
+function jsonf {
+	if (( $# < 1 )); then
+		echo "Format JSON-file in-place."
+		kill -INT $$
+	fi
+	t="$(mktemp)"
+	python -m json.tool "$1" "$t"
+	mv -f "$t" "$1"
+}
+
 function jvimn {
 # view the contents of a JSON-file after formatting has been applied
 	if (( $# < 1 )); then
 		echo 'Format JSON and open in vim. Saving afterwards optional. Useage: jvimn <file>'
 		kill -INT $$
 	fi
-	python -m json.tool "$1" | vim -
+	python -m json.tool "$1" | vim -c "setlocal syntax=json" -c "file $1" -
 }
 
 function headlessql {

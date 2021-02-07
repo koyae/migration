@@ -33,6 +33,7 @@ alias ssh='ssh -a' # use local ssh-agent if available, but do not allow challeng
 alias ssh-add='ssh-add -c' # require confirmation if agent-forwarding is about to occur (see README about requirements)
 alias zip='zip -r' # zip recursively by default
 alias grepc='grep --color=always'
+alias diff="diff -r --brief"
 alias :q=exit
 alias in='task add +in' # taskwarrior inbox
 shopt -s extglob # enable shell-extensions such as negation-based matching
@@ -53,7 +54,6 @@ bind Space:magic-space # allow backrefs like `!<command>` and `!!` to expand on 
 # weird stuff:
 alias l='ls'
 alias down='cd'
-alias sis='cis'
 alias cdP='cd "`pwd -P`"'
 alias cdgr='cd "`git rev-parse --show-toplevel`"'
 alias lastat='cd "$(cat "$HOME/lastat")"'
