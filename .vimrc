@@ -302,6 +302,8 @@ augroup END
 
 	Alias ulti UltiSnipsEdit
 
+	command Comred hi Comment ctermfg=Red
+
 	" Grab either the lefthand side or righthand side of a nearby line and paste
 	" it to the current line:
 	:command! -range Lhs :normal! mw<line1>gg^"pyf=`w"pp<Return>

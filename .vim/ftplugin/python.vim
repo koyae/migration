@@ -5,7 +5,7 @@
 ":let b:did_ftplugin = 1
 
 " set comments to display in red:
-hi Comment ctermfg=Red
+:Comred
 
 " FindFuncBottomPython(fromLine)
 " Search forward from `fromLine` to locate bottom of function
