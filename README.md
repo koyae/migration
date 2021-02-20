@@ -4,6 +4,10 @@
 
 Git does not allow cloning directly into non-empty folders, so making files accessible in the home directory (`~`) can be a little bit tricky. There are two essetial ways of achieving this, covered in the next two sections.
 
+### Environment variables
+
+Some scripts (e.g. the [link.cmd](./.vs_code/link.cmd) script for VS Code) uses the `CYGHOME` environment variable. This should simply contain the Windows-style path to your Cygwin home (`~`) diretory e.g. 'C:\\cygwin\\home\\sammy'.
+
 ### Create a new repo in ~ then synch it to an upstream
 
 1. Navigate to the home directory (`~`).

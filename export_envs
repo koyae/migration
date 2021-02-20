@@ -10,11 +10,11 @@
 #
 
 
-APPDATA="/cygdrive/c/Users/`whoami`/AppData/Roaming"
+# APPDATA="/cygdrive/c/Users/`cmd.exe /c 'echo %USERNAME%'`/AppData/Roaming"
 if ! [[ -d "$APPDATA" ]]; then
 	unset APPDATA
 else
-	USERPROFILE="/cygdrive/c/Users/`whoami`"
+	# USERPROFILE="/cygdrive/c/Users/`cmd.exe /c 'echo %USERNAME%'`"
 
 	# PostgreSQL stuff:
 
