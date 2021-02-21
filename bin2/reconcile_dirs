@@ -1,0 +1,133 @@
+#!/usr/bin/env python3
+
+import sys
+import os
+from os.path import isfile
+from os.path import join as pathjoin
+from hashlib import sha256
+
+from argparse import ArgumentParser
+
+parser = ArgumentParser(description="Tool for reconciling two similar directories.")
+
+parser.add_argument("dir1", help="First directory you wish to compare")
+parser.add_argument("dir2", help="Second directory you wish to compare")
+parser.add_argument("--quiet", help="Show fewer messages.", default=False, type=bool, const=True, nargs='?')
+parser.add_argument("--notice_freq", help="How often updates are shown during hashing. Not relevant if --quiet is set.", default=0.05, type=float)
+
+args = parser.parse_args()
+
+
+def check_dir(d):
+    if not os.path.isdir(d):
+        print("{} is not a valid directory".format(args.dir1))
+        exit(1)
+
+check_dir(args.dir1)
+check_dir(args.dir2)
+
+def get_hash(fp, hasher=None):
+    """ return the sha256 hash of a given full path `fp` """
+    hasher = hasher if hasher is not None else sha256()
+    with open(fp,'rb') as fh:
+        data = fh.read()
+        hasher.update(data)
+    return hasher.hexdigest()
+
+def get_hashes(path, nm):
+    global args
+    rval = {}
+    paths = os.listdir(path)
+    if not args.quiet:
+        print("\nHashing files in {}...\n".format(nm))
+    completion = 0
+    old_completion = 0
+    for x,p in enumerate(paths):
+        fp = pathjoin(path,p)
+        if isfile(fp):
+            rval[p] = get_hash(fp)
+        if not args.quiet:
+             completion = float(x)/len(paths)
+             if completion - old_completion > args.notice_freq:
+                print("\tHashed {} of {} files.".format(x, len(paths)))
+                old_completion = completion
+    return rval
+
+def print_iterable(it, prefix="\t", info_func=None):
+    if len(it): print("")
+    for i in it:
+        print("{}{}".format(prefix,i))
+        if info_func is not None:
+            print("{}{}".format(prefix, info_func(i)))
+    if len(it): print("")
+
+def announce_internal_dupes(d, dn):
+    """ print notices to the console about duplicates that occur in one hash-to-paths dict
+
+        d -- a dictionary mapping from hash-strings to tuples containing one or
+             more paths which hash to whatever key
+    """
+    items_of_interest = [(k,v) for k,v in d.items() if len(v)>1]
+    print("{} has {} internal duplicates".format(dn, len(items_of_interest)))
+    if len(items_of_interest): print("")
+    for hashstr,paths in items_of_interest:
+        print("\t{}".format(hashstr))
+        print_iterable(paths,"\t\t")
+
+hashd1 = get_hashes(args.dir1, "dir1")
+hashd2 = get_hashes(args.dir2, "dir2")
+
+hashes1 = set( hashd1.values() )
+hashes2 = set( hashd2.values() )
+
+unique_hashes1 = hashes1.difference( hashes2 )
+unique_hashes2 = hashes2.difference( hashes1 )
+
+names1 = set( hashd1.keys() )
+names2 = set( hashd2.keys() )
+
+unique_names1 = list(names1.difference( names2 ))
+unique_names1.sort()
+unique_names2 = list(names2.difference( names1 ))
+unique_names2.sort()
+
+print("")
+print("Dir1 has {} unique files by hash.".format(len(unique_hashes1)))
+print("Dir2 has {} unique files by hash.".format(len(unique_hashes2)))
+
+diff_hash_same_path = []
+for nm in names1.intersection(names2):
+    if hashd1[nm]!=hashd2[nm]:
+        diff_hash_same_path.append(nm)
+print("")
+print("{} files share a name but differ by hash.".format(len(diff_hash_same_path)))
+print_iterable(diff_hash_same_path)
+
+hashd1_reverse = {}
+hashd2_reverse = {}
+for h in hashes1:
+    hashd1_reverse[h] = tuple( (i[0] for i in hashd1.items() if i[1]==h) )
+for h in hashes2:
+    hashd2_reverse[h] = tuple( (i[0] for i in hashd2.items() if i[1]==h) )
+for rename_op in set(hashd1_reverse.keys()).intersection(set(hashd2_reverse.keys())):
+    paths_with_hash1 = hashd1_reverse[rename_op]
+    paths_with_hash2 = hashd2_reverse[rename_op]
+    if (
+        len(paths_with_hash1)==1
+        and len(paths_with_hash2)==1
+        and paths_with_hash1!=paths_with_hash2
+    ):
+        print("\tRename detected @{}".format(rename_op))
+        print("\t\tdir1: {}".format(paths_with_hash1[0]))
+        print("\t\tdir2: {}".format(paths_with_hash2[0]))
+announce_internal_dupes(hashd1_reverse, args.dir1)
+announce_internal_dupes(hashd2_reverse, args.dir2)
+
+print("")
+full_unique1 = [ p for p in unique_names1 if hashd2_reverse.get(hashd1[p]) is None ]
+print("Dir1 has {} unique files by name and hash.".format(len(full_unique1)))
+print_iterable(full_unique1)
+full_unique2 = [ p for p in unique_names2 if hashd1_reverse.get(hashd2[p]) is None ]
+print("Dir2 has {} unique files by name and hash.".format(len(full_unique2)))
+print_iterable(full_unique2)
+
