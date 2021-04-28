@@ -5,8 +5,9 @@ cd ~
 git config user.email "koyae@users.noreply.github.com"
 cd "$oldcwd"
 
-if [[ -f ~/.gitconfig1 ]]; then
-	read -r -d '' def <<-'EOF'
+if [ -f ~/.gitconfig1 ]; then
+	f="$(mktemp)"
+	read -r -d '' stuff <<-'EOF'
 		:function! Verytemporary()
 			let gohere = search('^\[include\]')
 			if gohere==0
@@ -16,7 +17,7 @@ if [[ -f ~/.gitconfig1 ]]; then
 				" Create [include] section and bump whatever was on first line:
 				execute "normal! i[include]\<Return>\<Esc>"
 			endif
-			let gohere = search('path \?= \? .gitconfig1') 
+			let gohere = search('path \?= \? .gitconfig1')
 			if gohere==0
 				" Jump to appropriate line:
 				execute gohere
@@ -30,8 +31,11 @@ if [[ -f ~/.gitconfig1 ]]; then
 				quit
 			endif
 		endfunction
+		:call Verytemporary()
 	EOF
-	vim ~/.gitconfig -c "$def" -c ":call Verytemporary()"
+	printf '%s' "$stuff"
+	vim ~/.gitconfig -c "so $f"
+	rm -f "$f"
 else
 	echo "Gitconfig supplement at $target not found."
 	kill -INT $$

@@ -28,7 +28,10 @@ if [[ "$(uname -a)" = *Microsoft*GNU/Linux ]]; then
 		echo "Configuring /run directory for screen. ctrlC to cancel."
 		sudo mkdir -p /run/screen
 	fi
-	if [[ "$(ls -ld --color=never /run/screen | cut -d ' ' -f1)" != "drwxrwxrwx" ]]; then
+	if [[
+		"$(whoami)" != "root"
+		&& "$(ls -ld --color=never /run/screen | cut -d ' ' -f1)" != "drwxrwxrwx"
+	]]; then
 		echo "Configuring /run directory for screen. ctrlC to cancel."
 		sudo chmod 777 /run/screen
 	fi
