@@ -1,7 +1,7 @@
 " Strip trailing whitespace on save:
 augroup striptrailing
 	autocmd!
-	autocmd BufWritePre * :exec (&syntax!="snippets")? "normal! :%s/\s\+$//e" : ""
+	autocmd BufWritePre * :exec (&syntax!="snippets")? '%s/\s\+$//e' : ""
 augroup END
 
 " Custom handling by filetype 1{{{
@@ -302,7 +302,7 @@ augroup END
 
 	Alias ulti UltiSnipsEdit
 
-	command Comred hi Comment ctermfg=Red
+	command! Comred hi Comment ctermfg=Red
 
 	" Grab either the lefthand side or righthand side of a nearby line and paste
 	" it to the current line:
