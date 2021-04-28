@@ -287,6 +287,10 @@ augroup END
 	" ^ This won't correct to 'Yp' on <Return> or <Space> but it will correct on
 	" <Tab> so to yank-then-paste the line above it would be :-1yp<Tab>
 
+	" Turn tabs into spaces for either the current line, or the lines indicated
+	" using the preceding range-syntax:
+	:command! -range Poof setlocal expandtab | <line1>,<line2>retab! | setlocal noexpandtab
+
 	" This command prefixes/prepends the given text to the beginning of the
 	" selected lines, or all lines, if it's invoked with no selection:
 	:command! -range=% -nargs=+ Beg silent <line1>,<line2>call InsertAtBeginning(<f-args>)
