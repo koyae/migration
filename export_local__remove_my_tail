@@ -10,6 +10,8 @@ function cdd {
 	cd "/somewhere/commonly/visited/$1"
 }
 
+export TASK_TAG_KEY_CHECKER_KEY_PATH="path_to_task_tagkey"
+
 if [[ "$(uname -a)" = *Microsoft*GNU/Linux ]]; then
 # if in a WSL shell (typically SUSE or Ubuntu):
 	if ! [ "$(ls -A /d)" ]; then
