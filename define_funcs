@@ -328,12 +328,15 @@ sis() {
 # path         --  the path to work on
 #                  Defaults to: current directory
 cis() {
-	part=-1
+	part=-1 # index of component to change
 	path="`pwd`"
+	if [[ $# -gt 2 ]]; then
+		path="$3"
+	fi
 	OLDIFS="$IFS"
-	sub="$1"
+	sub="$1" # string to use for replacing target index
 	IFS='/'
-	IFS=/ read -ra patharr <<< "`pwd`"
+	IFS=/ read -ra patharr <<< "$path"
 	if [ $# -gt 1 ]; then
 		if printf '%s' "$1" | grep -q '^[-+]\?[0-9]'; then
 			part="$1"
