@@ -326,6 +326,67 @@ augroup END
 
 " Note `function!` forces overwrite if necessary on creation of a funciton
 
+	" SuSave([path [,escape]])
+	"
+	" path    --  the path to which the current buffer should be saved. If
+	"             omitted, this defaults to whatever the current save-path
+	"             already is.
+	" escape  --  1 or 0 indicating whether the path should be escaped for use
+	"             on the shell or not. If omitted, it's assumed this is not
+	"             needed and has already been done.
+	function! SuSave(...)
+	" Code adapted from vim.fandom.com/wiki/Su-write
+		let path=expand("%:p")
+		let escapePath=0
+		if a:0 > 0
+			let path=a:1
+			if a:0 > 1
+				let escapePath=a:2
+			endif
+		else
+			let escapePath=1
+		endif
+		if escapePath==1
+			let path=shellescape(path)
+		endif
+		let fname=tempname()
+		exec 'w ' . fnameescape(fname)
+		let owners=GetOwners(path)
+		let modes=GetPermissions(path)
+		silent exec '!sudo cp' shellescape(fname) path
+		call SetAccess(path, modes, owners)
+	endfunction
+
+	" GetOwners(filePath)
+	" It's assumed filePath is already shellescape()'d
+	function! GetOwners(filePath)
+		return shellescape(system('stat --printf=%U:%G ' . a:filePath))
+	endfunction
+
+	" GetPermissions(filePath)
+	" It's assumed filePath is already shellescape()'d
+	function! GetPermissions(filePath)
+		return system('stat -c%a ' . a:filePath . ' | tr -d "\n"')
+	endfunction
+
+	" Adjust the ownership and permissions-bits of a given file.
+	"
+	" target  --  path to the file to work on. This should already be
+	"             shellescaped()'d
+	" modes   --  chmod mode-bits to set e.g. 600 or 0600. Pass an empty
+	"             string if you don't care about mode
+	" owners  --  first argument to chown. This can be either the name of a
+	"             single user or <userName>:<groupName> if you wish to set
+	"             both. Pass an empty string if you don't care about ownership
+	function! SetAccess(targetFile, modes, owners)
+		if a:modes
+			silent exec '!sudo' "chmod" a:modes a:targetFile
+		endif
+		if a:owners
+			silent exec '!sudo' "chown" a:owners a:targetFile
+		endif
+	endfunction
+
 	" Prepare a given vim-style SCP-path for use with real SCP. Cygwin doesn't
 	" seem to need this but Ubuntu does.
 	function! SCPify(targetPath)
@@ -340,8 +401,10 @@ augroup END
 	" RobustSave([targetPath])
 	" A (somewhat) robust wrapper for :W and :sav that avoids
 	" https://github.com/vim/vim/issues/1268 if SCP-paths contain spaces
+	"
+	" targetPath  --  the path to which the buffer-contents should be written
 	function! RobustSave(...)
-		let path = expand('%')
+		let path = expand('%:p')
 		if a:0 == 1
 			let path = a:1
 		endif
@@ -357,14 +420,41 @@ augroup END
 				\ . ' -post=call\ delete(''' . tmpfile . ''')'
 				\ . '\ |\ echo\ "delayed\ write"\ g:asyncrun_status\ strftime(''\%X'') '
 				\ . "scp " . tmpfile
-				\ . " " . escape(SCPify(expand('%')),' ')
+				\ . " " . escape(SCPify(path),' ')
 			" ^ inspired by:
 			" github.com/skywind3000/asyncrun.vim/wiki/Get-netrw-using-asyncrun-to-save-remote-files
 			" echom l:doMe
 			execute doMe
+			return
+		endif
+		" Check file is writeable to current user
+		call system("test -w " . shellescape(path))
+		let couldNotWrite=v:shell_error
+
+		if couldNotWrite
+			echo "Did not have permissions to write file. Try to su? "
+			let response=nr2char(getchar())
+			if response=="y" || response=="Y"
+				call SuSave()
+			else
+				redraw
+				echo "Write-op cancelled."
+			endif
 		else
 		" otherwise, just write as normal:
-			execute "sav " . escape(path, ' ')
+			let sePath=shellescape(path)
+			let perms=GetPermissions(sePath)
+			let owners=GetOwners(sePath)
+			execute "sav " . fnameescape(path)
+			let newPerms=GetPermissions(sePath)
+			let newOwners=GetOwners(sePath)
+			if perms!=newPerms || owners!=newOwners
+				echo "Permissions changed on write. Use su to adjust? "
+				let response=nr2char(getchar())
+				if response=="y" || response=="Y"
+					call SetAccess(sePath, perms, owners)
+				endif
+			endif
 		endif
 	endfunction
 
