@@ -114,8 +114,8 @@ Alias re Re
 command! Nneo execute "normal! y" . (mode()=='n'? 'iw' : '') . "iOLD.\<C-o>e\<Right> <> NEW.\<C-r>\""
 Alias nneo Nneo
 
-" backslash-then-u unfreezes pane 0 in the screen session to which we are
-" currently attached:
+" backslash-then-u unlocks/unfreezes pane 0 in the screen session to which we
+" are currently attached:
 nnoremap <leader>u :call ScreenDo('stuff "^["')<Return>
 " backslash-then-e
 nmap <leader>e :call ScreenDo('copy') \| call ScreenDo('stuff "?ERR^M"')<Return>
