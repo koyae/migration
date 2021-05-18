@@ -31,6 +31,16 @@ function koyae_find_home {
 	fi
 }
 
+function compare_text {
+	if [[ $# -ne 2 ]]; then
+		1>&2 echo "Function needs exactly 2 arguments."
+		exit 1
+	fi
+	# escape any spaces in second path:
+	two="$(printf '%s' "$2" | awk '{gsub(/ /,"\\ "); print}')"
+	vim "$1" -c "vs $two" -c "windo diffthis"
+}
+
 # set_aws_credentials [<aws_credentials_file_path>[.gpg]]
 # If path is omitted, function looks for ~/.aws_credentials_path for default
 # Otherwise it asks interactively
