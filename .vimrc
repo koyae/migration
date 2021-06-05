@@ -161,6 +161,10 @@ augroup END
 	filetype plugin on
 	source ~/.vim/plugin/cmdalias.vim
 
+	if !empty(glob("~/.vimrc2"))
+		source ~/.vimrc2
+	endif
+
 	" Cutlass overrides/settings 2{{{
 	" We have to apply this mapping before pathogen loads cutlass:
 	vnoremap d ""d

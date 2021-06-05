@@ -1,0 +1,17 @@
+
+" Don't write swapfiles to disk while editing within OneDrive, since this
+" will prevent it from synching anything (including other files you
+" probably want to be actively synched while you're editing).
+"
+" Edit or add to the below to add additional OneDrive locations that don't
+" match what's already specified here.
+"
+augroup swapfile_suppression
+	autocmd!
+	autocmd BufReadPre */OneDrive*/*,*OneDrive/* :setlocal noswapfile
+	" autocmd BufReadPre /mnt/?/Organization\ LTD/* :setlocal noswapfile
+	" autocmd BufReadPre /cygdrive/?/Organization\ LTD/* :setlocal noswapfile
+	" ^2 Institutional subscriptions to OneDrive take this general form,
+	" depending on whether you're on Cygwin or WSL. See `:h file-pattern`
+augroup END
+

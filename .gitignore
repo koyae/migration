@@ -2,6 +2,7 @@
 export_local
 .gitconfig
 .gitconfig2
+.vimrc2
 .screenrc1
 .task
 .taskrc
