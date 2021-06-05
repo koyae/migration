@@ -256,7 +256,7 @@ augroup END
 	" this is so noisy that it hurts more than it helps:
 	:hi SpellCap none
 
-"-- cmdalias.vim aliases:
+"-- cmdalias.vim aliases for vanilla commands:
 	:Alias Wq wq
 	:Alias WQ wq
 	:Alias qw wq
@@ -318,6 +318,8 @@ augroup END
 	Alias lhs Lhs
 	:command! -range Rhs :normal! mw<line1>gg^f=l"py$`w"pp<Return>
 	Alias rhs Rhs
+	:command! -range Dp <line1>m .
+	:Alias dp Dp
 
 " }}}
 
