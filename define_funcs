@@ -425,7 +425,17 @@ function jvimn {
 		echo 'Format JSON and open in vim. Saving afterwards optional. Useage: jvimn <file>'
 		kill -INT $$
 	fi
-	python -m json.tool "$1" | vim -c "setlocal syntax=json" -c "file $1" -
+	formatted="$(python -m json.tool "$1")"
+	rcode=$?
+	if [[ $rcode -eq 127 ]]; then
+		1>&2 echo 'jvimn: Problem finding `python` command.'
+	elif [[ $rcode -eq 0 ]]; then
+		printf "%s" "$formatted" | vim -c "setlocal syntax=json" -c "file $1" -
+	else
+		1>&2 echo "jvimn: Something went wrong when trying to format the JSON."
+		1>&2 echo "jvimn: Please check the file at: $1"
+
+	fi
 }
 
 function headlessql {
