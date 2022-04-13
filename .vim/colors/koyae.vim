@@ -15,7 +15,7 @@ hi lCursor    guifg=NONE   guibg=Cyan
 " Differentiable NR-8 xterm colors are: Black Blue Green Cyan
 " Red Magenta Brown Yellow White Grey
 hi DiffAdd      ctermbg=Green guibg=Brown ctermfg=White cterm=bold
-hi DiffChange   ctermbg=Grey cterm=bold
+hi DiffChange   ctermbg=Black
 hi DiffDelete   ctermfg=Blue ctermbg=LightRed
 hi DiffText     cterm=bold gui=bold ctermbg=Brown
 hi Directory    ctermfg=DarkBlue guifg=Blue
