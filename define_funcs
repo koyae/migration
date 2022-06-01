@@ -31,6 +31,82 @@ function koyae_find_home {
 	fi
 }
 
+function karate_chop {
+	ustring=$(cat<<-EOF
+		Usage: karate_chop <chop_guide> <main_file> [<output_prefix> [<duration>]]
+			chop_guide     --  absolute start-second as integer, hh:mm:ss, or file
+			                   with format:
+			                   	[<file_desc>]_<start>_for_<duration>.<fileext>
+			                   	where <start> and <duration> are given in
+			                   	seconds
+			main_file      --  original file from which clip will be created
+			output_prefix  --  Prefix-string for output file. Optional.
+			                   	Default: karate_chop
+			duration       --  start-second either as seconds or as hh:mm:ss
+			                   	Default: 5210 (90 minutes + 10 seconds)
+	EOF
+	)
+	if [ $# -lt 2 ] || [ $# -gt 3 ]; then
+		1>&2 printf "%s\\n" "$ustring"
+		exit 1
+	fi
+
+	explicit_duration=0
+
+	if [ -f "$1" ]; then
+		1>&2 printf "Using chop-guide filename: %s\\n" "$1"
+		duration=$(printf "%s" "$1" | grep -oP '[0-9]+(?=\.[a-z0-9]*)$')
+		if [ "$duration" = ""]; then
+			1>&2 printf "Duration component not found in filename %s" "$1"
+			exit 1
+		fi
+		startsec=$(printf "%s" "$1" | grep -oP '[0-9]+(?=_for_[0-9]+\.[a-z0-9]*)$')
+		if [ "$startsec" = ""]; then
+			1>&2 printf "Start-second component not found in filename %s" "$1"
+			1>&2 printf "%s\\n" "$ustring"
+			exit 1
+		fi
+		1>&2 printf "Start-second: %s" "$startsec"
+	elif printf "%s" "$1" | grep -q '[0-9]\+'; then
+	# else if user explicitly just gave an integer start-second
+		startsec="$1"
+		integer_startsec="$1"
+	elif printf "%s" "$1" | grep -q '[0-9][0-9]:[0-9][0-9]:[0-9][0-9]'; then
+		startsec="$1"
+		hour=$( echo "$1" | cut -d: -f1 )
+		min=$( echo "$1" | cut -d: -f2 )
+		sec=$( echo "$1" | cut -d: -f3 )
+		integer_startsec=$(($hour*3600 + $min*60 + $sec))
+	else
+		1>&2 printf "Can't make heads or tails of chop-guide %s" "$1"
+		1>&2 printf "%s\\n" "$ustring"
+		exit 1
+	fi
+	if [ $# -lt 3 ]; then
+		1>&2 printf "Duration: %s" "$duration"
+	fi
+
+	if [ -f "$2" ]; then
+		main_file="$2"
+		1>&2 printf "Main (source) file: %s" "$main_file"
+	else
+		1>&2 printf "%s is not a valid path or does not point to a regular file." "$2"
+		exit 1
+	fi
+
+	if [ $# -gt 2 ]; then
+		if printf "%s" "$3" | grep -q '[0-9]\+'; then
+			duration="$3"
+			1>&2 printf "Duration %s" "$duration"
+		else
+			1>&2 printf "%s not understood as a duration" "$3"
+			exit 1
+		fi
+	fi
+
+	ffmpeg -i "$main_file" -c:a copy -ss $startsec karate_chop_
+}
+
 function compare_text {
 	if [[ $# -ne 2 ]]; then
 		1>&2 echo "Function needs exactly 2 arguments."
