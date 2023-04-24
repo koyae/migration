@@ -215,9 +215,9 @@ augroup END
 	" highlighting off when viewing/editing an unrecognized filetype for which
 	" the user has already manually performed `set syntax=<syntax>` or `set
 	" filetype=<filetype>`:
-	let g:koyaeSyntaxEnabled = 1
 	if !exists('g:koyaeSyntaxEnabled')
 		syntax enable
+		let g:koyaeSyntaxEnabled = 1
 	endif " :4
 	let g:is_posix=1 " this will be right on 99% of systems
 	if exists('+breakindent')
