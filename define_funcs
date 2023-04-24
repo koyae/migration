@@ -33,6 +33,7 @@ function koyae_find_home {
 
 function karate_chop {
 	ustring=$(cat<<-EOF
+		karate_chop: utility for splitting audio and video files using ffmpeg.
 		Usage: karate_chop <chop_guide> <main_file> [<output_prefix> [<duration>]]
 			chop_guide     --  absolute start-second as integer, hh:mm:ss, or file
 			                   with format:
