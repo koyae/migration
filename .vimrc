@@ -4,6 +4,55 @@ augroup striptrailing
 	autocmd BufWritePre * :exec (&syntax!="snippets")? '%s/\s\+$//e' : ""
 augroup END
 
+" Compatibility settings 1{{{
+	:set nocompatible
+	:set <S-Left>=[D
+	:set <S-Right>=[C
+	:set <C-Left>=OD
+	:set <C-Right>=OC
+	:set <A-a>=a
+	:set <A-b>=b
+	:set <A-c>=c
+	:set <A-d>=d
+	:set <A-f>=f
+	:set <A-e>=e
+	:set <A-g>=g
+	:set <A-o>=o
+	:set <A-p>=p
+	:set <A-q>=q
+	:set <A-r>=r
+	:set <A-s>=s
+	:set <A-=>==
+	:set <A-w>=w
+	:set <A-x>=x
+	:set <A-z>=z
+	:set <A-(>=9
+	:set <A-)>=0
+	:set <C-A-p>=
+	:set <C-A-q>=
+	:set <C-A-t>=
+	:set <C-A-x>=
+	:set <A-1>=1
+	:set <A-i>=i
+	:set <C-S-g>=
+	:set <C-J>=
+	:set ttimeout
+	:set ttimeoutlen=100
+	" ^ 2: This prevents the above key-codes from being easily confused by Esc
+	" being pressed followed promptly (but not instantaneously) by another
+	" key; without this setting leaving insert mode by pressing Esc followed
+	" promptly (though perhaps not instantaneously) by a keystroke meant to be
+	" received by normal mode can cause strange characters or other weird
+	" nonsense to be processed
+
+	let term=$TERM
+	if term == 'screen' || term == "screen-256color" || term == "xterm-256color"
+	" if running from `screen`, assume xterm-signals:
+		:set term=xterm
+	endif
+
+" }}}
+
 " Custom handling by filetype 1{{{
 augroup oddboyz
 	autocmd!
@@ -105,55 +154,6 @@ augroup END
 " 	8 eight
 " 	9 nine
 " 	0 zero
-
-" }}}
-
-" Compatibility settings 1{{{
-	:set nocompatible
-	:set <S-Left>=[D
-	:set <S-Right>=[C
-	:set <C-Left>=OD
-	:set <C-Right>=OC
-	:set <A-a>=a
-	:set <A-b>=b
-	:set <A-c>=c
-	:set <A-d>=d
-	:set <A-f>=f
-	:set <A-e>=e
-	:set <A-g>=g
-	:set <A-o>=o
-	:set <A-p>=p
-	:set <A-q>=q
-	:set <A-r>=r
-	:set <A-s>=s
-	:set <A-=>==
-	:set <A-w>=w
-	:set <A-x>=x
-	:set <A-z>=z
-	:set <A-(>=9
-	:set <A-)>=0
-	:set <C-A-p>=
-	:set <C-A-q>=
-	:set <C-A-t>=
-	:set <C-A-x>=
-	:set <A-1>=1
-	:set <A-i>=i
-	:set <C-S-g>=
-	:set <C-J>=
-	:set ttimeout
-	:set ttimeoutlen=100
-	" ^ 2: This prevents the above key-codes from being easily confused by Esc
-	" being pressed followed promptly (but not instantaneously) by another
-	" key; without this setting leaving insert mode by pressing Esc followed
-	" promptly (though perhaps not instantaneously) by a keystroke meant to be
-	" received by normal mode can cause strange characters or other weird
-	" nonsense to be processed
-
-	let term=$TERM
-	if term == 'screen' || term == "screen-256color" || term == "xterm-256color"
-	" if running from `screen`, assume xterm-signals:
-		:set term=xterm
-	endif
 
 " }}}
 
