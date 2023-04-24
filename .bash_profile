@@ -36,3 +36,5 @@ if should_start_agent; then
 		exec ssh-agent /bin/bash
 	fi
 fi
+
+export PS1="\u [\t] \w> "
