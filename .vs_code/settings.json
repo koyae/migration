@@ -1,6 +1,11 @@
 {
+    "editor.autoClosingBrackets": "never",
+    "editor.autoClosingDelete": "never",
+    "editor.autoClosingQuotes": "never",
     "editor.codeLens": false,
     "editor.comments.insertSpace": false,
     "editor.insertSpaces": false,
-    "files.trimTrailingWhitespace": true
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true,
+    "files.trimFinalNewlines": true
 }
