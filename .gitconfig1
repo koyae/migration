@@ -9,6 +9,20 @@
 [push]
 	default = upstream
 #	recursesubmodules = check
+[pull]
+	# Git can get majorly stuck if you are too far behind and you try to do a
+	# rebasing pull, such that it will be unable to pick all the commits you
+	# would need to catch back up. So by default, simply make a merge-commit
+	# when pulling from another (remote) branch into local, rather than trying
+	# to replay current changes over top of whatever was just pulled in:
+	rebase = false
+	# ^ Note that you can usually just `git rebase` (by itself) to eliminate
+	# the extra merge-commit that will appear in your commit-history when you
+	# `git pull [<remote> <branchName>]` and you're behind.  Alternatively, you
+	# can `git pull --rebase [<source>]` if you know you're in a spot where you
+	# really want to. Note that the above command is equivalent to always just
+	# doing `git pull --no-rebase [<source>]`
+
 [log]
 	# show short commit-hashes under `git log`:
 	abbrevCommit = true
