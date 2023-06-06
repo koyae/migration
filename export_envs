@@ -34,6 +34,7 @@ else
 
 fi
 
+export PATH="$HOME/bin2:$PATH"
 export EDITOR="vim"
 export VISUAL="vim"
 export HISTIGNORE="ls" # don't store plain ls-commands in bash history

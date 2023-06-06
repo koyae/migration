@@ -42,7 +42,6 @@ shopt -s extglob # enable shell-extensions such as negation-based matching
 complete -D -o default -o nospace
 git config --global push.default upstream
 git config --global color.ui auto # some systems oddly disable this
-PATH="$HOME/bin2:$PATH"
 
 bind '"[1;5D":"b"' 2>/dev/null # ctrlLeft moves cursor one word back
 bind '"[1;5C":"f"' 2>/dev/null # ctrlRight moves cursor one word forward
@@ -55,7 +54,7 @@ bind Space:magic-space # allow backrefs like `!<command>` and `!!` to expand on 
 alias l='ls'
 alias down='cd'
 alias cdP='cd "`pwd -P`"'
-alias cdgr='cd "`git rev-parse --show-toplevel`"'
+alias gith='cd "`git rev-parse --show-toplevel`"'
 alias lastat='cd "$(cat "$HOME/lastat")"'
 alias lastam='pwd > "$HOME/lastat"'
 alias ssh-remove='ssh-add -d'
