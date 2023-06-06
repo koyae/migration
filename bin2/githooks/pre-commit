@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+#
+# If there are any lines that have the string 'nocommit' (with any sort of
+# casing e.g. 'NoComMIt', stop the commit-action from going through.
+#
+# This way, you can place `# NOCOMMIT` or `// NOCOMMIT` or similar at the end of
+# lines that need to be in the worktree for testing and development, but which
+# you don't actually want to commit accidentally.
+#
+# USAGE:
+#
+#     (A) Manually run `./pre-commit` against a branch with staged commit
+#
+#     (B) Place in .git/hooks (default) or wherever `git config core.hooksPath`
+#     points for a given repo. If a pre-commit hook already exists, modify it
+#     to execute everything in .git/hooks/pre-commit.d/ or whatever, assuming
+#     that doesn't happen already, in which case just symlink this into there.
+#
+
+prev_commit=$(git rev-parse --verify HEAD)
+
+if tput colors; then
+	red="$(tput setaf 1)"
+	default="$(tput sgr0)"
+fi
+
+if git diff --color=never --cached $prev_commit | grep -i -q -e NOCOMMIT; then
+	1>&2 printf '%sCOMMIT ABORTED. Found line containing "NOCOMMIT"%s\n' \
+		"$red" "$default"
+	exit 1
+fi
