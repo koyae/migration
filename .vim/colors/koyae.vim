@@ -22,8 +22,12 @@ hi Directory    ctermfg=DarkBlue guifg=Blue
 hi ErrorMsg     ctermfg=White ctermbg=DarkRed guibg=Red guifg=White
 hi FoldColumn   ctermfg=DarkBlue ctermbg=Grey guibg=Grey guifg=DarkBlue
 hi Folded       ctermbg=Grey ctermfg=DarkBlue guibg=LightGrey guifg=DarkBlue
+
+" Used before enter is pressed and `incsearch` is on:
 hi IncSearch    cterm=reverse gui=reverse
+" Used after enter is pressed and `hlsearch` is on:
 hi Search       cterm=reverse gui=reverse
+
 hi LineNr       ctermfg=LightMagenta guifg=Brown cterm=bold gui=underline
 hi ModeMsg      cterm=bold gui=bold
 hi MoreMsg      ctermfg=DarkGreen gui=bold guifg=SeaGreen
@@ -37,7 +41,7 @@ hi StatusLine   cterm=bold ctermbg=Black ctermfg=white guibg=gold guifg=blue
 hi StatusLineNC ctermbg=Black ctermfg=Grey guibg=blue guifg=black
 hi Title        ctermfg=DarkMagenta gui=bold guifg=Magenta
 hi VertSplit    cterm=reverse gui=reverse
-hi Visual       ctermbg=NONE cterm=reverse gui=reverse guifg=Grey guibg=fg
+hi Visual       ctermbg=Yellow ctermfg=Black cterm=bold guifg=Grey guibg=fg
 hi VisualNOS    cterm=underline,bold gui=underline,bold
 hi WarningMsg   ctermfg=DarkRed guifg=Red
 hi WildMenu     ctermfg=Black ctermbg=Yellow guibg=Yellow guifg=Black
