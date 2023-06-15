@@ -6,15 +6,20 @@ augroup END
 
 " Compatibility settings 1{{{
 	:set nocompatible
-	:set <S-Left>=[D
-	:set <S-Right>=[C
-	:set <C-Left>=OD
-	:set <C-Right>=OC
+
+	" **NOTE**: It's important to set `term` first because setting it can (at
+	" least on certain systems) undo custom keycode definitions (the ones like
+	" `set <C-Left> = b`)
+	let term=$TERM
+	if term == 'screen' || term == "screen-256color" || term == "xterm-256color"
+	" if running from `screen`, assume xterm-signals:
+		:set term=xterm
+	endif
+
 	:set <A-a>=a
 	:set <A-b>=b
 	:set <A-c>=c
 	:set <A-d>=d
-	:set <A-f>=f
 	:set <A-e>=e
 	:set <A-g>=g
 	:set <A-o>=o
@@ -28,10 +33,6 @@ augroup END
 	:set <A-z>=z
 	:set <A-(>=9
 	:set <A-)>=0
-	:set <C-A-p>=
-	:set <C-A-q>=
-	:set <C-A-t>=
-	:set <C-A-x>=
 	:set <A-1>=1
 	:set <A-i>=i
 	:set <C-S-g>=
@@ -45,10 +46,42 @@ augroup END
 	" received by normal mode can cause strange characters or other weird
 	" nonsense to be processed
 
-	let term=$TERM
-	if term == 'screen' || term == "screen-256color" || term == "xterm-256color"
-	" if running from `screen`, assume xterm-signals:
-		:set term=xterm
+	if match(system("uname -a"),"Darwin")==0
+		"" iTerm2 settings (comment) 2{{{
+		"    Profiles -> Keys -> General:
+		"        Allow application keypad mode
+		"        xterm control sequence can enable modifyOtherKeys mode
+		"        Left Option key = Esc+
+		"    Profiles -> Keys -> Key Mappings
+		"        optionLeft = Send Escape Sequence Esc+b
+		"        optionRight= Send Escape Sequence Esc+f
+		"    Profiles -> Text -> Font
+		"        Menlo regular 18
+		"    General -> Selection
+		"        Copy to pasteboard on selection
+		"        Applications in terminal may access clipboard
+		" Other stuff (to allow ctrlUp and ctrlDown to work):
+		"    Desktop and Dock -> Shortcuts ("Keyboard and Mouse Shortcuts" via
+		"    search)
+		"        Mission Control = (Hotkey disabled)
+		"        Application windows = (Hotkey disabled)
+		" }}}
+		set <A-d>=á
+		set <A-f>=æ
+		" 2: ctrlLeft and ctrlRight seem to get trapped completely (nothing
+		" gets sent) so we just assign optionLeft and optionRight:
+		set <C-Left>=â
+		set <C-Right>=f
+	else
+		:set <A-f>=f
+		:set <S-Left>=[D
+		:set <S-Right>=[C
+		:set <C-Left>=OD
+		:set <C-Right>=OC
+		:set <C-A-p>=
+		:set <C-A-q>=
+		:set <C-A-t>=
+		:set <C-A-x>=
 	endif
 
 " }}}
