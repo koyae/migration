@@ -1,7 +1,7 @@
 " Strip trailing whitespace on save:
 augroup striptrailing
 	autocmd!
-	autocmd BufWritePre * :exec (&syntax!="snippets")? '%s/\s\+$//e' : ""
+	autocmd BufWritePre * :exec (&syntax!="snippets" && ShouldStripTrailing()==1)? '%s/\s\+$//e' : ""
 augroup END
 
 " Compatibility settings 1{{{
@@ -187,6 +187,12 @@ augroup END
 " 	8 eight
 " 	9 nine
 " 	0 zero
+"
+" Conventions: function-names
+" I use the convention "before" in function names to connote one CHARACTER before
+" In turn "after" means the opposite.
+" To connote the LINE before the cursor's current position, I use "above".
+" In turn "below" means the opposite.
 
 " }}}
 
@@ -214,29 +220,28 @@ augroup END
 	execute pathogen#infect()
 	runtime macros/matchit.vim " allow jumping to matching XML tags using '%'
 
+	" Ultisnips config: 2{{{
+		" altQ expands snippet:
+		let g:UltiSnipsExpandTrigger="<A-q>"
+		" tab-key moves to next tabstop while snippets are active:
+		let g:UltiSnipsJumpForwardTrigger="<tab>"
+		" shiftTab moves to previous tabstop while snippets are active:
+		let g:UltiSnipsJumpBackwardTrigger="[Z"
+		let g:UltiSnipsEditSplit="vertical"
+	" }}}
 
-" Ultisnips config: 2{{{
-	" altQ expands snippet:
-	let g:UltiSnipsExpandTrigger="<A-q>"
-	" tab-key moves to next tabstop while snippets are active:
-	let g:UltiSnipsJumpForwardTrigger="<tab>"
-	" shiftTab moves to previous tabstop while snippets are active:
-	let g:UltiSnipsJumpBackwardTrigger="[Z"
-	let g:UltiSnipsEditSplit="vertical"
-" }}}
+	" Netrw config: 2{{{
+		let g:netrw_banner=0
+		" make netrw splits happen to the right (doesn't work with preview-splits,
+		" even if they're set vertical :C):
+		" let g:netrw_altv=1
+	" }}}
 
-" Netrw config: 2{{{
-	let g:netrw_banner=0
-	" make netrw splits happen to the right (doesn't work with preview-splits,
-	" even if they're set vertical :C):
-	" let g:netrw_altv=1
-" }}}
-
-" Taboo config: 2{{{
-	" This isn't technically a Taboo setting, but doing this per the repo's
-	" README allows tab names to be retained when using `:mksession`
-	set sessionoptions+=tabpages,globals
-" }}}
+	" Taboo config: 2{{{
+		" This isn't technically a Taboo setting, but doing this per the repo's
+		" README allows tab names to be retained when using `:mksession`
+		set sessionoptions+=tabpages,globals
+	" }}}
 
 " }}}1
 
@@ -358,12 +363,14 @@ augroup END
 
 "Functions 1{{{
 
-" I use the convention "before" in function names to connote one CHARACTER before
-" In turn "after" means the opposite.
-" To connote the LINE before the cursor's current position, I use "above".
-" In turn "below" means the opposite.
-
 " Note `function!` forces overwrite if necessary on creation of a funciton
+
+	if ! exists('*ShouldStripTrailing')
+	" On certain systems, this may be defined in .vimrc2 already
+		function ShouldStripTrailing()
+			return 1
+		endfunction
+	endif
 
 	" SuSave([path [,escape]])
 	"

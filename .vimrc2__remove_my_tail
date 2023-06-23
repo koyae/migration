@@ -1,3 +1,6 @@
+" Take off the '__remove_my_tail' part and put your system-specific vim stuff
+" in here.
+
 
 " Don't write swapfiles to disk while editing within OneDrive, since this
 " will prevent it from synching anything (including other files you
@@ -15,3 +18,12 @@ augroup swapfile_suppression
 	" depending on whether you're on Cygwin or WSL. See `:h file-pattern`
 augroup END
 
+
+" Avoid stripping trailing whitespace from plaintext `pg_dump` output, which
+" can screw things up if there are trailing nulls for any columns:
+function! ShouldStripTrailing()
+	if match(expand('%:p'),'.*populate.sql') != -1
+		return 0
+	endif
+	return 1
+endfunction
