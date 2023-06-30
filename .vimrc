@@ -474,7 +474,9 @@ augroup END
 			return
 		endif
 		" Check file is writeable to current user
-		call system("test -w " . shellescape(path))
+		let writetest = "test -w " . shellescape(path)
+			\ . " || touch " . shellescape(path)
+		call system(writetest)
 		let couldNotWrite=v:shell_error
 
 		if couldNotWrite
