@@ -1293,7 +1293,7 @@ augroup END
 		" execute has completed all of them, since it may be hard to tell
 		" otherwise whether it's frozen, still working, or done
 		let suffdict = {
-			\ 'pgsql': "\n;SELECT '(vim) All done (vim)';"
+			\ 'pgsql': "\n\\pset footer off\n\\pset tuples_only on\n;SELECT '(vim) All done (vim)';"
 		\ }
 		" duplicate the pgsql key for sql:
 		let suffdict.sql = suffdict.pgsql
