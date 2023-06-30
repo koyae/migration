@@ -1,4 +1,8 @@
 \pset null 'NULL'
+-- \pset format wrapped
+-- ^ easier to read but bad for copy/paste because it hardwraps stuff
+-- \pset pager off
+-- ^ Sameas using --pset="pager=off"
 \x auto
 \set ON_ERROR_STOP on
 \set ON_ERROR_ROLLBACK on
