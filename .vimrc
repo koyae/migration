@@ -24,7 +24,6 @@ augroup END
 	:set <A-g>=g
 	:set <A-o>=o
 	:set <A-p>=p
-	:set <A-q>=q
 	:set <A-r>=r
 	:set <A-s>=s
 	:set <A-=>==
@@ -68,12 +67,14 @@ augroup END
 		" }}}
 		set <A-d>=á
 		set <A-f>=æ
+		set <A-q>=ñ
 		" 2: ctrlLeft and ctrlRight seem to get trapped completely (nothing
 		" gets sent) so we just assign optionLeft and optionRight:
 		set <C-Left>=â
 		set <C-Right>=f
 	else
 		:set <A-f>=f
+		:set <A-q>=q
 		:set <S-Left>=[D
 		:set <S-Right>=[C
 		:set <C-Left>=OD

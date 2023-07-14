@@ -52,6 +52,10 @@ nmap <buffer> <leader>dr viw\dr
 vmap <buffer> <leader>d+ :<C-u>call AppendToFile('\d+ ' . GetSelectionText())<Return>
 nmap <buffer> <leader>d+ viw\d+
 
+" backslash-then-1 selects the first row from the relation under the cursor:
+vmap <buffer> <leader>1 :<C-u>call AppendToFile('SELECT * FROM ' . GetSelectionText() . ' LIMIT 1')<Return>
+nmap <buffer> <leader>1 viw\1
+
 " backslash-then-F1 adds 'SELECT' onto current selection and then sends to
 " fifo:
 vmap <buffer> <leader><F1> :<C-u>call AppendToFile('SELECT ' . GetSelectionText())<Return>
@@ -104,9 +108,9 @@ function! PgFlip(str)
 	return get(dic, a:str, a:str)
 endfunction
 
-" Highlight the COMMENT, DO, or CREATE statement in which the cursor currently
-" resides, and then press F5 to pipe the text to the outside (see .vimrc for
-" details on what that binding does from visual mode):
+" Redefine: Highlight the COMMENT, DO, or CREATE statement in which the cursor
+" currently resides, and then press F5 to pipe the text to the outside (see
+" .vimrc for details on what that binding does from visual mode):
 command! Re normal :set nopaste<Return>mwgZ:echo (search('\%'.line('.').'l^[CD]','b'))? 0 : search('^[CD]','b') <Return>^mugzgzV`u<F5>`w
 " ^ This covers CREATE statements, COMMENT statements, and DO statements
 Alias re Re
