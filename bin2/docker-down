@@ -1,0 +1,4 @@
+#!/bin/ksh
+docker-compose down --rmi all -v
+docker volume prune -f
+docker system prune -a -f --volumes

@@ -1,0 +1,13 @@
+#!/bin/sh
+
+docker stop database_container-local
+docker rm database_container-local
+docker volume rm database_container-data-local
+docker-compose build database_container
+docker-compose up -d database_container
+# docker logs -f database_container-local
+while ! docker logs database_container-local 2>&1 | tail -1 | grep -q "database system is ready to accept connections"
+do
+  echo "`date`: Waiting for database…"
+  sleep 10
+done
