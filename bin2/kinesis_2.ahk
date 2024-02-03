@@ -24,6 +24,26 @@ Pause:: ; printscreen-key
 	Winset, AlwaysOnTop, , A
 	return
 
+F4::
+	if WinActive("Unity") {
+		Send {WheelUp 4}
+	} else if WinActive("Firefox") {
+		Send {WheelUp 1}
+	} else if WinActive("GIMP") {
+		Send {F4}
+	}
+	return
+
+F3::
+	if WinActive("Unity") {
+		Send {WheelDown 4}
+	}else if WinActive("Firefox") {
+		Send {WheelDown 1}
+	}else if WinActive("GIMP") {
+		Send {F3}
+	}
+	return
+
 ^l:: ; ctrlL opens library tab
 	; NOTE: The only issue with the below implementation is that the offset (75)
 	; given to ImageSearch (used because searching the entire screen takes too
