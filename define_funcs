@@ -124,6 +124,7 @@ function compare_text {
 function set_aws_credentials {
 	location="$1"
 	home="$(koyae_find_home)"
+	gpg_cmd="$(if which gpg2 >/dev/null; then echo "gpg2"; else echo "gpg"; fi)"
 	default_storage_path="$home/.aws_credentials_path"
 	if [ "$location" = "" ] && [ "$home" != "" ]; then
 		location="$(cat "$default_storage_path")"
@@ -142,7 +143,7 @@ function set_aws_credentials {
 		1>&2 printf 'Bad locaton "%s"\n' "$locaton"
 		exit 1
 	fi
-	credentials="$(gpg2 -o- "$location" 2>/dev/null)"
+	credentials="$($gpg_cmd -o- "$location" 2>/dev/null)"
 	succ=$?
 	if [ $succ -eq 0 ]; then
 		1>&2 echo "Success."
