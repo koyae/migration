@@ -462,15 +462,20 @@ augroup END
 				\ escape(b:netrw_tmpfile,' ')
 				\ : escape(tempname(),' ')
 			execute "write! " . tmpfile
-			set nomod
+			" Replace any space that is not proceded by a backslash with the
+			" literal: '\ ':
+			let path = shellescape(substitute(SCPify(path), '\(\\\)\@<! ', '\\ ', 'g'))
 			let l:doMe='AsyncRun'
 				\ . ' -post=call\ delete(''' . tmpfile . ''')'
-				\ . '\ |\ echo\ "delayed\ write"\ g:asyncrun_status\ strftime(''\%X'') '
-				\ . "scp " . tmpfile
-				\ . " " . escape(SCPify(path),' ')
+				\ . '\ |\ echo\ "delayed\ write"\ g:asyncrun_status\ strftime(''\%X'')'
+				\ . '\ |\ if\ g:asyncrun_status=="success"'
+				\ . '\ |\ set\ nomod'
+				\ . '\ |\ :endif '
+				\  . "scp " . shellescape(tmpfile)
+				\ . " " . path
 			" ^ inspired by:
 			" github.com/skywind3000/asyncrun.vim/wiki/Get-netrw-using-asyncrun-to-save-remote-files
-			" echom l:doMe
+			"echom l:doMe
 			execute doMe
 			return
 		endif
