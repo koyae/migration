@@ -141,7 +141,7 @@ function set_aws_credentials {
 		printf '%s' "$location" > "$default_storage_path"
 	else
 		1>&2 printf 'Bad locaton "%s"\n' "$locaton"
-		exit 1
+		return 1
 	fi
 	credentials="$($gpg_cmd -o- "$location" 2>/dev/null)"
 	succ=$?
