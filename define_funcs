@@ -118,6 +118,45 @@ function compare_text {
 	vim "$1" -c "vs $two" -c "windo diffthis"
 }
 
+# ssh_config - set target IP-address for a host in ~/.ssh/config and in
+# ~/.pg_service
+function ssh_config {
+	if [ $# -ne 2 ]; then
+		echo "usage: ssh_config <server_name> <ip_address>"
+		return 1
+	fi
+	vim ~/.ssh/config \
+		-c "/\VHost $1" -c 'call system("echo " . line(".") . " > ~/ssh_config_start")' \
+		-c /HostName -c "normal wc$""$2" \
+		-c 'call system("echo " . line(".") . " > ~/ssh_config_stop")' -c wq
+	vim ~/.pg_service.conf \
+		-c "/\V[$1]" -c 'call system("echo " . line(".") . " > ~/pg_service_start")' \
+		-c /host -c "normal f=wc$""$2" \
+		-c 'call system("echo " . line(".") . " > ~/pg_service_stop")' -c wq
+	echo "------------------------------------"
+	echo "---------- ~/.ssh/config: ----------"
+	echo "------------------------------------"
+	echo "..."
+	echo ""
+	cat ~/.ssh/config | awk "NR>=$(cat ~/ssh_config_start)&&NR<=$(cat ~/ssh_config_stop)"
+	echo "..."
+	echo ""
+	echo "------------------------------------"
+	echo ""
+	echo "------------------------------------"
+	echo "------- ~/.pg_service.conf: --------"
+	echo "------------------------------------"
+	echo "..."
+	echo ""
+	cat ~/.pg_service.conf | awk "NR>=$(cat ~/pg_service_start)&&NR<=$(cat ~/pg_service_stop)"
+	echo "..."
+	echo ""
+	echo "------------------------------------"
+	cd ~
+	rm ssh_config_start ssh_config_stop pg_service_start pg_service_stop
+	cd - 1>/dev/null
+}
+
 # set_aws_credentials [<aws_credentials_file_path>[.gpg]]
 # If path is omitted, function looks for ~/.aws_credentials_path for default
 # Otherwise it asks interactively
