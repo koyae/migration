@@ -9,7 +9,10 @@
 #
 # USAGE:
 #
-#     (A) Manually run `./pre-commit` against a branch with staged commit
+#     (A) Manually run `./pre-commit` against a branch with staged changes
+#     and/or be a menace and shadow the `git` command with a custom function
+#     that performs this action before conditionally invoking the actual
+#     git-command you wrote out. (You will probably do this.)
 #
 #     (B) Place in .git/hooks (default) or wherever `git config core.hooksPath`
 #     points for a given repo. If a pre-commit hook already exists, modify it
@@ -19,7 +22,7 @@
 
 prev_commit=$(git rev-parse --verify HEAD)
 
-if tput colors; then
+if tput colors 1>/dev/null; then
 	red="$(tput setaf 1)"
 	default="$(tput sgr0)"
 fi

@@ -339,10 +339,14 @@ function vim {
 function git {
 	if (( $# > 0 )); then
 		if [[ "$1" == "commit" ]]; then
-		# if a commit was just made, show the author-information afterwards so
-		# that misattributed commits can be caught before being pushed to repo:
-			command git "$@"
-			command git show | awk 'NR==2'
+			# Always run our custom pre-commit script before committing:
+			bash -c ". ~/bin2/githooks/pre-commit" && command git "$@"
+			if (( $? == 0 )); then
+			# if a commit was just made, show the author-information afterwards
+			# so that misattributed commits can be caught before being pushed
+			# to repo:
+				command git show | awk 'NR==2'
+			fi
 		elif [[ "$1" == "clone" ]]; then
 			command git "$@" --recursive
 		elif [[ "$1" == "cd" ]]; then
