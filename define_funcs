@@ -216,6 +216,23 @@ function set_graph_credentials {
 	1>&2 echo "Success."
 }
 
+# recursively rename (just renames files in place)
+function renamer {
+	helpstr="usage: renamer {add} <findCoarsePat> <oldStr> <addToOldStr>"
+	helpstr="$helpstr\n"'Just `add` for right now. More options coming soon!'
+	if [ $# -ne 4 ]; then
+		1>&2 printf "$helpstr\n"
+		return 1
+	fi
+	if [ "$1" = "add" ]; then
+		shift
+		find . -name "$1" -exec rename.ul -v "$2" "$2 $3" '{}' \;
+	elif [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
+		1>&2 printf "$helpstr\n"
+		return 0
+	fi
+}
+
 # shortcut for making script-files
 function mkscript {
 	touch "$1"
