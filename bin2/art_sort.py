@@ -49,7 +49,7 @@ def boolifier(arg):
 
 def logpathifier(arg):
     """ string arg representeing a path to a log-file -> path or None """
-    if arg.lower() in ["None",""]:
+    if arg.lower() in ["none",""]:
         return None
     else:
         absolute_directory = os.path.join(*os.path.abspath(arg)[0:-1])
