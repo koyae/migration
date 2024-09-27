@@ -26,7 +26,7 @@ hi Folded       ctermbg=Grey ctermfg=DarkBlue guibg=LightGrey guifg=DarkBlue
 " Used before enter is pressed and `incsearch` is on:
 hi IncSearch    cterm=reverse gui=reverse
 " Used after enter is pressed and `hlsearch` is on:
-hi Search       cterm=reverse gui=reverse
+hi Search       cterm=reverse ctermfg=DarkGrey gui=reverse
 
 hi LineNr       ctermfg=LightMagenta guifg=Brown cterm=bold gui=underline
 hi ModeMsg      cterm=bold gui=bold
