@@ -1110,8 +1110,16 @@ augroup END
 		" any whitespace that's at the beginning of the next line, since this
 		" is pretty much universally unwanted for pulling stuff from below
 		" lines onto current:
+		let mode = mode(1) " get full mode
+		let smartStuff = "j:s/^\\s\\+//e | noh\<Return>0i\<BS>\<C-o>mp\<Esc>`p"
 		if AtEndOfLine()
-			return "j:s/^\\s\\+//e | noh\<Return>0i\<BS>\<C-o>mp\<Esc>`p"
+			if mode == "i"
+				return "\<Esc>" .. smartStuff .. "i"
+			else
+				return smartStuff
+			endif
+		elseif mode == "i"
+			return "\<Del>"
 		else
 			return '"_x'
 	endfunction
@@ -1695,6 +1703,7 @@ augroup END
 	" backspace-key deletes one character back
 	nmap <BS> i<BS><Esc><Right>
 	" delete-key acts like x unless at end of line
+	inoremap <silent> <expr> <Del> SmartDelete()
 	noremap <silent> <expr> <Del> SmartDelete()
 	nnoremap <silent> <expr> x SmartX()
 	" ctrlDelete deletes rest of line
