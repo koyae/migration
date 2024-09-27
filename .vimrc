@@ -447,27 +447,37 @@ augroup END
 
 	" RobustSave([targetPath])
 	" A (somewhat) robust wrapper for :W and :sav that avoids
-	" https://github.com/vim/vim/issues/1268 if SCP-paths contain spaces
+	" https://github.com/vim/vim/issues/1268 if SCP-paths contain spaces, which
+	" also uses AsyncRun to perform network writes, preventing Vim from
+	" temporarily hanging/freezing while waiting on IO on slow connections.
 	"
 	" targetPath  --  the path to which the buffer-contents should be written
+	"
+	" If you wish to save both a local file and a remote file every time this
+	" function is called, you can set the value of b:robustsave_alt_path. For example:
+	" let b:robustsave_alt_path = getcwd() .. '/' .. substitute(expand('%:t'),'\\ ',' ','')
+	" Assuming the current buffer is pointed at a remote SCP address with a
+	" space in the path, this will take that basename, unescape the spaces
 	function! RobustSave(...)
-		let path = expand('%:p')
+		let naturalpath = expand('%:p')
+		let path = naturalpath
 		if a:0 == 1
-			let path = a:1
+			let path = expand(a:1)
 		endif
 		if ( match(path, "scp://") == 0 )
 		" ^ if the remote filename might cause problems with how netrw tries to
 		" invoke scp, correct before saving:
-			let tmpfile = exists('b:netrw_tmpfile') ?
-				\ escape(b:netrw_tmpfile,' ')
+			let tmpfile = exists('b:robustsave_alt_path') ?
+				\ b:robustsave_alt_path
+				\ : exists('b:netrw_tmpfile') ?
+				\ b:netrw_tmpfile
 				\ : escape(tempname(),' ')
 			execute "write! " . tmpfile
 			" Replace any space that is not proceded by a backslash with the
 			" literal: '\ ':
 			let path = shellescape(substitute(SCPify(path), '\(\\\)\@<! ', '\\ ', 'g'))
 			let l:doMe='AsyncRun'
-				\ . ' -post=call\ delete(''' . tmpfile . ''')'
-				\ . '\ |\ echo\ "delayed\ write"\ g:asyncrun_status\ strftime(''\%X'')'
+				\ . ' -post=echo\ "delayed\ write"\ g:asyncrun_status\ strftime(''\%X'')'
 				\ . '\ |\ if\ g:asyncrun_status=="success"'
 				\ . '\ |\ set\ nomod'
 				\ . '\ |\ :endif '
@@ -478,6 +488,9 @@ augroup END
 			"echom l:doMe
 			execute doMe
 			return
+		endif
+		if naturalpath != path && match(naturalpath,'^scp://') == 0
+			let path = substitute(path, '\\ ', '\ ', '')
 		endif
 		" Check file is writeable to current user
 		let writetest = "test -w " . shellescape(path)
@@ -495,11 +508,27 @@ augroup END
 				echo "Write-op cancelled."
 			endif
 		else
-		" otherwise, just write as normal:
+		" otherwise, just write (pretty much) as normal:
 			let sePath=shellescape(path)
 			let perms=GetPermissions(sePath)
 			let owners=GetOwners(sePath)
-			execute "sav " . fnameescape(path)
+			" if the original path of the current buffer is different from the
+			" file we're being told to save (write) and is an SCP address,
+			" reduce the backslashes so we don't write files with backslashes
+			" locally:
+			let doMe="write " . fnameescape(path)
+			try
+				execute doMe
+			catch /^Vim\%((\a\+)\)\=:E13:/
+				echo "File " . path . " exists. Overwrite? "
+				let response=nr2char(getchar())
+				if response=="y" || response=="Y"
+					execute substitute(doMe,'^write','write!','')
+				else
+					echo "File-write aborted."
+					return
+				endif
+			endtry
 			let newPerms=GetPermissions(sePath)
 			let newOwners=GetOwners(sePath)
 			if perms!=newPerms || owners!=newOwners
