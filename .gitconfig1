@@ -40,6 +40,21 @@
 	# 	stackoverflow.com/a/4820071/3159183
 [diff]
 	submodule = log
+	algorithm = histogram
+	# ^ arguably superior to the default Myers and the unmodified Patience
+	# algorithm (of which histogram is itself a modification), histogram was
+	# found to be clearer according to arxiv.org/abs/1902.02467 .
+	# luppeng.wordpress.com/2020/10/10/when-to-use-each-of-the-git-diff-algorithms
+	# offers some good illustrations of the differences. Probably not as good
+	# as GitClear's algo, but that's proprietary and ain't nobody got time for
+	# that.
+[merge]
+	conflictstyle = zdiff3
+	# ^ recommended by adamj.eu/tech/2023/12/29/git-conflict-display-zdiff3/,
+	# this causes files with merge-conflicts to indicate the contents of the
+	# original line or chunk that was altered by different commits in different
+	# ways, which may make it more obvious which one to accept, or how to
+	# combine the two.
 [alias]
 # NOTE: In addition to the below aliases, a number of tweaks from define_funcs
 # are made to git-commands by shadowing them using a function. (git does not
