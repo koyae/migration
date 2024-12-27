@@ -1,4 +1,5 @@
 {
+    "editor.accessibilitySupport": "off",
     "editor.autoClosingBrackets": "never",
     "editor.autoClosingDelete": "never",
     "editor.autoClosingQuotes": "never",
@@ -6,15 +7,12 @@
     "editor.comments.insertSpace": false,
     "editor.insertSpaces": false,
     "files.insertFinalNewline": true,
-    "files.trimTrailingWhitespace": true,
     "files.trimFinalNewlines": true,
-    "terminal.integrated.defaultProfile.windows": "Command Prompt",
+    "files.trimTrailingWhitespace": true,
     "javascript.preferences.quoteStyle": "single",
-    "typescript.preferences.quoteStyle": "single",
-    "prettier.singleQuote": true,
     "prettier.jsxSingleQuote": true,
-    "editor.accessibilitySupport": "off",
-    "workbench.editor.enablePreview": false,
-    "editor.autoClosingBrackets": "never",
-    "editor.autoClosingQuotes": "never"
+    "prettier.singleQuote": true,
+    "terminal.integrated.defaultProfile.windows": "Command Prompt",
+    "typescript.preferences.quoteStyle": "single",
+    "workbench.editor.enablePreview": false
 }
