@@ -29,8 +29,16 @@ F4::
 		Send {WheelUp 4}
 	} else if WinActive("Firefox") {
 		Send {WheelUp 1}
+	} else if WinActive("Blender") {
+		Send {WheelUp 1}
 	} else if WinActive("GIMP") {
 		Send {F4}
+	} else if WinActive("PDF-XChange") {
+		Send ^{=}
+	} else if WinActive("Word") {
+		Send ^{WheelUp 1}
+	} else {
+		Send {WheelUp 1}
 	}
 	return
 
@@ -39,8 +47,16 @@ F3::
 		Send {WheelDown 4}
 	}else if WinActive("Firefox") {
 		Send {WheelDown 1}
-	}else if WinActive("GIMP") {
+	} else if WinActive("Blender") {
+		Send {WheelDown 1}
+	} else if WinActive("GIMP") {
 		Send {F3}
+	} else if WinActive("PDF-XChange") {
+		Send ^{-}
+	} else if WinActive("Word") {
+		Send ^{WheelDown 1}
+	} else {
+		Send {WheelDown 1}
 	}
 	return
 
