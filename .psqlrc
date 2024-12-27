@@ -8,3 +8,4 @@
 \set ON_ERROR_ROLLBACK on
 \! echo "Current directory on client: $PWD"
 \echo 'use \cd :home to visit' :home
+\set QUIET off
