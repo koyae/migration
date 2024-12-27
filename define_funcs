@@ -356,6 +356,22 @@ function vim {
 function git {
 	if (( $# > 0 )); then
 		if [[ "$1" == "commit" ]]; then
+			if printf 'scale=2;%s - 2.9\n' "$(git --version | cut -d' ' -f3 | cut -d'.' -f1,2)" | bc | grep -q '^-' && [[ "$(git config core.hooksPath)" != "" ]]; then
+				oldIFS="$IFS"
+				IFS='
+'
+				git_root="$(git rev-parse --show-toplevel)"
+				configured_hookspath="$git_root/$(git config core.hooksPath)"
+				default_hookspath="$git_root/.git/hooks"
+				for f in $(ls -1 --color=never "$configured_hookspath"); do
+					f="$configured_hookspath/$f"
+					basef="$(basename "$f")"
+					if ! diff -N >/dev/null "$f" "$default_hookspath/$basef"; then
+						command cp -f "$f" "$default_hookspath"
+					fi
+				done
+				IFS="$oldIFS"
+			fi
 			# Always run our custom pre-commit script before committing:
 			bash -c ". ~/bin2/githooks/pre-commit" && command git "$@"
 			if (( $? == 0 )); then
