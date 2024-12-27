@@ -30,6 +30,8 @@ setlocal formatoptions+=r
 " include-order, which causes the string to get overridden. Solution for now
 " is just to set this here and not do `filetype indent on`
 setlocal comments=s1:/*,mb:*,ex:*/,://
+" Include '$' as a word-character so it's easier to autocomplete on variables:
+set iskeyword+=$
 
 function! UnmapI()
 	iunmap <Tab>
