@@ -66,6 +66,7 @@
 	# this can be used with "`pwd`" as its argument if the repo has changed
 	# locations or been mounted somewhere else:
 	rehome = config --path core.worktree
+	home = rev-parse --show-toplevel
 [status]
 	submodulessummary = 1
 [alias "submodule"]
