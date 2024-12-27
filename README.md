@@ -15,8 +15,8 @@ Some scripts (e.g. the [link.cmd](./.vs_code/link.cmd) script for VS Code) uses 
 3. **`git remote add origin https://github.com/koyae/migration`** to define a remote source repo.
 4. **`git remote set-url --push origin git@github.com:koyae/migration`** to allow push over SSH. (SSH is easiest for pushing whereas HTTPS is easiest for **pulling**).
 5. **`git config core.sshCommand "ssh -i <path_to_ssh_key>"`**. If you're not using a generic SSH-key file like "id_rsa" in ~/.ssh, this is the easiest way to specify a custom location.
-5. **`git pull origin master`** to pull from the master branch of that source.
-6. **`git branch --set-upstream-to="origin/master"`** to allow **`git push`** to target `origin master` by default.
+5. **`git pull origin main`** to pull from the main branch of that source.
+6. **`git branch --set-upstream-to="origin/main"`** to allow **`git push`** to target `origin main` by default.
 7. Perform the step listed in the **"Initialize submodules"** section below, and all following sections.
 
 #### Advantages
