@@ -1,3 +1,4 @@
+\set QUIET on
 \pset null 'NULL'
 -- \pset format wrapped
 -- ^ easier to read but bad for copy/paste because it hardwraps stuff
