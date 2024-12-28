@@ -1,8 +1,8 @@
-" Strip trailing whitespace on save:
-augroup striptrailing
+ " Strip trailing whitespace on save:
+ augroup striptrailing
 	autocmd!
 	autocmd BufWritePre * :exec (&syntax!="snippets" && ShouldStripTrailing()==1)? '%s/\s\+$//e' : ""
-augroup END
+ augroup END
 
 " Compatibility settings 1{{{
 	:set nocompatible
@@ -46,7 +46,7 @@ augroup END
 	" nonsense to be processed
 
 	if match(system("uname -a"),"Darwin")==0
-		"" iTerm2 settings (comment) 2{{{
+		" iTerm2 settings (comment) 2{{{
 		"    Profiles -> Keys -> General:
 		"        Allow application keypad mode
 		"        xterm control sequence can enable modifyOtherKeys mode
@@ -85,46 +85,47 @@ augroup END
 		:set <C-A-x>=
 	endif
 
-" }}}
+ " }}}
 
 " Custom handling by filetype 1{{{
-augroup oddboyz
-	autocmd!
-	autocmd BufNewFile,BufRead, pom.xml,web.xml,*.yaml,*.ansible* set tabstop=2 expandtab shiftwidth=2
-augroup END
+"
+	augroup oddboyz
+	   autocmd!
+	   autocmd BufNewFile,BufRead, pom.xml,web.xml,*.yaml,*.ansible* set tabstop=2 expandtab shiftwidth=2
+	augroup END
 
-augroup ansible
-	autocmd BufNewFile,BufRead, *.ansible* setf yaml.ansible
-augroup END
+	augroup ansible
+	   autocmd BufNewFile,BufRead, *.ansible* setf yaml.ansible
+	augroup END
 
-augroup gitconfigs
-	autocmd!
-	autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
-augroup END
+	augroup gitconfigs
+	   autocmd!
+	   autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
+	augroup END
 
-augroup screenstuff
-	autocmd!
-	autocmd BufNewFile,BufRead, *.screen,.screenrc* setf screen
-augroup END
+	augroup screenstuff
+	   autocmd!
+	   autocmd BufNewFile,BufRead, *.screen,.screenrc* setf screen
+	augroup END
 
-" allow various comments to rewrap correctly:
-augroup vimstuff
-	autocmd!
-	autocmd BufNewFile,BufRead, *.vim,.vimrc setlocal comments+=:\\\\|
-	" ^ allow line-extension character
-	autocmd BufNewFile,BufRead, *.vim,.vimrc setlocal foldmethod=marker
-augroup END
+	" allow various comments to rewrap correctly:
+	augroup vimstuff
+	   autocmd!
+	   autocmd BufNewFile,BufRead, *.vim,.vimrc setlocal comments+=:\\\\|
+	   " ^ allow line-extension character
+	   autocmd BufNewFile,BufRead, *.vim,.vimrc setlocal foldmethod=marker
+	augroup END
 
-augroup pgstuff
-	autocmd!
-	autocmd BufNewFile,BufRead, *.postgre.sql,scp://*.postgre.sql setf pgsql
+	augroup pgstuff
+	   autocmd!
+	   autocmd BufNewFile,BufRead, *.postgre.sql,scp://*.postgre.sql setf pgsql
 		\| setlocal comments=:--
-augroup END
+	augroup END
 
-augroup ultistuff
-	autocmd!
-	autocmd BufNewFile,BufRead, *.snippets setlocal comments=:#
-augroup END
+	augroup ultistuff
+	   autocmd!
+	   autocmd BufNewFile,BufRead, *.snippets setlocal comments=:#
+	augroup END
 
 " }}}
 
@@ -197,7 +198,7 @@ augroup END
 
 " }}}
 
-" Plugin Imports and Settings 1{{{
+" Plugin Settings and Imports 1{{{
 	filetype plugin on
 	source ~/.vim/plugin/cmdalias.vim
 
@@ -206,9 +207,9 @@ augroup END
 	endif
 
 	" Cutlass overrides/settings 2{{{
-	" We have to apply this mapping before pathogen loads cutlass:
-	vnoremap d ""d
-	" }}}
+		" We have to apply this mapping before pathogen loads cutlass:
+		vnoremap d ""d
+	" }}}2
 
 	let g:pathogen_blacklist = []
 	if has('signs') != 1
@@ -256,7 +257,7 @@ augroup END
 			autocmd BufNew,BufRead * :let b:copilot_enabled = v:false
 			autocmd VimEnter, * :Copilot disable
 		augroup end
-	" }}}
+	" }}}2
 
 	" Ultisnips config: 2{{{
 		" altQ expands snippet:
@@ -266,20 +267,20 @@ augroup END
 		" shiftTab moves to previous tabstop while snippets are active:
 		let g:UltiSnipsJumpBackwardTrigger="[Z"
 		let g:UltiSnipsEditSplit="vertical"
-	" }}}
+	" }}}2
 
 	" Netrw config: 2{{{
 		let g:netrw_banner=0
 		" make netrw splits happen to the right (doesn't work with preview-splits,
 		" even if they're set vertical :C):
 		" let g:netrw_altv=1
-	" }}}
+	" }}}2
 
 	" Taboo config: 2{{{
 		" This isn't technically a Taboo setting, but doing this per the repo's
 		" README allows tab names to be retained when using `:mksession`
 		set sessionoptions+=tabpages,globals
-	" }}}
+	" }}}2
 
 	" EightHeader config 2{{{
 		" This makes fold-headers look a bit nicer, by using '.' as a
@@ -287,7 +288,7 @@ augroup END
 		" indicating the indent-level with a leading number. e.g.:
 		"     2 EightHeader config ................................10 lines
 		let &foldtext = "EightHeaderFolds( '\\=s:fullwidth-2', 'left', [ repeat('    ', v:foldlevel - 1), '.', '' ], '\\= s:foldlines . \" lines\"', '\\=substitute(s:str,\"^\\\\(.*\\\\)\\\\([0-9]\\\\)$\",\"\\\\2 \\\\1\",\"\")' )"
-	" }}}
+	" }}}2
 
 	" Folddigest config 2{{{
 		let folddigest_options="vertical,nofoldclose,flexnumwidth"
@@ -297,123 +298,129 @@ augroup END
 
 " User settings 1{{{
 
-"-- Display
-	colorscheme koyae
-	" 4: Only turn on syntax highlighting once; this avoids turning
-	" highlighting off when viewing/editing an unrecognized filetype for which
-	" the user has already manually performed `set syntax=<syntax>` or `set
-	" filetype=<filetype>`:
-	if !exists('g:koyaeSyntaxEnabled')
-		syntax enable
-		let g:koyaeSyntaxEnabled = 1
-	endif " :4
-	let g:is_posix=1 " this will be right on 99% of systems
-	if exists('+breakindent')
-		:set breakindent
-		" ^ paragraphs moved all the way over if there's an indent in front
-		" (long line soft wrap)
-	endif
-	:set linebreak " whole-word wrapping instead of mid-word
-	:set foldmethod=marker
+	" Display 2{{{
+		colorscheme koyae
+		" 4: Only turn on syntax highlighting once; this avoids turning
+		" highlighting off when viewing/editing an unrecognized filetype for which
+		" the user has already manually performed `set syntax=<syntax>` or `set
+		" filetype=<filetype>`:
+		if !exists('g:koyaeSyntaxEnabled')
+			syntax enable
+			let g:koyaeSyntaxEnabled = 1
+		endif " :4
+		let g:is_posix=1 " this will be right on 99% of systems
+		if exists('+breakindent')
+			:set breakindent
+			" ^ paragraphs moved all the way over if there's an indent in front
+			" (long line soft wrap)
+		endif
+		:set linebreak " whole-word wrapping instead of mid-word
+		:set foldmethod=marker
+	" }}}2
 
-"-- I/O
-	:set bs=2
-	:set mouse=n
-	:set scrolloff=0
-	:set noincsearch " no incremental search; makes me think i hit enter already
-	:set ttymouse=sgr
-	:set gdefault " find-and-replace defaults to global rather than just current line
-	:set autoindent " keep the current indentation on new <CR>. Negate with :setlocal noautoindent
-	:set splitright " make :vs open on right instead of bumping current pane over
-	:set splitbelow " make :split open files on the bottom instead of bumping current pane down
-	:set tabstop=4 " make tab-characters display as 4 spaces instead of default 8
-	:set shiftwidth=0 " make '>' (angle bracket) always just match `tabstop`
-	:set ignorecase smartcase "searching is non-case-sensitive unless there's a cap
-	:set shellcmdflag=-c
+	" I/O 2{{{
+		:set bs=2
+		:set mouse=n
+		:set scrolloff=0
+		:set noincsearch " no incremental search; makes me think i hit enter already
+		:set ttymouse=sgr
+		:set gdefault " find-and-replace defaults to global rather than just current line
+		:set autoindent " keep the current indentation on new <CR>. Negate with :setlocal noautoindent
+		:set splitright " make :vs open on right instead of bumping current pane over
+		:set splitbelow " make :split open files on the bottom instead of bumping current pane down
+		:set tabstop=4 " make tab-characters display as 4 spaces instead of default 8
+		:set shiftwidth=0 " make '>' (angle bracket) always just match `tabstop`
+		:set ignorecase smartcase "searching is non-case-sensitive unless there's a cap
+		:set shellcmdflag=-c
+	" }}}
 
-"-- Formatting behavior:
-	:set formatoptions+=j " allow vim's re-wrapping functionality to join as well as split
-	" 3: wrap python-style arg-docs
-	:set formatoptions+=n
-	:set formatoptions-=2 " having the 2 flag set prevents n from working
-	:set formatlistpat=^\\s\*[a-z][a-z_0-9]\\+[^-]\*\ \ --\ \ " :3 *
-	" ^ * btw we need an end-of-line comment on the above line or else the
-	" whitespace will be stripped from the end since it would be trailing
+  " Formatting behavior 2 {{{
+		:set formatoptions+=j " allow vim's re-wrapping functionality to join as well as split
+		" 3: wrap python-style arg-docs
+		:set formatoptions+=n
+		:set formatoptions-=2 " having the 2 flag set prevents n from working
+		:set formatlistpat=^\\s\*[a-z][a-z_0-9]\\+[^-]\*\ \ --\ \ " :3 *
+		" ^ * btw we need an end-of-line comment on the above line or else the
+		" whitespace will be stripped from the end since it would be trailing
 
-	" Disable highlighting of non-capitalized words that follow periods; IMO
-	" this is so noisy that it hurts more than it helps:
-	:hi SpellCap none
+		" Disable highlighting of non-capitalized words that follow periods; IMO
+		" this is so noisy that it hurts more than it helps:
+		:hi SpellCap none
+	" }}}2
 
-"-- cmdalias.vim aliases for vanilla commands:
-	:Alias Wq wq
-	:Alias WQ wq
-	:Alias qw wq
-	:Alias Q q
-	:Alias w W
+	" cmdalias.vim aliases (vanilla): 2{{{
+		:Alias Wq wq
+		:Alias WQ wq
+		:Alias qw wq
+		:Alias Q q
+		:Alias w W
+	" }}}2
 
-"-- Custom commands:
-	:command! -nargs=? W call RobustSave(<f-args>)
-	:command! Reup source ~/.vimrc
-	:Alias reup Reup
-	" Create a new tab with the desired help-page inside of it:
-	:command! -nargs=1 Tabh tab h <args>
-	:Alias tabh Tabh
-	:command! -nargs=+ Resize call Resize(<f-args>) " TODO: handle percents. https://www.reddit.com/r/vim/comments/3m85zo/resizing_splits_as_a_percentage_in_macvim/
-	:command! Hoh set hlsearch
-	:Alias hoh Hoh
-	" Count the number of commas on the current line:
-	:command! Comman keeppattern s/,//n
-	" Run vim's grep in a new tab if necessary:
-	:command! -nargs=+ Grep execute (&modified)? "tabe" : "" | grep <args>
-	Alias grep Grep
-	:command! Grepr Grep -r <args> .
-	Alias grepr Grepr
-	:command! -nargs=+ Greprt tabe | grep -r <args> .
-	Alias greprt Greprt
+  " Custom commands 2{{{
+		:command! -nargs=? W call RobustSave(<f-args>)
+		:command! Reup source ~/.vimrc
+		:Alias reup Reup
+		" Create a new tab with the desired help-page inside of it:
+		:command! -nargs=1 Tabh tab h <args>
+		:Alias tabh Tabh
+		:command! -nargs=+ Resize call Resize(<f-args>) " TODO: handle percents. https://www.reddit.com/r/vim/comments/3m85zo/resizing_splits_as_a_percentage_in_macvim/
+		:command! Hoh set hlsearch
+		:Alias hoh Hoh
+		" Count the number of commas on the current line:
+		:command! Comman keeppattern s/,//n
+		" Run vim's grep in a new tab if necessary:
+		:command! -nargs=+ Grep execute (&modified)? "tabe" : "" | grep <args>
+		Alias grep Grep
+		:command! Grepr Grep -r <args> .
+		Alias grepr Grepr
+		:command! -nargs=+ Greprt tabe | grep -r <args> .
+		Alias greprt Greprt
 
-	:command! -range=% Imply <line1>,<line2>s/^./>\0/ | noh
-	" Soft-yank a line (or line-range) and then immediately paste it at the
-	" cursor's current position:
-	:command! -range Yp <line1>,<line2>y p | normal! "pP
-	Alias yp Yp
-	" ^ This won't correct to 'Yp' on <Return> or <Space> but it will correct on
-	" <Tab> so to yank-then-paste the line above it would be :-1yp<Tab>
+		:command! -range=% Imply <line1>,<line2>s/^./>\0/ | noh
+		" Soft-yank a line (or line-range) and then immediately paste it at the
+		" cursor's current position:
+		:command! -range Yp <line1>,<line2>y p | normal! "pP
+		Alias yp Yp
+		" ^ This won't correct to 'Yp' on <Return> or <Space> but it will correct on
+		" <Tab> so to yank-then-paste the line above it would be :-1yp<Tab>
 
-	" Turn tabs into spaces for either the current line, or the lines indicated
-	" using the preceding range-syntax:
-	:command! -range Poof setlocal expandtab | <line1>,<line2>retab! | setlocal noexpandtab
+		" Turn tabs into spaces for either the current line, or the lines indicated
+		" using the preceding range-syntax:
+		:command! -range Poof setlocal expandtab | <line1>,<line2>retab! | setlocal noexpandtab
 
-	" This command prefixes/prepends the given text to the beginning of the
-	" selected lines, or all lines, if it's invoked with no selection:
-	:command! -range=% -nargs=+ Beg silent <line1>,<line2>call InsertAtBeginning(<f-args>)
-	Alias beg Beg
+		" This command prefixes/prepends the given text to the beginning of the
+		" selected lines, or all lines, if it's invoked with no selection:
+		:command! -range=% -nargs=+ Beg silent <line1>,<line2>call InsertAtBeginning(<f-args>)
+		Alias beg Beg
 
-	" Copy path to current file into default register #current path
-	:command! Cpath let @"=escape(expand('%:p'),' \')
-	Alias cpath Cpath
+		" Copy path to current file into default register #current path
+		:command! Cpath let @"=escape(expand('%:p'),' \')
+		Alias cpath Cpath
 
-	" Change the current working directory to that of the current file:
-	command! Nowat lcd %:p:h
-	Alias nowat Nowat
+		" Change the current working directory to that of the current file:
+		command! Nowat lcd %:p:h
+		Alias nowat Nowat
 
-	Alias ulti UltiSnipsEdit
+		Alias ulti UltiSnipsEdit
 
-	command! Comred hi Comment ctermfg=Red
+		command! Comred hi Comment ctermfg=Red
 
-	" Grab either the lefthand side or righthand side of a nearby line and paste
-	" it to the current line:
-	:command! -range Lhs :normal! mw<line1>gg^"pyf=`w"pp<Return>
-	Alias lhs Lhs
-	:command! -range Rhs :normal! mw<line1>gg^f=l"py$`w"pp<Return>
-	Alias rhs Rhs
-	:command! -range Dp <line1>m .
-	:Alias dp Dp
+		" Grab either the lefthand side or righthand side of a nearby line and paste
+		" it to the current line:
+		:command! -range Lhs :normal! mw<line1>gg^"pyf=`w"pp<Return>
+		Alias lhs Lhs
+		:command! -range Rhs :normal! mw<line1>gg^f=l"py$`w"pp<Return>
+		Alias rhs Rhs
+		:command! -range Dp <line1>m .
+		:Alias dp Dp
 
-" }}}
+	" }}}2
 
-"Functions 1{{{
+" }}} 1
 
-" Note `function!` forces overwrite if necessary on creation of a funciton
+" Functions 1{{{
+
+  " Note `function!` forces overwrite if necessary on creation of a funciton
 
 	if ! exists('*ShouldStripTrailing')
 	" On certain systems, this may be defined in .vimrc2 already
@@ -933,7 +940,7 @@ augroup END
 		let rString = ''
 		let fromCol = '.'
 		if l:luddite
-"			echom l:lineToBe . ' -> ' . l:toLine
+  "			echom l:lineToBe . ' -> ' . l:toLine
 			let lineToBe = l:fromLine
 			" ^ This is the line we expect to land on after each set of actions
 			let postInject = ''
@@ -1029,7 +1036,7 @@ augroup END
 		if l:luddite
 			let rString = ''
 			let difference = l:toCol - l:fromCol
-"			echom 'difference: ' . l:difference
+  "			echom 'difference: ' . l:difference
 			for c in range(l:fromCol,l:toCol,1 - 2*(l:difference<0))
 				let rString	.= l:inject . c . '|'
 			endfor
@@ -1110,16 +1117,16 @@ augroup END
 		"return "%s/\
 	"endfunction
 
-" helper-function
-  function! AtEndOfLine()
-      let textAfterCursor = strpart(getline('.'),col('.'))
-      if textAfterCursor==""
-          return 1
-      endif
-      return 0
-  endfunction
+  " helper-function
+	function! AtEndOfLine()
+		let textAfterCursor = strpart(getline('.'),col('.'))
+		if textAfterCursor==""
+			return 1
+		endif
+		return 0
+	endfunction
 
-" helper-function: return whether there's only whitespace on a line or not
+  " helper-function: return whether there's only whitespace on a line or not
 	function! OnlyWhitespaceOnLine()
 		let onlySpace = match(getline('.'),'\_^\s\+\_$')
 		let blankLine = match(getline('.'),'\_^\_$')
@@ -1133,16 +1140,16 @@ augroup END
 	endfunction
 
 
-" helper-function: return booleanishly to indicate whether there are multiple
-" lines selected:
+  " helper-function: return booleanishly to indicate whether there are multiple
+  " lines selected:
 	function! MultipleLinesSelected()
 		" if the start of the active selection is on a different line than the
 		" end of it:
 		return line("v") != line(".")
 	endfunction
 
-" nnoremapped to <Return>
-" SmartEnter
+  " nnoremapped to <Return>
+  " SmartEnter
 	function! SmartReturn()
 		"let indentLevel = GetCurrentIndentLevel()
 		let terminalChar = matchstr( getline('.'),'\%' . col('.') . 'c.' )
@@ -1153,7 +1160,7 @@ augroup END
 		return "i\<CR>\<Esc>^"
 	endfunction
 
-" nnoremaped to <Del>
+  " nnoremaped to <Del>
 	function! SmartDelete()
 		" If we're deleting from the end of the current line, immediately eat
 		" any whitespace that's at the beginning of the next line, since this
@@ -1435,14 +1442,14 @@ augroup END
 		call PipeToSocket('SELECT 1;',socketPath)
 	endfunction
 
-" }}}
+" }}}1
 
 " Minesweeping 1{{{
 
 	" shiftK doesn't to try look up any man-pages for the word under the cursor:
 	nnoremap K <Nop>
 
-" }}}
+" }}}1
 
 " Novel keybindings 1{{{
 
@@ -1617,7 +1624,7 @@ augroup END
 	" d-then-plus increments the nearest integer at/after the cursor:
 	nnoremap d+ <C-a>
 
-" }}}
+" }}}1
 
 " Keybinding overrides 1{{{
 
@@ -1629,270 +1636,274 @@ augroup END
 	" character):
 	imap ç <C-c>g
 
-" Emmet bindings: 2{{{
-	" altZ expands tags instead of Emmet's default ctrlY-then-comma:
-	imap <A-z> <C-Y>,
-" }}}
-
-" }}}
+	" Emmet bindings: 2{{{
+		" altZ expands tags instead of Emmet's default ctrlY-then-comma:
+		imap <A-z> <C-Y>,
+	 " }}}2
 
 
-" Navigation bindings: 2{{{
+	" Navigation bindings: 2{{{
 
-	" 6: home-key goes to the beginning of the virtual line, and toggles
-	" between soft home and hard home after that:
-	nnoremap <expr> <Home> SmartHome('n')
-	nnoremap <expr> <kHome> SmartHome('n')
-	imap <expr> <Home> "\<C-o>" . SmartHome('i')
-	imap <expr> <kHome> "\<C-o>" . SmartHome('i')
-	vnoremap <expr> <Home> SmartHome(visualmode())
-	vnoremap <expr> <kHome> SmartHome(visualmode())
+		" 6: home-key goes to the beginning of the virtual line, and toggles
+		" between soft home and hard home after that:
+		nnoremap <expr> <Home> SmartHome('n')
+		nnoremap <expr> <kHome> SmartHome('n')
+		imap <expr> <Home> "\<C-o>" . SmartHome('i')
+		imap <expr> <kHome> "\<C-o>" . SmartHome('i')
+		vnoremap <expr> <Home> SmartHome(visualmode())
+		vnoremap <expr> <kHome> SmartHome(visualmode())
 
-	" 6: end-key goes to the end of the virtual line or the actual end if
-	" already there:
-	nnoremap <silent> <expr> <End> SmartEnd('n')
-	nnoremap <silent> <expr> <kEnd> SmartEnd('n')
-	inoremap <silent> <expr> <End> "\<C-o>" . SmartEnd('i')
-	inoremap <silent> <expr> <kEnd> "\<C-o>" . SmartEnd('i')
-	vnoremap <silent> <expr> <End> SmartEnd(visualmode())
-	vnoremap <silent> <expr> <kEnd> SmartEnd(visualmode())
+		" 6: end-key goes to the end of the virtual line or the actual end if
+		" already there:
+		nnoremap <silent> <expr> <End> SmartEnd('n')
+		nnoremap <silent> <expr> <kEnd> SmartEnd('n')
+		inoremap <silent> <expr> <End> "\<C-o>" . SmartEnd('i')
+		inoremap <silent> <expr> <kEnd> "\<C-o>" . SmartEnd('i')
+		vnoremap <silent> <expr> <End> SmartEnd(visualmode())
+		vnoremap <silent> <expr> <kEnd> SmartEnd(visualmode())
 
-	"2: o-key and shiftO insert a line below or above the current one (without staying in insert mode)
-	" the x below deletes the autoindent whitespace 2:
-	nmap <silent> <expr> <A-o> InsertLineBelow() . "\<Esc>``"
-	nmap <silent> <expr> o InsertLineBelow() . "\<Esc>"
-	nmap <silent> <expr> O InsertLineAbove() . "\<Esc>"
+		"2: o-key and shiftO insert a line below or above the current one (without staying in insert mode)
+		" the x below deletes the autoindent whitespace 2:
+		nmap <silent> <expr> <A-o> InsertLineBelow() . "\<Esc>``"
+		nmap <silent> <expr> o InsertLineBelow() . "\<Esc>"
+		nmap <silent> <expr> O InsertLineAbove() . "\<Esc>"
 
-	" backslash-key inserts a backslash:
-	nmap <silent> <expr> \\ ToInsertBeforeCurrentChar('\') . "\<Right>"
-	" space inserts a space in front of current character:
-	noremap <silent> <expr> <Space> ToInsertBeforeCurrentChar(" ")
+		" backslash-key inserts a backslash:
+		nmap <silent> <expr> \\ ToInsertBeforeCurrentChar('\') . "\<Right>"
+		" space inserts a space in front of current character:
+		noremap <silent> <expr> <Space> ToInsertBeforeCurrentChar(" ")
 
-	" h-key goes up one line:
-	nnoremap h j
-	" l-key goes down one line:
-	nnoremap l k
+		" h-key goes up one line:
+		nnoremap h k
+		" l-key goes down one line:
+		nnoremap l j
 
-	" equals-key helps to navigate to lower lines (avoids shift):
-	nnoremap = +
-	vnoremap = +
+		" equals-key helps to navigate to lower lines (avoids shift):
+		nnoremap = +
+		vnoremap = +
 
-	" shiftEquals gets swapped with standard plus-key functionality:
-	nnoremap + =
-	vnoremap + =
+		" shiftEquals gets swapped with standard plus-key functionality:
+		nnoremap + =
+		vnoremap + =
 
-	" 6: up-key goes up by virutal line
-	" down-key goes down by virutal line
-	nnoremap <Up> gk
-	nnoremap <Down> gj
-	vnoremap <Up> gk
-	vnoremap <Down> gj
-	inoremap <Up> <C-o>gk
-	inoremap <Down> <C-o>gj
+		" 6: up-key goes up by virutal line
+		" down-key goes down by virutal line
+		nnoremap <Up> gk
+		nnoremap <Down> gj
+		vnoremap <Up> gk
+		vnoremap <Down> gj
+		inoremap <Up> <C-o>gk
+		inoremap <Down> <C-o>gj
 
-	" g-then-i goes to the next matching indent:
-	nnoremap <expr> gi ToJumpToIndent()
-	vnoremap <expr> gi ToJumpToIndent()
-	" g-then-shiftI goes to the previous matching indent:
-	nnoremap <expr> gI ToJumpToIndent(1)
-	vnoremap <expr> gI ToJumpToIndent(1)
+		" g-then-i goes to the next matching indent:
+		nnoremap <expr> gi ToJumpToIndent()
+		vnoremap <expr> gi ToJumpToIndent()
+		" g-then-shiftI goes to the previous matching indent:
+		nnoremap <expr> gI ToJumpToIndent(1)
+		vnoremap <expr> gI ToJumpToIndent(1)
 
-	" allow shiftLeft to stay held while selecting without jumping by word
-	vmap <S-Left> <Left>
-	" allow shiftRight to stay held while selecting without jumping by word
-	vmap <S-Right> <Right>
-	" allow shiftDown to stay held while selecting without jumping by screen
-	vmap <S-Down> <Down>
-	" allow shiftUp to stay held while selecting without jumping by screen
-	vmap <S-Up> <Up>
-	" ctrlRight jumps only to the beginning words that I consider words:
-	nnoremap <silent> <C-Right> :set nohlsearch \| let @s=@/<Return>/\<[a-zA-Z0-9_]<Return>:let @/=@s<Return>
-	" ctrlLeft jumps only to the beginning of words that I consider words:
-	nnoremap <silent> <C-Left> :set nohlsearch \| let @s=@/<Return>?\<[a-zA-Z0-9_]<Return>:let @/=@s<Return>
-	" ctrlRight jumps by word like in most text editors:
-	vnoremap <C-Right> /[a-zA-Z0-9_]\><Return>
-	" ctrlLeft jumps by word like in most text editors:
-	vnoremap <C-Left> ?\<[a-zA-Z0-9_]<Return>
+		" allow shiftLeft to stay held while selecting without jumping by word
+		vmap <S-Left> <Left>
+		" allow shiftRight to stay held while selecting without jumping by word
+		vmap <S-Right> <Right>
+		" allow shiftDown to stay held while selecting without jumping by screen
+		vmap <S-Down> <Down>
+		" allow shiftUp to stay held while selecting without jumping by screen
+		vmap <S-Up> <Up>
+		" ctrlRight jumps only to the beginning words that I consider words:
+		nnoremap <silent> <C-Right> :set nohlsearch \| let @s=@/<Return>/\<[a-zA-Z0-9_]<Return>:let @/=@s<Return>
+		" ctrlLeft jumps only to the beginning of words that I consider words:
+		nnoremap <silent> <C-Left> :set nohlsearch \| let @s=@/<Return>?\<[a-zA-Z0-9_]<Return>:let @/=@s<Return>
+		" ctrlRight jumps by word like in most text editors:
+		vnoremap <C-Right> /[a-zA-Z0-9_]\><Return>
+		" ctrlLeft jumps by word like in most text editors:
+		vnoremap <C-Left> ?\<[a-zA-Z0-9_]<Return>
 
-	" 2: shiftLeft and shiftRight switch to selection-mode:
-	imap <S-Left> <C-o>mv<Esc>`vv<Left>
-	imap <S-Right> <C-o>mv<Esc>`vv<Right>
+		" 2: shiftLeft and shiftRight switch to selection-mode:
+		imap <S-Left> <C-o>mv<Esc>`vv<Left>
+		imap <S-Right> <C-o>mv<Esc>`vv<Right>
 
-	":4 sadly the previous two aliases do not quite work in PuTTY
-	imap <silent> <C-Right> <C-o>:set nohlsearch \| let @s=@/<Return><C-o>/\<[a-zA-Z0-9_]<Return><C-o>:let @/=@s<Return>
-	imap <silent> <C-Left> <C-o>:set nohlsearch \| let @s=@/<Return><C-o>?\<[a-zA-Z0-9_]<Return><C-o>:let @/=@s<Return>
-	" altE goes to (after) end of word:
-	imap <A-e> <C-o>e<Right>
-	nmap <A-e> e
-	" altB goes to beginning of word:
-	imap <A-b> <C-o>b
+		":4 sadly the previous two aliases do not quite work in PuTTY
+		imap <silent> <C-Right> <C-o>:set nohlsearch \| let @s=@/<Return><C-o>/\<[a-zA-Z0-9_]<Return><C-o>:let @/=@s<Return>
+		imap <silent> <C-Left> <C-o>:set nohlsearch \| let @s=@/<Return><C-o>?\<[a-zA-Z0-9_]<Return><C-o>:let @/=@s<Return>
+		" altE goes to (after) end of word:
+		imap <A-e> <C-o>e<Right>
+		nmap <A-e> e
+		" altB goes to beginning of word:
+		imap <A-b> <C-o>b
 
-	" 2: j-key jumps to the next/previous character which matches the one under
-	" the cursor:
-	nnoremap <silent> j :call JumpToNextMatchingChar('')<Return>
-	vnoremap <silent> J :<C-u>let @p=escape(GetCharFromCursor(),'/\') \| set nohlsearch<Return>gv?\V<C-r>p<Return>
-	" 2: shiftJ does the same only backwards:
-	nnoremap <silent> J :call JumpToNextMatchingChar('b')<Return>
-	vnoremap <silent> j :<C-u>let @p=escape(GetCharFromCursor(),'/\') \| set nohlsearch<Return>gv/\V<C-r>p<Return>
+		" 2: j-key jumps to the next/previous character which matches the one under
+		" the cursor:
+		nnoremap <silent> j :call JumpToNextMatchingChar('')<Return>
+		vnoremap <silent> J :<C-u>let @p=escape(GetCharFromCursor(),'/\') \| set nohlsearch<Return>gv?\V<C-r>p<Return>
+		" 2: shiftJ does the same only backwards:
+		nnoremap <silent> J :call JumpToNextMatchingChar('b')<Return>
+		vnoremap <silent> j :<C-u>let @p=escape(GetCharFromCursor(),'/\') \| set nohlsearch<Return>gv/\V<C-r>p<Return>
 
-" }}}
+	" }}}2
 
-"-- Editing bindings:
+	" Editing bindings 2{{{
 
-	" enter-key acts like enter:
-	nmap <silent> <expr> <Return> SmartReturn()
-	"inoremap <silent> <expr> <Return> SmartReturn()
-	" shiftI begins insert above:
-	" TODO: clone indent from line above or current line depending on which
-	" one(s) are blank
-	nmap <expr> <S-i> line('.')==1 ? "Oi" : "\<Up>k"
-	" k-key begins insert below:
-	nmap <silent> <expr> k InsertLineBelow()
-	"<A-i> i\<End>\<End>\<CR>
-	" backspace-key deletes one character back
-	nmap <BS> i<BS><Esc><Right>
-	" delete-key acts like x unless at end of line
-	inoremap <silent> <expr> <Del> SmartDelete()
-	noremap <silent> <expr> <Del> SmartDelete()
-	nnoremap <silent> <expr> x SmartX()
-	" ctrlDelete deletes rest of line
-	nmap <C-kDel> v<S-$><Left>x
+		" enter-key acts like enter:
+		nmap <silent> <expr> <Return> SmartReturn()
+		"inoremap <silent> <expr> <Return> SmartReturn()
+		" shiftI begins insert above:
+		" TODO: clone indent from line above or current line depending on which
+		" one(s) are blank
+		nmap <expr> <S-i> line('.')==1 ? "Oi" : "\<Up>k"
+		" k-key begins insert below:
+		nmap <silent> <expr> k InsertLineBelow()
+		"<A-i> i\<End>\<End>\<CR>
+		" backspace-key deletes one character back
+		nmap <BS> i<BS><Esc><Right>
+		" delete-key acts like x unless at end of line
+		inoremap <silent> <expr> <Del> SmartDelete()
+		noremap <silent> <expr> <Del> SmartDelete()
+		nnoremap <silent> <expr> x SmartX()
+		" ctrlDelete deletes rest of line
+		nmap <C-kDel> v<S-$><Left>x
 
-	" ctrlBackspace deletes previous word:
-	nmap  i<C-w><Esc>x
+		" ctrlBackspace deletes previous word:
+		nmap  i<C-w><Esc>x
 
-	" altD eats next word / deletes next word:
-	nmap ä <A-d>
-	nnoremap <silent> <A-d> :call EatNextWord() <Return>
-	imap ä <A-d>
-	inoremap <silent> <A-d> <Right><Esc>:call EatNextWord() <Return>i
+		" altD eats next word / deletes next word:
+		nmap ä <A-d>
+		nnoremap <silent> <A-d> :call EatNextWord() <Return>
+		imap ä <A-d>
+		inoremap <silent> <A-d> <Right><Esc>:call EatNextWord() <Return>i
 
-	" s-key does not yank, just deletes then enters insert-mode:
-	vnoremap <expr> s SmartS()
-	vmap a s<Right>
-	nnoremap <expr> s SmartS()
-	" x-key does not yank, just deletes:
-	vnoremap <expr> x SmartX()
-	" p-key and shiftP do not yank, just:
-	vnoremap p "_xP
-	vnoremap P "_xP
+		" s-key does not yank, just deletes then enters insert-mode:
+		vnoremap <expr> s SmartS()
+		vmap a s<Right>
+		nnoremap <expr> s SmartS()
+		" x-key does not yank, just deletes:
+		vnoremap <expr> x SmartX()
+		" p-key and shiftP do not yank, just:
+		vnoremap p "_xP
+		vnoremap P "_xP
 
-	" shiftU redoes:
-	noremap U <C-r>
-	" insert-key enters replace-mode
-	nnoremap <Insert> i<Insert>
+		" shiftU redoes:
+		noremap U <C-r>
+		" insert-key enters replace-mode
+		nnoremap <Insert> i<Insert>
 
-	" shiftU capitalizes SQL keywords:
-	nnoremap <silent> <C-u> :exec 'silent! normal! ' . To('$','$','.',1,'',":call PgCap() \<Enter>")
-	" U-key capitalizes any alphas in selection:
-	vnoremap <silent> U gU
-	" u-key lowercases any alphas in selection:
-	vnoremap <silent> u gu
+		" shiftU capitalizes SQL keywords:
+		nnoremap <silent> <C-u> :exec 'silent! normal! ' . To('$','$','.',1,'',":call PgCap() \<Enter>")
+		" U-key capitalizes any alphas in selection:
+		vnoremap <silent> U gU
+		" u-key lowercases any alphas in selection:
+		vnoremap <silent> u gu
 
-"--- Find and replace stuff
+	" }}}2
 
-	" ctrlF opens search-mode:
-	nnoremap <C-f> /
-	vnoremap <C-f> "fy/\V<C-r>f
-	" hash-key and star-key (asterisk-key) search on current selection as a token:
-	" TODO: we'll need to actually escape the clipboard-contents instead of
-	" using \V, since \V disables use of \< and \>
-	vnoremap * "fygv/\V\<<C-r>f\><Return>
-	vmap # "fygv?\V\<<C-r>f\><Return>
-	" ctrlG searches on current selection (if present, otherwise repeats last)
-	nnoremap <C-g> n
-	vmap <C-g> <C-f><Return>
-	" ctrlShiftG searches backward on current selection (if present, otherwise repeats last)
-	nnoremap <C-S-g> N
-	vnoremap <C-S-g> "fy?\V<C-r>f<Return>
-	" normal ctrlH starts a document-wide replace:
-	nnoremap <C-h> :%s/
-	" visual ctrlH starts replacement within selection:
-	vnoremap <C-h>  :s/
-	" ctrlR starts a replace-command containing the selected text:
-	vnoremap <C-r> :call SelectionAsRegexToRegister('h')<Return>:<C-u>%s/<C-r>h//<Left>
-	" :credit http://stackoverflow.com/questions/676600/
-	" shiftR in visual mode starts a replace-command on the selected text
-	" (set up to only affect text until the end of the line):
-	vnoremap R :call SelectionAsRegexToRegister('h')<Return>:<BS><BS><BS><BS><BS>s/\%><C-r>=col('.')-1<Return>c<C-r>h//<Left>
-	" shiftR in normal mode replaces from current cursor position until EOL:
-	nnoremap R :s/\%><C-r>=col('.')<Return>c//<Left><Left>
-	" :credit https://www.reddit.com/r/vim/comments/5zbyfw/tn/dewvpfw/
-	" enter-key copies in visual mode:
-	vmap <Return> y
-	" qq dismisses search-highlighting:
-	nnoremap qq :noh<Return>
 
-	" 4: f-key finds the next single character (accepted afterwards
-	" interactively) on multiple lines, rather than just the current one:
-	nnoremap <silent> <expr> f ((mode()=="i")? "m`" : "") . ":call FindChar('')\<Return>"
-	" ^ from normal mode, this also marks the current position for return, which
-	" functionally skips this step if done from insert-mode using ctrlO:
-	vnoremap <silent> <expr> f 'm`' . FindChar('v')
-	" 2: shiftF finds previous single character (accepted afterwards
-	" interactively):
-	nnoremap <silent> <expr> F ((mode()=="i")? "m`" : "") . ":call FindChar('b')\<Return>"
-	vnoremap <silent> <expr> F 'm`' . FindChar('vb')
-	" 2: semicolon-key repeats previous FindChar search:
-	nnoremap <silent> ; :call JumpToChar('','')<Return>
-	vnoremap <silent> <expr> ; JumpToChar('','v')
-	" 2: comma-key repeats previous FindChar search backwards:
-	nnoremap <silent> , :call JumpToChar('','b')<Return>
-	vnoremap <silent> <expr> , JumpToChar('','vb')
+	" Find and replace stuff 2{{{
 
-"-- Universal IDE-oid stuff:
+		" ctrlF opens search-mode:
+		nnoremap <C-f> /
+		vnoremap <C-f> "fy/\V<C-r>f
+		" hash-key and star-key (asterisk-key) search on current selection as a token:
+		" TODO: we'll need to actually escape the clipboard-contents instead of
+		" using \V, since \V disables use of \< and \>
+		vnoremap * "fygv/\V\<<C-r>f\><Return>
+		vmap # "fygv?\V\<<C-r>f\><Return>
+		" ctrlG searches on current selection (if present, otherwise repeats last)
+		nnoremap <C-g> n
+		vmap <C-g> <C-f><Return>
+		" ctrlShiftG searches backward on current selection (if present, otherwise repeats last)
+		nnoremap <C-S-g> N
+		vnoremap <C-S-g> "fy?\V<C-r>f<Return>
+		" normal ctrlH starts a document-wide replace:
+		nnoremap <C-h> :%s/
+		" visual ctrlH starts replacement within selection:
+		vnoremap <C-h>  :s/
+		" ctrlR starts a replace-command containing the selected text:
+		vnoremap <C-r> :call SelectionAsRegexToRegister('h')<Return>:<C-u>%s/<C-r>h//<Left>
+		" :credit http://stackoverflow.com/questions/676600/
+		" shiftR in visual mode starts a replace-command on the selected text
+		" (set up to only affect text until the end of the line):
+		vnoremap R :call SelectionAsRegexToRegister('h')<Return>:<BS><BS><BS><BS><BS>s/\%><C-r>=col('.')-1<Return>c<C-r>h//<Left>
+		" shiftR in normal mode replaces from current cursor position until EOL:
+		nnoremap R :s/\%><C-r>=col('.')<Return>c//<Left><Left>
+		" :credit https://www.reddit.com/r/vim/comments/5zbyfw/tn/dewvpfw/
+		" enter-key copies in visual mode:
+		vmap <Return> y
+		" qq dismisses search-highlighting:
+		nnoremap qq :noh<Return>
 
-	" F5-key pipes selected text to a file:
-	vnoremap <F5> :<C-u>call AppendToFile()<Return>
-	vnoremap <F1> :<C-u>call AppendToFile()<Return>
-	nmap <F5> ggVG<F5><C-o><C-o>
-	" F5-key just sends current line from insert-mode:
-	imap <F5> <F1>
-	" F1-key just sends current line to file:
-	nmap <F1> V<F5>
-	imap <F1> <C-o>mp<C-o><F1><C-o>`p
+		" 4: f-key finds the next single character (accepted afterwards
+		" interactively) on multiple lines, rather than just the current one:
+		nnoremap <silent> <expr> f ((mode()=="i")? "m`" : "") . ":call FindChar('')\<Return>"
+		" ^ from normal mode, this also marks the current position for return, which
+		" functionally skips this step if done from insert-mode using ctrlO:
+		vnoremap <silent> <expr> f 'm`' . FindChar('v')
+		" 2: shiftF finds previous single character (accepted afterwards
+		" interactively):
+		nnoremap <silent> <expr> F ((mode()=="i")? "m`" : "") . ":call FindChar('b')\<Return>"
+		vnoremap <silent> <expr> F 'm`' . FindChar('vb')
+		" 2: semicolon-key repeats previous FindChar search:
+		nnoremap <silent> ; :call JumpToChar('','')<Return>
+		vnoremap <silent> <expr> ; JumpToChar('','v')
+		" 2: comma-key repeats previous FindChar search backwards:
+		nnoremap <silent> , :call JumpToChar('','b')<Return>
+		vnoremap <silent> <expr> , JumpToChar('','vb')
+	" }}}
 
-	vnoremap <F10> :<C-u>call AppendToFile(GetSelectionText(),'/tmp/lifo')<Return>
-	vnoremap <F6> :<C-u>call AppendToFile(GetSelectionText(),'/tmp/lifo')<Return>
-	nmap <F10> ggVG<F6><C-o><C-o>
-	" F10-key just sends current line from insert-mode:
-	imap <F10> <F6>
-	" F6-key just sends current line to file:
-	nmap <F6> V<F10>
-	imap <F6> <C-o>mp<C-o><F6><C-o>`p
+	" Universal IDE-oid stuff 2{{{
 
-	" 2: altG opens command-bar:
-	nnoremap <A-g> :
-	vnoremap <A-g> :
+		" F5-key pipes selected text to a file:
+		vnoremap <F5> :<C-u>call AppendToFile()<Return>
+		vnoremap <F1> :<C-u>call AppendToFile()<Return>
+		nmap <F5> ggVG<F5><C-o><C-o>
+		" F5-key just sends current line from insert-mode:
+		imap <F5> <F1>
+		" F1-key just sends current line to file:
+		nmap <F1> V<F5>
+		imap <F1> <C-o>mp<C-o><F1><C-o>`p
 
-"-- Selection stuff
+		vnoremap <F10> :<C-u>call AppendToFile(GetSelectionText(),'/tmp/lifo')<Return>
+		vnoremap <F6> :<C-u>call AppendToFile(GetSelectionText(),'/tmp/lifo')<Return>
+		nmap <F10> ggVG<F6><C-o><C-o>
+		" F10-key just sends current line from insert-mode:
+		imap <F10> <F6>
+		" F6-key just sends current line to file:
+		nmap <F6> V<F10>
+		imap <F6> <C-o>mp<C-o><F6><C-o>`p
 
-	" 2: shiftHome and shiftEnd select from current position to whatever
-	" positions these are happed to jump to:
-	nmap <S-Home> v<Home>
-	nmap <S-End> v<End>
+		" 2: altG opens command-bar:
+		nnoremap <A-g> :
+		vnoremap <A-g> :
+	" }}}2
 
-	" shiftW from normal mode selects current word cursor:
-	nnoremap W viw
-	" shiftW from visual mode deletes selection and spaces:
-	vnoremap W w<Left>"_x
-	nnoremap <C-w><C-w> db
+    " Selection stuff "{{{
 
-	" 4: shiftRight/shiftLeft/shiftDown/shiftUp start visual selection in the
-	" specified direction:
-	nmap <S-Right> v<Right>
-	nmap <S-Left> v<Left>
-	nmap <S-Down> v<Down>
-	nmap <S-Up> v<Up>
-	" ctrlShiftRight starts visual selection by word to the left:
-	nmap <C-S-Right> v<C-Right>
-	" ctrlShiftLeft starts visual selection by word to the left:
-	nmap <C-S-Left> v<C-Left>
+		" 2: shiftHome and shiftEnd select from current position to whatever
+		" positions these are happed to jump to:
+		nmap <S-Home> v<Home>
+		nmap <S-End> v<End>
 
-	" ctrlA does select all:
-	nnoremap <C-a> gg<S-v>G
+		" shiftW from normal mode selects current word cursor:
+		nnoremap W viw
+		" shiftW from visual mode deletes selection and spaces:
+		vnoremap W w<Left>"_x
+		nnoremap <C-w><C-w> db
 
-	" shiftV enters line-select mode and moves the cursor to the end:
-	nnoremap V V$
+		" 4: shiftRight/shiftLeft/shiftDown/shiftUp start visual selection in the
+		" specified direction:
+		nmap <S-Right> v<Right>
+		nmap <S-Left> v<Left>
+		nmap <S-Down> v<Down>
+		nmap <S-Up> v<Up>
+		" ctrlShiftRight starts visual selection by word to the left:
+		nmap <C-S-Right> v<C-Right>
+		" ctrlShiftLeft starts visual selection by word to the left:
+		nmap <C-S-Left> v<C-Left>
 
-" }}}
+		" ctrlA does select all:
+		nnoremap <C-a> gg<S-v>G
+
+		" shiftV enters line-select mode and moves the cursor to the end:
+		nnoremap V V$
+	" }}}2
+
+" }}}1
