@@ -20,8 +20,11 @@ hi DiffDelete   ctermfg=Blue ctermbg=LightRed
 hi DiffText     cterm=bold gui=bold ctermbg=Brown
 hi Directory    ctermfg=DarkBlue guifg=Blue
 hi ErrorMsg     ctermfg=White ctermbg=DarkRed guibg=Red guifg=White
-hi FoldColumn   ctermfg=DarkBlue ctermbg=Grey guibg=Grey guifg=DarkBlue
-hi Folded       ctermbg=Grey ctermfg=DarkBlue guibg=LightGrey guifg=DarkBlue
+" 2: These two lines control the colors for when the `foldcolumn` setting is a
+" nonzero value:
+hi FoldColumn   ctermfg=Black ctermbg=Grey guibg=Grey guifg=DarkBlue
+hi Folded       ctermbg=Grey ctermfg=Black guibg=LightGrey guifg=DarkBlue
+" :2
 
 " Used before enter is pressed and `incsearch` is on:
 hi IncSearch    cterm=reverse gui=reverse
@@ -37,11 +40,12 @@ hi PmenuSel     ctermfg=White ctermbg=DarkBlue guifg=White guibg=DarkBlue
 hi Question     ctermfg=DarkGreen gui=bold guifg=SeaGreen
 hi Search       ctermfg=NONE ctermbg=Grey guibg=Yellow guifg=NONE
 hi SpecialKey   ctermfg=DarkBlue guifg=Blue
-hi StatusLine   cterm=bold ctermbg=Black ctermfg=white guibg=gold guifg=blue
+hi StatusLine   ctermbg=Black ctermfg=White guibg=gold guifg=blue
 hi StatusLineNC ctermbg=Black ctermfg=Grey guibg=blue guifg=black
 hi Title        ctermfg=DarkMagenta gui=bold guifg=Magenta
 hi VertSplit    cterm=reverse gui=reverse
-hi Visual       ctermbg=Yellow ctermfg=Black cterm=bold guifg=Grey guibg=fg
+" This appears to be reversed, at least in WSL:
+hi Visual       ctermbg=Black ctermfg=Yellow guifg=Grey guibg=fg
 hi VisualNOS    cterm=underline,bold gui=underline,bold
 hi WarningMsg   ctermfg=DarkRed guifg=Red
 hi WildMenu     ctermfg=Black ctermbg=Yellow guibg=Yellow guifg=Black
@@ -56,3 +60,4 @@ hi Statement  cterm=bold ctermfg=Blue	     gui=bold guifg=blue
 hi String     cterm=NONE ctermfg=DarkYellow   gui=NONE guifg=SkyBlue
 hi Type	      cterm=NONE ctermfg=Blue	     gui=bold guifg=blue
 
+hi CopilotSuggestion cterm=underline ctermfg=Lightgrey guifg=SeaGreen
