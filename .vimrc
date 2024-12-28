@@ -288,6 +288,12 @@
 		" indicating the indent-level with a leading number. e.g.:
 		"     2 EightHeader config ................................10 lines
 		let &foldtext = "EightHeaderFolds( '\\=s:fullwidth-2', 'left', [ repeat('    ', v:foldlevel - 1), '.', '' ], '\\= s:foldlines . \" lines\"', '\\=substitute(s:str,\"^\\\\(.*\\\\)\\\\([0-9]\\\\)$\",\"\\\\2 \\\\1\",\"\")' )"
+		" NOTE: If this addon ever breaks, a custom function can just be
+		" provided to the `foldtext` setting to override the default value
+		" which causes the built-in `foldtext()` to be invoked. It'll take a
+		" little bit of extra work, since EightHeader takes care of some
+		" basics for us, but it shouldn't be too bad. Maybe I could even try
+		" to expose the innards of a given header by making it multi-line.
 	" }}}2
 
 	" Folddigest config 2{{{
