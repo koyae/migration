@@ -28,3 +28,9 @@
 [submodule ".vim/bundle/vim-cutlass"]
 	path = .vim/bundle/vim-cutlass
 	url = https://github.com/svermeulen/vim-cutlass
+[submodule ".vim/bundle/copilot.vim"]
+	path = .vim/bundle/copilot.vim
+	url = https://github.com/github/copilot.vim
+[submodule ".vim/bundle/vim-eightheader"]
+	path = .vim/bundle/vim-eightheader
+	url = https://github.com/bimlas/vim-eightheader

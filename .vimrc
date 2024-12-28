@@ -210,16 +210,53 @@ augroup END
 	vnoremap d ""d
 	" }}}
 
+	let g:pathogen_blacklist = []
 	if has('signs') != 1
-		let g:pathogen_blacklist = []
 		call add(g:pathogen_blacklist, 'vim-bookmarks')
 		echom "vim-bookmarks is not supported on this system"
 	else
 		let g:bookmark_sign = '🔖'
 	endif
+
+	" If nodejs is not available, or it's an older version of vim, don't
+	" try to load Copilot.
+	silent let njs = system("nodejs --version")
+	if v:shell_error || v:version < 900
+	" ^ Note: `has('patch-9.0-0185')` should work according to
+	" vi.stackexchange.com/questions/2466 but it doesn't seem to, so the
+	" above is slightly imprecise; a few versions of vim 9.0 won't work,
+	" which will have to be caught by the extension itself
+		call add(g:pathogen_blacklist, 'copilot.vim')
+		echom "copilot requires vim >=9.0.0185 and access to nodejs " .. v:shellerror .. njs
+		" nodejs will typically break under WSL 1 so it's necessary to
+		" upgrade to 2. Sufficiently-modern versions of vim begin to
+		" appear under WSL Ubuntu 24.04.1 LTS and up.
+	endif
+
 	" grab everything from ~/.vim/bundle:
 	execute pathogen#infect()
 	runtime macros/matchit.vim " allow jumping to matching XML tags using '%'
+
+	" Copilot settings 2{{{
+
+		" Info about the free tier of Copilot:
+		" * 2,000 code suggestions per month
+		" * 50 Copilot chat messages per month
+		" * Choice of Claude 3.5 Sonnet and GPT 4o
+		" * Copilot extensions like Perplexity web-search
+		" * 'Copilot Edits' for edits across multiple files
+
+		" altLeft while in insert mode to scrub forward along suggestion
+
+		imap <silent><script><expr> <A-a> copilot#Accept("\<CR>")
+		let g:copilot_no_tab_map = v:true
+
+		augroup copilot
+			autocmd!
+			autocmd BufNew,BufRead * :let b:copilot_enabled = v:false
+			autocmd VimEnter, * :Copilot disable
+		augroup end
+	" }}}
 
 	" Ultisnips config: 2{{{
 		" altQ expands snippet:
@@ -243,6 +280,18 @@ augroup END
 		" README allows tab names to be retained when using `:mksession`
 		set sessionoptions+=tabpages,globals
 	" }}}
+
+	" EightHeader config 2{{{
+		" This makes fold-headers look a bit nicer, by using '.' as a
+		" fill-character, indenting according to the fold-level, and also
+		" indicating the indent-level with a leading number. e.g.:
+		"     2 EightHeader config ................................10 lines
+		let &foldtext = "EightHeaderFolds( '\\=s:fullwidth-2', 'left', [ repeat('    ', v:foldlevel - 1), '.', '' ], '\\= s:foldlines . \" lines\"', '\\=substitute(s:str,\"^\\\\(.*\\\\)\\\\([0-9]\\\\)$\",\"\\\\2 \\\\1\",\"\")' )"
+	" }}}
+
+	" Folddigest config 2{{{
+		let folddigest_options="vertical,nofoldclose,flexnumwidth"
+	" }}}2
 
 " }}}1
 
