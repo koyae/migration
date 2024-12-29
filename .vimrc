@@ -363,6 +363,9 @@
 	" }}}2
 
   " Custom commands 2{{{
+
+		:command! ArgTranspose call TransposeArgs()
+
 		:command! -nargs=? W call RobustSave(<f-args>)
 		:command! Reup source ~/.vimrc
 		:Alias reup Reup
@@ -762,6 +765,33 @@
 		else
 			return lastMatchNr . "gg"
 		endif
+	endfunction
+
+	" Call this function if the argument-list to a function has grown too long,
+	" for one line, even if you go down a line to provide arguments only before
+	" closing out the call. This provides a way to sanely wrap each argument,
+	" even if there are strings containing commas or things that would screw up
+	" something simpler like a basic macro:
+	function! TransposeArgs()
+		" Note: we're currently making the assumption the args have already been
+		" put on their own line, so jump to the first right away:
+		normal ^
+		let startpos = getcurpos()
+		let repcount = 0
+		while startpos[1] == line('.')
+		" So long as we're still on the same line, keep repeating the motion to
+		" visit the next argument, keeping track of how many times we've
+		" done it:
+			normal 1],
+			let repcount += 1
+		endwhile
+		" Reset the cursor position and use the number of repeats we determined
+		" to jump to the dividing comma between each argument, move right one
+		" character, then insert a new line after the comma, which will match
+		" indent (or not) on the next line according to vim's `formatoptions`
+		call setpos('.',startpos) " reset cursor position
+		let doThis = repeat("1],\<Right>\<Return>", repcount-1)
+		execute 'normal ' .. doThis
 	endfunction
 
 	function! EatNextWord()
