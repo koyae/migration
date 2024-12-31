@@ -45,7 +45,11 @@ hi StatusLineNC ctermbg=Black ctermfg=Grey guibg=blue guifg=black
 hi Title        ctermfg=DarkMagenta gui=bold guifg=Magenta
 hi VertSplit    cterm=reverse gui=reverse
 " This appears to be reversed, at least in WSL:
-hi Visual       ctermbg=Black ctermfg=Yellow guifg=Grey guibg=fg
+if match(system('uname -a'),'icrosoft.*Linux')!=-1 && match($TERM,'^screen')==-1
+	hi Visual   ctermbg=Black ctermfg=Yellow guifg=Grey guibg=fg
+else
+	hi Visual   ctermbg=Yellow ctermfg=Black guifg=Grey guibg=fg
+endif
 hi VisualNOS    cterm=underline,bold gui=underline,bold
 hi WarningMsg   ctermfg=DarkRed guifg=Red
 hi WildMenu     ctermfg=Black ctermbg=Yellow guibg=Yellow guifg=Black
