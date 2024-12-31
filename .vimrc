@@ -108,13 +108,16 @@
 		autocmd BufNewFile,BufRead, *.screen,.screenrc* setf screen
 	augroup END
 
+
 	" allow various comments to rewrap correctly:
 	augroup vimstuff
 		autocmd!
-		autocmd BufNewFile,BufRead, *.vim,.vimrc setlocal comments+=:\\\\|
 		" ^ allow line-extension character
 		autocmd BufNewFile,BufRead, *.vim,.vimrc setlocal foldmethod=marker
-		autocmd BufRead .vimrc if tabpagewinnr(tabpagenr(),'$') == 1 | silent call FoldDigest() | silent Resize -h -28
+		" If vim is in its very own tab, open the FoldDigest pane at a
+		" reasonable size
+		autocmd BufWinEnter .vimrc if tabpagewinnr(tabpagenr(),'$') == 1 | call FoldDigest() | silent Resize -h 45 endif
+		autocmd BufNewFile,BufRead, *.vim,.vimrc setlocal comments+=:\\\\|
 	augroup END
 
 	augroup pgstuff
@@ -220,6 +223,7 @@
 		let g:bookmark_sign = '🔖'
 	endif
 
+	let s:copilot = 0
 	" If nodejs is not available, or it's an older version of vim, don't
 	" try to load Copilot.
 	silent let njs = system("nodejs --version")
@@ -233,6 +237,8 @@
 		" nodejs will typically break under WSL 1 so it's necessary to
 		" upgrade to 2. Sufficiently-modern versions of vim begin to
 		" appear under WSL Ubuntu 24.04.1 LTS and up.
+	else
+		let s:copilot = 1
 	endif
 
 	" grab everything from ~/.vim/bundle:
@@ -249,15 +255,40 @@
 		" * 'Copilot Edits' for edits across multiple files
 
 		" altLeft while in insert mode to scrub forward along suggestion
+		" (built-in)
 
-		imap <silent><script><expr> <A-a> copilot#Accept("\<CR>")
-		let g:copilot_no_tab_map = v:true
+		if s:copilot == 1
+			" altA accepts whole Copilot suggestion:
+			imap <silent><script><expr> <A-a> copilot#Accept("\<CR>")
+			let g:copilot_no_tab_map = v:true
 
-		augroup copilot
-			autocmd!
-			autocmd BufNew,BufRead * :let b:copilot_enabled = v:false
-			autocmd VimEnter, * :Copilot disable
-		augroup end
+			augroup copilot
+				autocmd!
+				" Start vim with Copilot disabled:
+				autocmd VimEnter * :Copilot disable
+				" When a new buffer is opened or we leave insert mode, disable
+				" Copilot:
+				autocmd BufNew,BufRead * :let b:copilot_enabled = v:false
+				" Since both temporarily pausing insert mode (ctrlO) to perform
+				" other actions and leaving insert mode wholesale both trigger
+				" InsertLeave, we check which one has just occurred before we
+				" switch Copilot off:
+				autocmd InsertLeave * if match(mode('full'),'^ni')==-1 | let b:copilot_enabled = v:false | endif
+				autocmd InsertEnter * let g:normal_mode_time=0
+			augroup end
+
+			" c-key enters insert-mode with Copilot turned on:
+			nnoremap ci :Copilot enable<Return>:let b:copilot_enabled=v:true<Return>i
+			" c-then-k enters insert-mode with Copilot turned on using the k-key
+			" mapping:
+			nmap ck :Copilot enable<Return>:let b:copilot_enabled=v:true<Return>k
+			" c-then-a enters insert-mode with Copilot turned on by using the
+			" a-key mapping:
+			nmap ca :Copilot enable<Return>:let b:copilot_enabled=v:true<Return>a
+			" c-then-shiftA enters insert-mode with Copilot turned on by using
+			" the shiftA mapping:
+			nmap cA :Copilot enable<Return>:let b:copilot_enabled=v:true<Return>A
+		endif
 	" }}}2
 
 	" Ultisnips config: 2{{{
@@ -347,8 +378,8 @@
 		:set formatoptions+=n
 		:set formatoptions-=2 " having the 2 flag set prevents n from working
 		:set formatlistpat=^\\s\*[a-z][a-z_0-9]\\+[^-]\*\ \ --\ \ " :3 *
-		" ^ * btw we need an end-of-line comment on the above line or else the
-		" whitespace will be stripped from the end since it would be trailing
+		" ^ * the end-of-line comment here is functional since it prevents the
+		" trailing whitespace from being stripped
 
 		" Disable highlighting of non-capitalized words that follow periods; IMO
 		" this is so noisy that it hurts more than it helps:
@@ -1680,6 +1711,11 @@
 
 	" Navigation bindings: 2{{{
 
+		" Folding bindings: 3{{{
+			nnoremap zn zj
+			nnoremap zp zk
+		" }}}3
+
 		" 6: home-key goes to the beginning of the virtual line, and toggles
 		" between soft home and hard home after that:
 		nnoremap <expr> <Home> SmartHome('n')
@@ -1698,10 +1734,11 @@
 		vnoremap <silent> <expr> <End> SmartEnd(visualmode())
 		vnoremap <silent> <expr> <kEnd> SmartEnd(visualmode())
 
-		"2: o-key and shiftO insert a line below or above the current one (without staying in insert mode)
-		" the x below deletes the autoindent whitespace 2:
+		"2: o-key and altO insert a line below or above the current one (without
+		"staying in insert mode):
 		nmap <silent> <expr> <A-o> InsertLineBelow() . "\<Esc>``"
 		nmap <silent> <expr> o InsertLineBelow() . "\<Esc>"
+		" shiftO inserts a line above the current one:
 		nmap <silent> <expr> O InsertLineAbove() . "\<Esc>"
 
 		" backslash-key inserts a backslash:
@@ -1886,6 +1923,9 @@
 	" }}}
 
 	" Universal IDE-oid stuff 2{{{
+
+		" See also the binding for Copilot mode found in the "Copilot settings"
+		" section.
 
 		" F5-key pipes selected text to a file:
 		vnoremap <F5> :<C-u>call AppendToFile()<Return>
