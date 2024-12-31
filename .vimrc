@@ -90,41 +90,42 @@
 " Custom handling by filetype 1{{{
 "
 	augroup oddboyz
-	   autocmd!
-	   autocmd BufNewFile,BufRead, pom.xml,web.xml,*.yaml,*.ansible* set tabstop=2 expandtab shiftwidth=2
+		autocmd!
+		autocmd BufNewFile,BufRead, pom.xml,web.xml,*.yaml,*.ansible* setlocal tabstop=2 expandtab shiftwidth=2
 	augroup END
 
 	augroup ansible
-	   autocmd BufNewFile,BufRead, *.ansible* setf yaml.ansible
+		autocmd BufNewFile,BufRead, *.ansible* setf yaml.ansible
 	augroup END
 
 	augroup gitconfigs
-	   autocmd!
-	   autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
+		autocmd!
+		autocmd BufNewFile,BufRead, .gitconfig* setf gitconfig
 	augroup END
 
 	augroup screenstuff
-	   autocmd!
-	   autocmd BufNewFile,BufRead, *.screen,.screenrc* setf screen
+		autocmd!
+		autocmd BufNewFile,BufRead, *.screen,.screenrc* setf screen
 	augroup END
 
 	" allow various comments to rewrap correctly:
 	augroup vimstuff
-	   autocmd!
-	   autocmd BufNewFile,BufRead, *.vim,.vimrc setlocal comments+=:\\\\|
-	   " ^ allow line-extension character
-	   autocmd BufNewFile,BufRead, *.vim,.vimrc setlocal foldmethod=marker
+		autocmd!
+		autocmd BufNewFile,BufRead, *.vim,.vimrc setlocal comments+=:\\\\|
+		" ^ allow line-extension character
+		autocmd BufNewFile,BufRead, *.vim,.vimrc setlocal foldmethod=marker
+		autocmd BufRead .vimrc if tabpagewinnr(tabpagenr(),'$') == 1 | silent call FoldDigest() | silent Resize -h -28
 	augroup END
 
 	augroup pgstuff
-	   autocmd!
-	   autocmd BufNewFile,BufRead, *.postgre.sql,scp://*.postgre.sql setf pgsql
+		autocmd!
+		autocmd BufNewFile,BufRead, *.postgre.sql,scp://*.postgre.sql setf pgsql
 		\| setlocal comments=:--
 	augroup END
 
 	augroup ultistuff
-	   autocmd!
-	   autocmd BufNewFile,BufRead, *.snippets setlocal comments=:#
+		autocmd!
+		autocmd BufNewFile,BufRead, *.snippets setlocal comments=:#
 	augroup END
 
 " }}}
@@ -1675,8 +1676,7 @@
 	" Emmet bindings: 2{{{
 		" altZ expands tags instead of Emmet's default ctrlY-then-comma:
 		imap <A-z> <C-Y>,
-	 " }}}2
-
+	" }}}2
 
 	" Navigation bindings: 2{{{
 
