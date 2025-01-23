@@ -54,7 +54,8 @@
 	# this causes files with merge-conflicts to indicate the contents of the
 	# original line or chunk that was altered by different commits in different
 	# ways, which may make it more obvious which one to accept, or how to
-	# combine the two.
+	# combine the two. Note this is only available in Git versions 2.35.0 and
+	# later. Otherwise, you'll need to disable this.
 [alias]
 # NOTE: In addition to the below aliases, a number of tweaks from define_funcs
 # are made to git-commands by shadowing them using a function. (git does not
