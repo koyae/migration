@@ -2,7 +2,11 @@
 
 import sys
 import os
+import re
 from os.path import isfile
+from os.path import dirname
+from os.path import basename
+from os.path import splitext
 from os.path import join as pathjoin
 from hashlib import sha256
 
@@ -14,6 +18,7 @@ parser.add_argument("dir1", help="First directory you wish to compare")
 parser.add_argument("dir2", help="Second directory you wish to compare")
 parser.add_argument("--quiet", help="Show fewer messages.", default=False, type=bool, const=True, nargs='?')
 parser.add_argument("--notice_freq", help="How often updates are shown during hashing. Not relevant if --quiet is set.", default=0.05, type=float)
+parser.add_argument("--reconcile", help="Prompt for actions to make folders the same.", default=False, type=bool, const=True, nargs='?')
 
 args = parser.parse_args()
 
@@ -25,6 +30,7 @@ def check_dir(d):
 
 check_dir(args.dir1)
 check_dir(args.dir2)
+dirs = [args.dir1, args.dir2]
 
 def get_hash(fp, hasher=None):
     """ return the sha256 hash of a given full path `fp` """
@@ -45,7 +51,7 @@ def get_hashes(path, nm):
     for x,p in enumerate(paths):
         fp = pathjoin(path,p)
         if isfile(fp):
-            rval[p] = get_hash(fp)
+            rval[fp] = get_hash(fp)
         if not args.quiet:
              completion = float(x)/len(paths)
              if completion - old_completion > args.notice_freq:
@@ -112,14 +118,66 @@ for h in hashes2:
 for rename_op in set(hashd1_reverse.keys()).intersection(set(hashd2_reverse.keys())):
     paths_with_hash1 = hashd1_reverse[rename_op]
     paths_with_hash2 = hashd2_reverse[rename_op]
+    prefixless_paths = [
+        paths_with_hash1[0].replace(dirs[0],"",1),
+        paths_with_hash2[0].replace(dirs[1],"",1)
+    ]
     if (
         len(paths_with_hash1)==1
         and len(paths_with_hash2)==1
-        and paths_with_hash1!=paths_with_hash2
+        and prefixless_paths[0]!=prefixless_paths[1]
     ):
         print("\tRename detected @{}".format(rename_op))
-        print("\t\tdir1: {}".format(paths_with_hash1[0]))
-        print("\t\tdir2: {}".format(paths_with_hash2[0]))
+        print("\t\tdir1: {}".format(prefixless_paths[0]))
+        print("\t\tdir2: {}".format(prefixless_paths[1]))
+        paths_with_hash = [paths_with_hash1[0], paths_with_hash2[0]]
+        if args.reconcile:
+            gg = False
+            while not gg:
+                reconciliation=input("""Reconciliation?
+                    1. (1) Use dir1's version.
+                    2. (2) Use dir2's version.
+                    3. (s) Specify a name manually (keeps dir(s) and extension).
+                    4. (n) None.
+                """).lower().split()
+                reconciliation1 = reconciliation[0]
+                gg = True
+                old_names = []
+                new_names = []
+                if reconciliation1 in ["1", "dir1", "d1", "2", "dir2", "d2"]:
+                    # The number indicated by the user has the preferred name:
+                    get_yes = int(re.search(r'\d', reconciliation1).group(0)) - 1
+                    # The other number is the target path we need to alter:
+                    get_no = (get_yes + 1)%2
+                    old_names.append(paths_with_hash[get_no])
+                    # Using the preferred path, replace the main prefix with
+                    # that of the target file:
+                    new_names.append(
+                        paths_with_hash[get_yes].replace(
+                            dirs[get_yes],
+                            dirs[get_no]
+                        )
+                    )
+                elif reconciliation1 in ["3", "manual", "s", "specify"]:
+                    new_ebn = ""
+                    if len(reconciliation) < 2:
+                        new_ebn = input("New name? ")
+                    else:
+                        new_ebn = reonciliation[1:]
+                    for x in range(0,2):
+                        old_names.append(paths_with_hash[x])
+                        new_names.append(pathjoin(
+                            dirname(paths_with_hash[x]),
+                            new_ebn + splitext(paths_with_hash[x])[1]
+                        ))
+                elif reconciliation1 in ["4", "none", "n"]:
+                    pass
+                else:
+                    gg = False
+                    continue
+                for x in range(len(old_names)):
+                    os.rename(old_names[x], new_names[x])
+                    print(f"{old_names[x]} -> {new_names[x]}")
 announce_internal_dupes(hashd1_reverse, args.dir1)
 announce_internal_dupes(hashd2_reverse, args.dir2)
 
