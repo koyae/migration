@@ -1,8 +1,16 @@
- " Strip trailing whitespace on save:
- augroup striptrailing
+" Strip trailing whitespace on save:
+augroup striptrailing
+   autocmd!
+   autocmd BufWritePre * :exec (&syntax!="snippets" && ShouldStripTrailing()==1)? '%s/\s\+$//e' : ""
+augroup END
+
+augroup reloadReadOnly
 	autocmd!
-	autocmd BufWritePre * :exec (&syntax!="snippets" && ShouldStripTrailing()==1)? '%s/\s\+$//e' : ""
- augroup END
+	" This will automatically reload any buffers for which `autoread` has
+	" been :set :
+	autocmd CursorHold * checktime
+augroup END
+
 
 " Compatibility settings 1{{{
 	:set nocompatible
@@ -112,11 +120,10 @@
 	" allow various comments to rewrap correctly:
 	augroup vimstuff
 		autocmd!
-		" ^ allow line-extension character
-		autocmd BufNewFile,BufRead, *.vim,.vimrc setlocal foldmethod=marker
-		" If vim is in its very own tab, open the FoldDigest pane at a
+		autocmd BufNewFile,BufRead, *.vim,.vimrc setlocal foldmethod=marker modeline
+		" If vim is in its very own tab, with no other panes in that tab, open the FoldDigest pane at a
 		" reasonable size
-		autocmd BufWinEnter .vimrc if tabpagewinnr(tabpagenr(),'$') == 1 | call FoldDigest() | silent Resize -h 45 endif
+		autocmd BufWinEnter .vimrc if tabpagewinnr(tabpagenr(),'$') == 1 && winnr('$') == 1 | call FoldDigest() | silent Resize -h 45 endif
 		autocmd BufNewFile,BufRead, *.vim,.vimrc setlocal comments+=:\\\\|
 	augroup END
 
@@ -233,7 +240,7 @@
 	" above is slightly imprecise; a few versions of vim 9.0 won't work,
 	" which will have to be caught by the extension itself
 		call add(g:pathogen_blacklist, 'copilot.vim')
-		echom "copilot requires vim >=9.0.0185 and access to nodejs " .. v:shellerror .. njs
+		echom "copilot requires vim >=9.0.0185 and access to nodejs " .. v:shell_error .. njs
 		" nodejs will typically break under WSL 1 so it's necessary to
 		" upgrade to 2. Sufficiently-modern versions of vim begin to
 		" appear under WSL Ubuntu 24.04.1 LTS and up.
@@ -261,6 +268,12 @@
 			" altA accepts whole Copilot suggestion:
 			imap <silent><script><expr> <A-a> copilot#Accept("\<CR>")
 			let g:copilot_no_tab_map = v:true
+			" if ! exists('g:copilot_workspace_folders')
+			" 	let g:copilot_workspace_folders = ['~/.copilot_context']
+			" endif
+			" ^ At least for SQL files, doing this did not appear to have any
+			" effect. Perhaps in the future, this will be resolved, but for
+			" the moment, copilot.vim requires hacks.
 
 			augroup copilot
 				autocmd!
@@ -1462,18 +1475,19 @@
 		" execute has completed all of them, since it may be hard to tell
 		" otherwise whether it's frozen, still working, or done
 		let suffdict = {
-			\ 'pgsql': "\n\\pset footer off\n\\pset tuples_only on\n;SELECT '(vim) All done (vim)';"
+			\ 'pgsql': "\n\\set ECHO none\n\\pset footer off\n\\pset tuples_only on\n;SELECT '(vim) All done (vim)';"
 		\ }
 		" duplicate the pgsql key for sql:
 		let suffdict.sql = suffdict.pgsql
 		let text = (a:0 >= 1)? a:1 : GetSelectionText()
 		let fifoPath = (a:0 >= 2)? a:2 : '/tmp/fif'
-		" Below, first backslash prevents vim from expandeding '%' to current
-		" filename and the second backslash allows the '\n' to actually reach
-		" `printf`:
-		" echom
+		let fulltext = text
+		" Only add footer if appended text was nonempty:
+		if fulltext != ""
+			let fulltext = text . get(suffdict,&syntax,'')
+		endif
 		call writefile(
-			\ split( text . get(suffdict,&syntax,''), "\n", 1 ),
+			\ split( fulltext, "\n", 1 ),
 			\ fifoPath
 		\ )
 		" ^ vim.1045645.n5.nabble.com/Write-register-contents-to-file-tp5610081p5610229.html
@@ -1951,7 +1965,7 @@
 		vnoremap <A-g> :
 	" }}}2
 
-    " Selection stuff "{{{
+	" Selection stuff "{{{
 
 		" 2: shiftHome and shiftEnd select from current position to whatever
 		" positions these are happed to jump to:

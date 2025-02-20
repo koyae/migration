@@ -10,3 +10,5 @@ lastat
 .bash_history
 .viminfo
 .ssh
+.headlessql_psqlrc
+.headlessqlrc

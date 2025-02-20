@@ -619,8 +619,30 @@ function headlessql {
 		# try to disable the pager, since we generally only want to look at the
 		# window rather than touch it
 		export PAGER=""
-		psql "$1" -q --no-psqlrc -v VERBOSITY=default -v QUIET=off --expanded \
-			-v ON_ERROR_STOP=on -v ON_ERROR_ROLLBACK=on -f "$fifoPath"
+		# Pick up latest changes to .headlessqlrc file, since this may be
+		# modified on-the-fly:
+		if [ -e ~/.headlessqlrc ]; then
+			. ~/.headlessqlrc
+		fi
+		if [ "$HEADLESSQL_TEE_TARGET" = "" ]; then
+			HEADLESSQL_TEE_TARGET="/dev/null"
+		fi
+		# run with `-q` first so there isn't a bunch of spam from the target
+		# psqlrc file (assuming it's present) every time we loop, but then turn
+		# quiet off again after it's sourced so we can see output:
+		PSQLRC="~/.headlessql_psqlrc" psql "$1" -q -v VERBOSITY=default \
+			-v QUIET=off --expanded -v ON_ERROR_STOP=on -v ON_ERROR_ROLLBACK=on \
+			-f "$fifoPath" 2>&1 \
+			| sed \
+				-e '/^Null display is ".*"/d' \
+				-e '/^\\set ECHO/d' \
+				-e '/^--/! s/^.*/-- \0/' \
+			| tee -a "$HEADLESSQL_TEE_TARGET" \
+			| sed 's/^-- //'
+		# ^ the last sed command here before we reach `tee` finds all lines
+		# that don't have the SQL comment leader and then adds it to those
+		# lines. The sed command AFTER `tee` strips it off again so the
+		# immediate output looks nicer.
 	done
 	# socket-approach is simpler to express because it doesn't require a loop
 	# but at least for psql, a bad SQL-command will break it, so that doesn't

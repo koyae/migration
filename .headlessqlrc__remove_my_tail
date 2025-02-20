@@ -1,0 +1,3 @@
+# ~/.headlessqlrc is sourced (`. ~/.headlessqlrc`) by the `headlessql` command
+# during each loop iteration during which it waits for more (Postgres) SQL.
+HEADLESSQL_TEE_TARGET="/dev/null" # by default, don't accumulate output anywhere

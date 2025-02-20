@@ -7,6 +7,10 @@ set formatoptions+=c
 " (since '2' interferes with it):
 set formatoptions-=2
 
+if ! exists("g:copilot_context_file")
+	let g:copilot_context_file = "~/.copilot_context/copilot_context.postgre.sql"
+endif
+
 " Jump to start or end of function-definitions:
 vnoremap <buffer> gz :<C-u>call search('\%>'.line("'>").'l\V$$')<Return>V`<o
 " ^ Since we hop to the end of the line after starting visual-line mode, we
@@ -29,42 +33,80 @@ vmap <buffer> <A-f> :<C-u>let @p=PgFlip(GetSelectionText())<Return>gvx"pP
 noremap <buffer> gk /\(^\s*\)\@<=\(INSERT\\|SELECT [^1]\\|DELETE\\|PERFORM\\|WITH\)<Return>
 noremap <buffer> gK ?\(^\s*\)\@<=\(INSERT\\|SELECT [^1]\\|DELETE\\|PERFORM\\|WITH\)<Return>
 
-" backslash-then-d-then-f,
-" backslash-then-d-then-f-then-f documents function under cursor:
-vmap <buffer> <leader>df :<C-u>call AppendToFile('\df ' . GetSelectionText())<Return>
-nmap <buffer> <leader>df viw\dff
-vmap <buffer> <leader>dff :<C-u>call AppendToFile('\df ' . GetSelectionText())<Return>
-nmap <buffer> <leader>dff viw\dff
+" Headlessql control 1{{{
 
-" backslash-then-plus-then-d-then-f documents function under cursor with extra
-" details:
-vmap <buffer> <leader>df+ :<C-u>call AppendToFile('\df+ ' . GetSelectionText())<Return>
-nmap <buffer> <leader>df+ viw\df+
+	" backslash-then-d-then-f-then-f documents function under cursor:
+	vmap <buffer> <leader>df :<C-u>call AppendToFile('\df ' . GetSelectionText())<Return>
+	nmap <buffer> <leader>df viw\dff
+	vmap <buffer> <leader>dff :<C-u>call AppendToFile('\df ' . GetSelectionText())<Return>
+	nmap <buffer> <leader>dff viw\dff
 
-" backslash-then-d,
-" backslash-then-d-then-r documents relation under cursor:
-vmap <buffer> <leader>d :<C-u>call AppendToFile('\d ' . GetSelectionText())<Return>
-nmap <buffer> <leader>d viw\dr
-vmap <buffer> <leader>dr :<C-u>call AppendToFile('\d ' . GetSelectionText())<Return>
-nmap <buffer> <leader>dr viw\dr
+	" backslash-then-plus-then-d-then-f documents function under cursor with extra
+	" details:
+	vmap <buffer> <leader>df+ :<C-u>call AppendToFile('\df+ ' . GetSelectionText())<Return>
+	nmap <buffer> <leader>df+ viw\df+
 
-" backslash-then-d-then-plus documents relation under cursor:
-vmap <buffer> <leader>d+ :<C-u>call AppendToFile('\d+ ' . GetSelectionText())<Return>
-nmap <buffer> <leader>d+ viw\d+
+	" backslash-then-d-then-r documents relation under cursor:
+	vmap <buffer> <leader>d :<C-u>call AppendToFile('\d ' . GetSelectionText())<Return>
+	nmap <buffer> <leader>d viw\dr
+	vmap <buffer> <leader>dr :<C-u>call AppendToFile('\d ' . GetSelectionText())<Return>
+	nmap <buffer> <leader>dr viw\dr
 
-" backslash-then-1 selects the first row from the relation under the cursor:
-vmap <buffer> <leader>1 :<C-u>call AppendToFile('SELECT * FROM ' . GetSelectionText() . ' LIMIT 1')<Return>
-nmap <buffer> <leader>1 viw\1
+	" backslash-then-d-then-plus documents relation under cursor:
+	vmap <buffer> <leader>d+ :<C-u>call AppendToFile('\d+ ' . GetSelectionText())<Return>
+	nmap <buffer> <leader>d+ viw\d+
 
-" backslash-then-F1 adds 'SELECT' onto current selection and then sends to
-" fifo:
-vmap <buffer> <leader><F1> :<C-u>call AppendToFile('SELECT ' . GetSelectionText())<Return>
-nmap <buffer> <leader><F1> viw\<F1>
+	command! Pge echo "Toggled query echo."
+		\ | call system("sed -i -e 's/ECHO all/ECHO none/' -e 's/ECHO none/ECHO all/' ~/.headlessql_psqlrc")
+		\ | call AppendToFile("")
+	command! PgeOn echo "Query echo on."
+		\ | call system("sed -i 's/ECHO none/ECHO all/' ~/.headlessql_psqlrc")
+		\ | call AppendToFile("")
+	Alias pgeon PgeOn
+	Alias pgeOn PgeOn
+	Alias Pgeon PgeOn
 
-" backslash-then-F8 adds 'SELECT * FROM ' onto current selection and then sends
-" to fifo:
-vmap <buffer> <leader><F8> :<C-u>call AppendToFile('SELECT * FROM ' . GetSelectionText())<Return>
-nmap <buffer> <leader><F8> V\<F8>
+	command! PgeOff echo "Query echo off."
+		\ | call system("sed -i 's/ECHO all/ECHO none/' ~/.headlessql_psqlrc")
+		\ | call AppendToFile("")
+	Alias pgeoff PgeOff
+	Alias Pgeoff PgeOff
+
+	command! PgcOn echo "Context accumulation on."
+		\ | call system("sed -i -e '/^HEADLESSQL_TEE_TARGET=/d' ~/.headlessqlrc")
+		\ | call system("printf 'HEADLESSQL_TEE_TARGET=\"%s\"' "
+			\ .. g:copilot_context_file .. " >>~/.headlessqlrc")
+		\ | call AppendToFile("")
+	Alias Pgcon PgcOn
+	Alias pgcon PgcOn
+
+	command! PgcOff echo "Context accumulation off."
+		\ | call system("sed -i -e '/^HEADLESSQL_TEE_TARGET=/d' ~/.headlessqlrc")
+		\ | call AppendToFile("")
+	Alias Pgcoff PgcOff
+	Alias pgcoff PgcOff
+
+	command! PgcClr call system('printf -- "-------- CONTEXT:\n" >' .. shellescape(expand(g:copilot_context_file)))
+		\ | echo "Copilot context cleared."
+	Alias Pgclr PgcClr
+	Alias pgcclr PgcClr
+	Alias pgclr PgcClr
+
+	" backslash-then-1 selects the first row from the relation under the cursor:
+	vmap <buffer> <leader>1 :<C-u>call AppendToFile('SELECT * FROM ' . GetSelectionText() . ' LIMIT 1')<Return>
+	nmap <buffer> <leader>1 viw\1
+
+	" backslash-then-F1 adds 'SELECT' onto current selection and then sends to
+	" fifo:
+	vmap <buffer> <leader><F1> :<C-u>call AppendToFile('SELECT ' . GetSelectionText())<Return>
+	nmap <buffer> <leader><F1> viw\<F1>
+
+	" backslash-then-8 adds 'SELECT * FROM ' onto current selection and then sends
+	" to fifo:
+	vmap <buffer> <leader>8 :<C-u>call AppendToFile('SELECT * FROM ' . GetSelectionText())<Return>
+	nmap <buffer> <leader>8 V\8
+
+" }}}1
 
 
 " replace '00' with '--', since it's a common typo for me:
