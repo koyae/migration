@@ -390,7 +390,7 @@ augroup END
 		" 3: wrap python-style arg-docs
 		:set formatoptions+=n
 		:set formatoptions-=2 " having the 2 flag set prevents n from working
-		:set formatlistpat=^\\s\*[a-z][a-z_0-9]\\+[^-]\*\ \ --\ \ " :3 *
+		:set formatlistpat=^\\s\*[a-z-][a-z_0-9-]\\+[^-]\*\ \ --\ \ " :3 *
 		" ^ * the end-of-line comment here is functional since it prevents the
 		" trailing whitespace from being stripped
 
@@ -1244,11 +1244,11 @@ augroup END
   " nnoremaped to <Del>
 	function! SmartDelete()
 		" If we're deleting from the end of the current line, immediately eat
-		" any whitespace that's at the beginning of the next line, since this
-		" is pretty much universally unwanted for pulling stuff from below
+		" all whitespace at the beginning of the next line except for one, since
+		" this is pretty much universally unwanted for pulling stuff from below
 		" lines onto current:
 		let mode = mode(1) " get full mode
-		let smartStuff = "j:s/^\\s\\+//e | noh\<Return>0i\<BS>\<C-o>mp\<Esc>`p"
+		let smartStuff = "j:s/^\\s\\+/ /e | noh\<Return>0i\<BS>\<C-o>mp\<Esc>`p"
 		if AtEndOfLine()
 			if mode == "i"
 				return "\<Esc>" .. smartStuff .. "i"
