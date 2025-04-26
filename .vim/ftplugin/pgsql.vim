@@ -35,11 +35,16 @@ noremap <buffer> gK ?\(^\s*\)\@<=\(INSERT\\|SELECT [^1]\\|DELETE\\|PERFORM\\|WIT
 
 " Headlessql control 1{{{
 
+	" backslash-then-t-then-c gets table comment for table:
+	vmap <buffer> <silent> <leader>tc :<C-u>call AppendToFile("\\x off\nSELECT pg_catalog.obj_description('" .. GetSelectionText() .. "'::REGCLASS::OID)")<Return>
+	nmap <buffer> <leader>tc viw\gtc
+
 	" backslash-then-d-then-f-then-f documents function under cursor:
-	vmap <buffer> <leader>df :<C-u>call AppendToFile('\df ' . GetSelectionText())<Return>
-	nmap <buffer> <leader>df viw\dff
 	vmap <buffer> <leader>dff :<C-u>call AppendToFile('\df ' . GetSelectionText())<Return>
 	nmap <buffer> <leader>dff viw\dff
+	" backslash-then-d-then-f (then wait) documents function under cursor:
+	vmap <buffer> <leader>df :<C-u>call AppendToFile('\df ' . GetSelectionText())<Return>
+	nmap <buffer> <leader>df viw\dff
 
 	" backslash-then-plus-then-d-then-f documents function under cursor with extra
 	" details:
@@ -82,6 +87,8 @@ noremap <buffer> gK ?\(^\s*\)\@<=\(INSERT\\|SELECT [^1]\\|DELETE\\|PERFORM\\|WIT
 
 	command! PgcOff echo "Context accumulation off."
 		\ | call system("sed -i -e '/^HEADLESSQL_TEE_TARGET=/d' ~/.headlessqlrc")
+		\ | call system("printf 'HEADLESSQL_TEE_TARGET=\"%s\"' "
+			\ .. '/dev/null' .. " >>~/.headlessqlrc")
 		\ | call AppendToFile("")
 	Alias Pgcoff PgcOff
 	Alias pgcoff PgcOff
