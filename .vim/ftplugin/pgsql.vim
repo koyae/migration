@@ -46,14 +46,18 @@ noremap <buffer> gK ?\(^\s*\)\@<=\(INSERT\\|SELECT [^1]\\|DELETE\\|PERFORM\\|WIT
 	vmap <buffer> <leader>df :<C-u>call AppendToFile('\df ' . GetSelectionText())<Return>
 	nmap <buffer> <leader>df viw\dff
 
-	" backslash-then-plus-then-d-then-f documents function under cursor with extra
+	" backslash-then-d-then-f-then-plus documents function under cursor with extra
 	" details:
 	vmap <buffer> <leader>df+ :<C-u>call AppendToFile('\df+ ' . GetSelectionText())<Return>
 	nmap <buffer> <leader>df+ viw\df+
 
-	" backslash-then-plus-then-f-then-b gets function body:
+	" backslash-then-f-then-b gets function body:
 	vmap <buffer> <silent> <leader>fb :<C-u>call AppendToFile("\\x off\nSELECT oid::REGPROCEDURE \|\| E' body:\\n' \|\| prosrc FROM pg_proc WHERE proname ='" .. GetSelectionText() .. "'")<Return>
 	nmap <buffer> <leader>fb viw\fb
+
+	" backslash-then-f-then-c gets function comment:
+	vmap <buffer> <silent> <leader>fc :<C-u>call AppendToFile("\\x off\nSELECT pg_proc.oid::REGPROCEDURE \|\| E' comment:\\n' \|\| COALESCE(description,'') FROM pg_proc LEFT JOIN pg_description ON objoid = pg_proc.oid WHERE proname ='" .. GetSelectionText() .. "'")<Return>
+	nmap <buffer> <leader>fc viw\fc
 
 	" backslash-then-d-then-r documents relation under cursor:
 	vmap <buffer> <leader>d :<C-u>call AppendToFile('\d ' . GetSelectionText())<Return>
@@ -139,6 +143,8 @@ function! PgFlip(str)
 		\ 'DELETE': 'SELECT *',
 		\ '*': 'COUNT(*)',
 		\ 'COUNT(*)': '*',
+		\ 'AND': 'OR',
+		\ 'OR': 'AND',
 		\ 'update': 'insert',
 		\ 'insert': 'update',
 		\ 'UPDATE': 'INSERT',
