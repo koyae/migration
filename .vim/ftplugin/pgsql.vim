@@ -51,6 +51,10 @@ noremap <buffer> gK ?\(^\s*\)\@<=\(INSERT\\|SELECT [^1]\\|DELETE\\|PERFORM\\|WIT
 	vmap <buffer> <leader>df+ :<C-u>call AppendToFile('\df+ ' . GetSelectionText())<Return>
 	nmap <buffer> <leader>df+ viw\df+
 
+	" backslash-then-plus-then-f-then-b gets function body:
+	vmap <buffer> <silent> <leader>fb :<C-u>call AppendToFile("\\x off\nSELECT oid::REGPROCEDURE \|\| E' body:\\n' \|\| prosrc FROM pg_proc WHERE proname ='" .. GetSelectionText() .. "'")<Return>
+	nmap <buffer> <leader>fb viw\fb
+
 	" backslash-then-d-then-r documents relation under cursor:
 	vmap <buffer> <leader>d :<C-u>call AppendToFile('\d ' . GetSelectionText())<Return>
 	nmap <buffer> <leader>d viw\dr
