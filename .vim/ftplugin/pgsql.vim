@@ -35,39 +35,53 @@ noremap <buffer> gK ?\(^\s*\)\@<=\(INSERT\\|SELECT [^1]\\|DELETE\\|PERFORM\\|WIT
 
 " Headlessql control 1{{{
 
+	function! AlterWordDefViwThen(seq)
+		" 3: Prepare to grab fully-qualified relation-name if the cursor is
+		" on/inside of one, then type "viw" in normal mode, then restore
+		" definition:
+		let &iskeyword=&iskeyword . ",."
+		execute "normal viw" .. a:seq
+		let &iskeyword=&iskeyword[:-3]
+	endfunction
+
 	" backslash-then-t-then-c gets table comment for table:
 	vmap <buffer> <silent> <leader>tc :<C-u>call AppendToFile("\\x off\nSELECT pg_catalog.obj_description('" .. GetSelectionText() .. "'::REGCLASS::OID)")<Return>
-	nmap <buffer> <leader>tc viw\gtc
+	nmap <buffer> <leader>tc :call AlterWordDefViwThen('\tc')<Return>
 
 	" backslash-then-d-then-f-then-f documents function under cursor:
 	vmap <buffer> <leader>dff :<C-u>call AppendToFile('\df ' . GetSelectionText())<Return>
-	nmap <buffer> <leader>dff viw\dff
+	nmap <buffer> <leader>dff :call AlterWordDefViwThen('\dff')<Return>
 	" backslash-then-d-then-f (then wait) documents function under cursor:
 	vmap <buffer> <leader>df :<C-u>call AppendToFile('\df ' . GetSelectionText())<Return>
-	nmap <buffer> <leader>df viw\dff
+	nmap <buffer> <leader>df :call AlterWordDefViwThen('\dff')<Return>
 
 	" backslash-then-d-then-f-then-plus documents function under cursor with extra
 	" details:
 	vmap <buffer> <leader>df+ :<C-u>call AppendToFile('\df+ ' . GetSelectionText())<Return>
-	nmap <buffer> <leader>df+ viw\df+
+	nmap <buffer> <leader>df+ :call AlterWordDefViwThen('\df+')<Return>
 
 	" backslash-then-f-then-b gets function body:
 	vmap <buffer> <silent> <leader>fb :<C-u>call AppendToFile("\\x off\nSELECT oid::REGPROCEDURE \|\| E' body:\\n' \|\| prosrc FROM pg_proc WHERE proname ='" .. GetSelectionText() .. "'")<Return>
-	nmap <buffer> <leader>fb viw\fb
+	nmap <buffer> <leader>fb :call AlterWordDefViwThen('\fb')<Return>
 
 	" backslash-then-f-then-c gets function comment:
 	vmap <buffer> <silent> <leader>fc :<C-u>call AppendToFile("\\x off\nSELECT pg_proc.oid::REGPROCEDURE \|\| E' comment:\\n' \|\| COALESCE(description,'') FROM pg_proc LEFT JOIN pg_description ON objoid = pg_proc.oid WHERE proname ='" .. GetSelectionText() .. "'")<Return>
-	nmap <buffer> <leader>fc viw\fc
+	nmap <buffer> <leader>fc :call AlterWordDefViwThen('\fc')<Return>
 
-	" backslash-then-d-then-r documents relation under cursor:
+	" backslash-then-d documents relation under cursor:
 	vmap <buffer> <leader>d :<C-u>call AppendToFile('\d ' . GetSelectionText())<Return>
-	nmap <buffer> <leader>d viw\dr
+	nmap <buffer> <leader>d :call AlterWordDefViwThen('\dr')<Return>
+	" backslash-then-d-then-r documents relation under cursor:
 	vmap <buffer> <leader>dr :<C-u>call AppendToFile('\d ' . GetSelectionText())<Return>
-	nmap <buffer> <leader>dr viw\dr
+	nmap <buffer> <leader>dr :call AlterWordDefViwThen('\dr')<Return>
 
 	" backslash-then-d-then-plus documents relation under cursor:
 	vmap <buffer> <leader>d+ :<C-u>call AppendToFile('\d+ ' . GetSelectionText())<Return>
-	nmap <buffer> <leader>d+ viw\d+
+	nmap <buffer> <leader>d+ :call AlterWordDefViwThen('\d+')<Return>
+
+	" backslash-then-d-then-z shows permissions for relation under cursor:
+	vmap <buffer> <leader>z :<C-u>call AppendToFile('\z ' . GetSelectionText())<Return>
+	nmap <buffer> <leader>z :call AlterWordDefViwThen('\z')<Return>
 
 	command! Pge echo "Toggled query echo."
 		\ | call system("sed -i -e 's/ECHO all/ECHO none/' -e 's/ECHO none/ECHO all/' ~/.headlessql_psqlrc")
